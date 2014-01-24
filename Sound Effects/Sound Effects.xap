@@ -335,7 +335,7 @@ Sound Bank
     {
         Name = hit;
         Volume = -1200;
-        Pitch = 0;
+        Pitch = 367;
         Priority = 0;
 
         Category Entry
@@ -473,6 +473,14 @@ Sound Bank
                     Relative = 0;
                     Random Recurrence = 0;
                     Random Offset = 0;
+                }
+
+                Pitch Variation
+                {
+                    Min = -563;
+                    Max = 498;
+                    Operator = 0;
+                    New Variation On Loop = 0;
                 }
 
                 Wave Entry
