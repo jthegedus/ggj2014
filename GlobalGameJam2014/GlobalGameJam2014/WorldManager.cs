@@ -25,7 +25,10 @@ namespace GGJ2014
         public SpriteBatch SpriteBatch { get; set; }
         private Sprite s;
         private Level level;
-
+        private BulletPool bulletPool;
+        public BulletPool BulletPool { get { return this.bulletPool; } }
+        private List<Object> objsToRemove;
+        private List<Object> objsToAdd;
 
         public WorldManager()
         {
@@ -36,6 +39,9 @@ namespace GGJ2014
             this.StaticObjects = new List<IStatic>();
             this.DynamicObjects = new List<IDynamic>();
             this.Agents = new List<Agent>();
+            this.bulletPool = new BulletPool();
+            this.objsToRemove = new List<Object>();
+            this.objsToAdd = new List<Object>();
         }
 
         public void InitGame()
@@ -77,43 +83,103 @@ namespace GGJ2014
 
         public void AddToWorld(Object obj)
         {
-            if (obj is ITransform)
-            {
-                this.TransformObjects.Add(obj as ITransform);
-            }
+            this.objsToAdd.Add(obj);
+        }
 
-            if (obj is IDraw)
+        public void AddObjsToLists()
+        {
+            if (objsToAdd.Count > 0)
             {
-                this.DrawObjects.Add(obj as IDraw);
-            }
+                foreach (Object obj in objsToAdd)
+                {
+                    if (obj is ITransform)
+                    {
+                        this.TransformObjects.Add(obj as ITransform);
+                    }
 
-            if (obj is IUpdate)
-            {
-                this.UpdateObjects.Add(obj as IUpdate);
-            }
+                    if (obj is IDraw)
+                    {
+                        this.DrawObjects.Add(obj as IDraw);
+                    }
 
-            if (obj is IMovement)
-            {
-                this.MovementObjects.Add(obj as IMovement);
-            }
+                    if (obj is IUpdate)
+                    {
+                        this.UpdateObjects.Add(obj as IUpdate);
+                    }
 
-            if (obj is IStatic)
-            {
-                this.StaticObjects.Add(obj as IStatic);
-            }
+                    if (obj is IMovement)
+                    {
+                        this.MovementObjects.Add(obj as IMovement);
+                    }
 
-            if (obj is IDynamic)
+                    if (obj is IStatic)
+                    {
+                        this.StaticObjects.Add(obj as IStatic);
+                    }
+
+                    if (obj is IDynamic)
+                    {
+                        this.DynamicObjects.Add(obj as IDynamic);
+                    }
+                }
+                objsToAdd.Clear();
+            }
+        }
+
+        public void RemoveFromWorld(Object obj)
+        {
+            this.objsToRemove.Add(obj);
+        }
+
+        private void RemoveInactiveObjsFromLists()
+        {
+            if (objsToRemove.Count > 0)
             {
-                this.DynamicObjects.Add(obj as IDynamic);
+                foreach (Object obj in objsToRemove)
+                {
+                    if (obj is ITransform)
+                    {
+                        this.TransformObjects.Remove(obj as ITransform);
+                    }
+
+                    if (obj is IDraw)
+                    {
+                        this.DrawObjects.Remove(obj as IDraw);
+                    }
+
+                    if (obj is IUpdate)
+                    {
+                        this.UpdateObjects.Remove(obj as IUpdate);
+                    }
+
+                    if (obj is IMovement)
+                    {
+                        this.MovementObjects.Remove(obj as IMovement);
+                    }
+
+                    if (obj is IStatic)
+                    {
+                        this.StaticObjects.Remove(obj as IStatic);
+                    }
+
+                    if (obj is IDynamic)
+                    {
+                        this.DynamicObjects.Remove(obj as IDynamic);
+                    }
+                }
+                this.objsToRemove.Clear();
             }
         }
 
         public void Update(GameTime gameTime)
         {
+            AddObjsToLists();
+            bulletPool.Update(gameTime);
             foreach (IUpdate obj in UpdateObjects)
             {
                 obj.Update(gameTime);
             }
+            RemoveInactiveObjsFromLists();
         }
 
         public void HandleCollisions()
