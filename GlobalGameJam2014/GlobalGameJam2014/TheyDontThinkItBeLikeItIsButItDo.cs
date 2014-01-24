@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Media;
 using GGJ2014.GameObjects;
 using GGJ2014.Controllers;
 using GGJ2014.Components;
+using GGJ2014.Graphics;
 
 namespace GGJ2014
 {
@@ -32,9 +33,9 @@ namespace GGJ2014
         public TheyDontThinkItBeLikeItIsButItDo()
         {
             graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-            graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-            graphics.IsFullScreen = true;
+            // graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            // graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            // graphics.IsFullScreen = true;
             graphics.SynchronizeWithVerticalRetrace = true;
             graphics.ApplyChanges();
             Content.RootDirectory = "Content";
@@ -122,6 +123,7 @@ namespace GGJ2014
                 this.Exit();
             TheyDontThinkItBeLikeItIsButItDo.ControllerManager.Update();
             TheyDontThinkItBeLikeItIsButItDo.WorldManager.Update(gameTime);
+            TheyDontThinkItBeLikeItIsButItDo.WorldManager.HandleCollisions();
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -134,7 +136,6 @@ namespace GGJ2014
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
             // TODO: Add your drawing code here
             TheyDontThinkItBeLikeItIsButItDo.WorldManager.Draw(gameTime);
 

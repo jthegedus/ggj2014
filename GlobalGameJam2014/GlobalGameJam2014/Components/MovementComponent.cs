@@ -9,5 +9,6 @@ namespace GGJ2014.Components
     public struct MovementComponent
     {
         public Vector2 Velocity { get; set; }
+        public Vector2 LastPosition { get; set; }
     }
 }
