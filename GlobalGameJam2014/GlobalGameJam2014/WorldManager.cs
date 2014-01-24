@@ -15,6 +15,11 @@ namespace GGJ2014
         List<IUpdate> UpdateObjects { get; set; }
         List<IMovement> MovementObjects { get; set; }
         public SpriteBatch SpriteBatch { get; set; }
+        private BulletPool bulletPool;
+        public BulletPool BulletPool { get { return this.bulletPool; } }
+        private List<Object> objsToRemove;
+        private List<Object> objsToAdd;
+
 
         public WorldManager()
         {
@@ -22,37 +27,91 @@ namespace GGJ2014
             this.DrawObjects = new List<IDraw>();
             this.UpdateObjects = new List<IUpdate>();
             this.MovementObjects = new List<IMovement>();
+
+            this.bulletPool = new BulletPool();
+            this.objsToRemove = new List<Object>();
+            this.objsToAdd = new List<Object>();
         }
 
         public void AddToWorld(Object obj)
         {
-            if (obj is ITransform)
-            {
-                this.TransformObjects.Add(obj as ITransform);
-            }
+            this.objsToAdd.Add(obj);
+        }
 
-            if (obj is IDraw)
+        public void AddObjsToLists()
+        {
+            if (objsToAdd.Count > 0)
             {
-                this.DrawObjects.Add(obj as IDraw);
-            }
+                foreach (Object obj in objsToAdd)
+                {
+                    if (obj is ITransform)
+                    {
+                        this.TransformObjects.Add(obj as ITransform);
+                    }
 
-            if (obj is IUpdate)
-            {
-                this.UpdateObjects.Add(obj as IUpdate);
-            }
+                    if (obj is IDraw)
+                    {
+                        this.DrawObjects.Add(obj as IDraw);
+                    }
 
-            if (obj is IMovement)
+                    if (obj is IUpdate)
+                    {
+                        this.UpdateObjects.Add(obj as IUpdate);
+                    }
+
+                    if (obj is IMovement)
+                    {
+                        this.MovementObjects.Add(obj as IMovement);
+                    }
+                }
+                objsToAdd.Clear();
+            }
+        }
+
+        public void RemoveFromWorld(Object obj)
+        {
+            this.objsToRemove.Add(obj);
+        }
+
+        private void RemoveInactiveObjsFromLists()
+        {
+            if (objsToRemove.Count > 0)
             {
-                this.MovementObjects.Add(obj as IMovement);
+                foreach (Object obj in objsToRemove)
+                {
+                    if (obj is ITransform)
+                    {
+                        this.TransformObjects.Remove(obj as ITransform);
+                    }
+
+                    if (obj is IDraw)
+                    {
+                        this.DrawObjects.Remove(obj as IDraw);
+                    }
+
+                    if (obj is IUpdate)
+                    {
+                        this.UpdateObjects.Remove(obj as IUpdate);
+                    }
+
+                    if (obj is IMovement)
+                    {
+                        this.MovementObjects.Remove(obj as IMovement);
+                    }
+                }
+                this.objsToRemove.Clear();
             }
         }
 
         public void Update(GameTime gameTime)
         {
+            AddObjsToLists();
+            bulletPool.Update(gameTime);
             foreach (IUpdate obj in UpdateObjects)
             {
                 obj.Update(gameTime);
             }
+            RemoveInactiveObjsFromLists();
         }
 
         public void Draw(GameTime gameTime)

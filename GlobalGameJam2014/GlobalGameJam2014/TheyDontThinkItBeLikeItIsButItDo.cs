@@ -32,9 +32,9 @@ namespace GGJ2014
         public TheyDontThinkItBeLikeItIsButItDo()
         {
             graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-            graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-            graphics.IsFullScreen = true;
+            // graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            // graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            // graphics.IsFullScreen = true;
             graphics.SynchronizeWithVerticalRetrace = true;
             graphics.ApplyChanges();
             Content.RootDirectory = "Content";
