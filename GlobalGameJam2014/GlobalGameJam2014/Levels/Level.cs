@@ -11,8 +11,8 @@ namespace GGJ2014.Levels
     public class Level
     {
         private bool[] map;
-        private List<Rectangle> SpawnRectangles { get; set; }
-        private Rectangle[,] WallRectangles { get; set; }
+        public List<Rectangle> SpawnRectangles { get; set; }
+        public Rectangle[,] WallRectangles { get; set; }
         private int Width { get; set; }
         private int Height { get; set; }
         private Sprite sprite;
@@ -34,7 +34,6 @@ namespace GGJ2014.Levels
             CellHeight = (int)(TheyDontThinkItBeLikeItIsButItDo.ScreenHeight / height);
             this.sprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/agent"), CellWidth, CellHeight);
             this.SpawnRectangles = new List<Rectangle>();
-            this.initialiseRectangles();
         }
 
         public bool getCell(int x, int y)
@@ -55,7 +54,7 @@ namespace GGJ2014.Levels
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
             // Draw walls
-            this.sprite.Tint = Color.White;
+            this.sprite.Tint = Color.DarkGray;
             for (int y = 0; y < Height; ++y)
             {
                 for (int x = 0; x < Width; ++x)
@@ -73,9 +72,20 @@ namespace GGJ2014.Levels
                 this.sprite.Tint = Color.Red;
                 this.sprite.Draw(spriteBatch, new Vector2(spawn.Center.X, spawn.Center.Y));
             }
+
+            // Draw rectangles
+            this.sprite.Tint = Color.Blue;
+            foreach (Rectangle wall in WallRectangles)
+            {
+                if (wall != null)
+                {
+                    this.sprite.Tint = Color.Blue;
+                    this.sprite.Draw(spriteBatch, new Vector2(wall.Center.X, wall.Center.Y));
+                }
+            }
         }
 
-        private void initialiseRectangles()
+        public void UpdateWallRectangles()
         {
             this.WallRectangles = new Rectangle[Width, Height];
             for (int y = 0; y < Height; ++y)

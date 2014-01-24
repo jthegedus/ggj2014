@@ -91,9 +91,17 @@ namespace GGJ2014.GameObjects
                 this.possibleRectangles.Clear();
 
                 // TESTING
-                this.possibleRectangles.Add(new Rectangle(200, 200, 100, 100));
-                
-                // fill list of possible rectangles from the level
+                //this.possibleRectangles.Add(new Rectangle(200, 200, 100, 100));
+
+                // Get grid coordinates from level
+                Rectangle[,] wallRectangles = TheyDontThinkItBeLikeItIsButItDo.WorldManager.Level.WallRectangles;
+                foreach (Rectangle wall in wallRectangles)
+                {
+                    if (wall != null)
+                    {
+                        this.possibleRectangles.Add(wall);
+                    }
+                }
 
                 foreach (Rectangle r in possibleRectangles)
                 {
@@ -113,6 +121,7 @@ namespace GGJ2014.GameObjects
                     if (xPenetrations.Count >= yPenetrations.Count)
                     {
                         this.xPenetrations.Sort();
+                        this.movementComponent.LastPosition = this.transformComponent.Position;
                         this.transformComponent.Position = this.transformComponent.Position - Vector2.UnitX * xPenetrations[0];
                         this.movementComponent.Velocity *= -Vector2.UnitX;
                         HandleMapCollisions();
@@ -120,6 +129,7 @@ namespace GGJ2014.GameObjects
                     else
                     {
                         this.yPenetrations.Sort();
+                        this.movementComponent.LastPosition = this.transformComponent.Position;
                         this.transformComponent.Position = this.transformComponent.Position - Vector2.UnitY * yPenetrations[0];
                         this.movementComponent.Velocity *= -Vector2.UnitY;
                         HandleMapCollisions();

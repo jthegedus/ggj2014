@@ -22,8 +22,8 @@ namespace GGJ2014
         List<IStatic> StaticObjects { get; set; }
         List<IDynamic> DynamicObjects { get; set; }
         public SpriteBatch SpriteBatch { get; set; }
-        private Sprite s;
-        private Level level;
+        //private Sprite s;
+        public Level Level { get; private set; }
 
 
         public WorldManager()
@@ -55,17 +55,28 @@ namespace GGJ2014
             PlayerController player4 = new PlayerController(PlayerIndex.Four, agents[3]);
             TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player4);
 
-            TransformComponent tc = new TransformComponent();
-            tc.Position = new Vector2(50, 50);
-            agents[0].TransformComponent = tc;
-            tc.Position = new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 50, 50);
-            agents[1].TransformComponent = tc;
-            tc.Position = new Vector2(50, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 50);
-            agents[2].TransformComponent = tc;
-            tc.Position = new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 50, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 50);
-            agents[3].TransformComponent = tc;
+            // Load level
+            this.Level = LevelLoader.LoadLevel("level04");
 
-            this.level = LevelLoader.LoadLevel("level04");
+            // Assign player positions based on first 4 spawn points
+            List<Rectangle> spawns = this.Level.SpawnRectangles;
+            TransformComponent tc = new TransformComponent();
+            for (int i = 0; i < 4; ++i)
+            {
+                tc.Position = new Vector2(spawns[i].Center.X, spawns[i].Center.Y);
+                agents[i].TransformComponent = tc;
+            }
+
+            //tc.Position = new Vector2(50, 50);
+            //agents[0].TransformComponent = tc;
+            //tc.Position = new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 50, 50);
+            //agents[1].TransformComponent = tc;
+            //tc.Position = new Vector2(50, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 50);
+            //agents[2].TransformComponent = tc;
+            //tc.Position = new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 50, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 50);
+            //agents[3].TransformComponent = tc;
+
+            
         }
 
         public void AddToWorld(Object obj)
@@ -120,18 +131,19 @@ namespace GGJ2014
         public void Draw(GameTime gameTime)
         {
             this.SpriteBatch.Begin();
-            
-            if (s == null)
-                s = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/agent"), 100, 100);
-            s.Draw(this.SpriteBatch, new Vector2(200, 200), true);
+
+            if (this.Level != null)
+                this.Level.Draw(this.SpriteBatch, gameTime);
+
+            //if (s == null)
+            //    s = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/agent"), 100, 100);
+            //s.Draw(this.SpriteBatch, new Vector2(200, 200), true);
 
             foreach (IDraw obj in DrawObjects)
             {
                 obj.Draw(this.SpriteBatch, gameTime);
             }
 
-            if (this.level != null)
-                this.level.Draw(this.SpriteBatch, gameTime);
             this.SpriteBatch.End();
         }
     }
