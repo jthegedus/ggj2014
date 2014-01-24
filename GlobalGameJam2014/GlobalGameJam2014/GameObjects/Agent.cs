@@ -9,6 +9,7 @@ using GGJ2014.Interfaces;
 using GGJ2014.Components;
 using Microsoft.Xna.Framework.Graphics;
 using GGJ2014.Physics;
+using GGJ2014.Levels;
 
 namespace GGJ2014.GameObjects
 {
@@ -124,7 +125,7 @@ namespace GGJ2014.GameObjects
             this.Sprite.Draw(spriteBatch, this.transformComponent.Position);
         }
 
-        public void HandleMapCollisions()
+        public void HandleMapCollisions(Level level)
         {
             // if the player has moved
             if (this.transformComponent.Position != this.movementComponent.LastPosition)
@@ -134,9 +135,9 @@ namespace GGJ2014.GameObjects
                 this.possibleRectangles.Clear();
 
                 // TESTING
-                this.possibleRectangles.Add(new Rectangle(200, 200, 100, 100));
-                
-                // fill list of possible rectangles from the level
+                //this.possibleRectangles.Add(new Rectangle(200, 200, 100, 100));
+
+                level.GetPossibleRectangles(this.possibleRectangles, this.transformComponent.Position, this.movementComponent.LastPosition, this.CollisionRectangle);
 
                 foreach (Rectangle r in possibleRectangles)
                 {
@@ -156,16 +157,18 @@ namespace GGJ2014.GameObjects
                     if (xPenetrations.Count >= yPenetrations.Count)
                     {
                         this.xPenetrations.Sort();
+                        // this.movementComponent.LastPosition = this.transformComponent.Position;
                         this.transformComponent.Position = this.transformComponent.Position - Vector2.UnitX * xPenetrations[0];
                         this.movementComponent.Velocity *= -Vector2.UnitX;
-                        HandleMapCollisions();
+                        HandleMapCollisions(level);
                     }
                     else
                     {
                         this.yPenetrations.Sort();
+                        // this.movementComponent.LastPosition = this.transformComponent.Position;
                         this.transformComponent.Position = this.transformComponent.Position - Vector2.UnitY * yPenetrations[0];
                         this.movementComponent.Velocity *= -Vector2.UnitY;
-                        HandleMapCollisions();
+                        HandleMapCollisions(level);
                     }
                 }
             }

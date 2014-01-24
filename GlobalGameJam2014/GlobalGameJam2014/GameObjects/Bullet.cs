@@ -8,6 +8,7 @@ using GGJ2014.Interfaces;
 using GGJ2014.Components;
 using Microsoft.Xna.Framework.Graphics;
 using GGJ2014.Physics;
+using GGJ2014.Levels;
 
 namespace GGJ2014.GameObjects
 {
@@ -66,17 +67,15 @@ namespace GGJ2014.GameObjects
             this.Lifespan -= (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
     
-        public void HandleMapCollisions()
+        public void HandleMapCollisions(Level level)
         {
             // if the player has moved
             if (this.transformComponent.Position != this.movementComponent.LastPosition)
             {
                 this.possibleRectangles.Clear();
-
-                // TESTING
-                this.possibleRectangles.Add(new Rectangle(200, 200, 100, 100));
                 
                 // fill list of possible rectangles from the level
+                level.GetPossibleRectangles(this.possibleRectangles, this.transformComponent.Position, this.movementComponent.LastPosition, this.CollisionRectangle);
 
                 foreach (Rectangle r in possibleRectangles)
                 {
