@@ -121,7 +121,7 @@ namespace GGJ2014.GameObjects
                     if (xPenetrations.Count >= yPenetrations.Count)
                     {
                         this.xPenetrations.Sort();
-                        this.movementComponent.LastPosition = this.transformComponent.Position;
+                        // this.movementComponent.LastPosition = this.transformComponent.Position;
                         this.transformComponent.Position = this.transformComponent.Position - Vector2.UnitX * xPenetrations[0];
                         this.movementComponent.Velocity *= -Vector2.UnitX;
                         HandleMapCollisions();
@@ -129,7 +129,7 @@ namespace GGJ2014.GameObjects
                     else
                     {
                         this.yPenetrations.Sort();
-                        this.movementComponent.LastPosition = this.transformComponent.Position;
+                        // this.movementComponent.LastPosition = this.transformComponent.Position;
                         this.transformComponent.Position = this.transformComponent.Position - Vector2.UnitY * yPenetrations[0];
                         this.movementComponent.Velocity *= -Vector2.UnitY;
                         HandleMapCollisions();
