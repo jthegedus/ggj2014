@@ -1,0 +1,11 @@
+# Common files to ignore
+*.swp
+*.zip
+*.suo
+*.user
+GlobalGameJam2014/GlobalGameJam2014/bin
+GlobalGameJam2014/GlobalGameJam2014Content/bin
+GlobalGameJam2014/GlobalGameJam2014/obj
+GlobalGameJam2014/GlobalGameJam2014Content/obj
+*.cachefile
+*.ccgame
