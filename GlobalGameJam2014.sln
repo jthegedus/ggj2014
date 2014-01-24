@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GlobalGameJam2014", "GlobalGameJam2014\GlobalGameJam2014\GlobalGameJam2014.csproj", "{32A1B94F-A358-4D8C-B774-BF06AE3C3FA4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GGJ2014", "GlobalGameJam2014\GlobalGameJam2014\GGJ2014.csproj", "{32A1B94F-A358-4D8C-B774-BF06AE3C3FA4}"
 EndProject
-Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "GlobalGameJam2014Content", "GlobalGameJam2014\GlobalGameJam2014Content\GlobalGameJam2014Content.contentproj", "{65CE21BD-97E6-4F9B-8159-FBBB40B4E5D4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GlobalGameJam2014Content", "GlobalGameJam2014\GlobalGameJam2014Content\GlobalGameJam2014Content.contentproj", "{65CE21BD-97E6-4F9B-8159-FBBB40B4E5D4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

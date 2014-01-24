@@ -1,6 +1,6 @@
 using System;
 
-namespace GlobalGameJam2014
+namespace GGJ2014
 {
 #if WINDOWS || XBOX
     static class Program
@@ -10,7 +10,7 @@ namespace GlobalGameJam2014
         /// </summary>
         static void Main(string[] args)
         {
-            using (Game1 game = new Game1())
+            using (TheyDontThinkItBeLikeItIsButItDo game = new TheyDontThinkItBeLikeItIsButItDo())
             {
                 game.Run();
             }
