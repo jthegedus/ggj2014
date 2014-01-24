@@ -14,6 +14,8 @@ namespace GGJ2014.GameObjects
 {
     public class Agent : IMovement, IDraw, IUpdate, IDynamic
     {
+        private const float RevealDuration = 0.5f;
+        private float revealTimer;
         private TransformComponent transformComponent;
         private MovementComponent movementComponent;
         private float speed;
@@ -57,7 +59,7 @@ namespace GGJ2014.GameObjects
             this.movementComponent.LastPosition = this.transformComponent.Position;
 
             // attenuate current velocity so the player slows down. Stop them if they're really close to not moving
-            this.movementComponent.Velocity *= 0.9f;
+            this.movementComponent.Velocity *= 54f * (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (this.movementComponent.Velocity.LengthSquared() < 0.5f)
             {
                 this.movementComponent.Velocity = Vector2.Zero;
@@ -78,6 +80,8 @@ namespace GGJ2014.GameObjects
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
+            this.Sprite.Tint = Color.Lerp(Color.White, this.Color, this.revealTimer / Agent.RevealDuration);
+            this.revealTimer = MathHelper.Clamp(this.revealTimer, 0, this.revealTimer - (float)gameTime.ElapsedGameTime.TotalSeconds);
             this.Sprite.Draw(spriteBatch, this.transformComponent.Position);
         }
 
@@ -128,8 +132,18 @@ namespace GGJ2014.GameObjects
             }
         }
 
-        public void HandleAgentCollisions()
+        public void HandleAgentCollisions(List<Agent> agents, int myIndex)
         {
+            int numAgents = agents.Count;
+            for (int i = myIndex + 1; i < numAgents; ++i)
+            {
+                if (this.CollisionRectangle.Intersects(agents[i].CollisionRectangle))
+                {
+                    // display colours
+                    this.revealTimer = RevealDuration;
+                    agents[i].revealTimer = RevealDuration;
+                }
+            }
         }
 
         public void HandleBulletCollisions()

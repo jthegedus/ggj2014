@@ -21,6 +21,7 @@ namespace GGJ2014
         List<IMovement> MovementObjects { get; set; }
         List<IStatic> StaticObjects { get; set; }
         List<IDynamic> DynamicObjects { get; set; }
+        List<Agent> Agents { get; set; }
         public SpriteBatch SpriteBatch { get; set; }
         private Sprite s;
         private Level level;
@@ -34,38 +35,44 @@ namespace GGJ2014
             this.MovementObjects = new List<IMovement>();
             this.StaticObjects = new List<IStatic>();
             this.DynamicObjects = new List<IDynamic>();
+            this.Agents = new List<Agent>();
         }
 
         public void InitGame()
         {
-            List<Agent> agents = new List<Agent>();
 
             for (int i = 0; i < 4; ++i)
             {
-                agents.Add(new Agent());
-                this.AddToWorld(agents[i]);
+                Agents.Add(new Agent());
+                this.AddToWorld(Agents[i]);
             }
 
-            PlayerController player1 = new PlayerController(PlayerIndex.One, agents[0]);
+            PlayerController player1 = new PlayerController(PlayerIndex.One, Agents[0]);
             TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player1);
-            PlayerController player2 = new PlayerController(PlayerIndex.Two, agents[1]);
+            PlayerController player2 = new PlayerController(PlayerIndex.Two, Agents[1]);
             TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player2);
-            PlayerController player3 = new PlayerController(PlayerIndex.Three, agents[2]);
+            PlayerController player3 = new PlayerController(PlayerIndex.Three, Agents[2]);
             TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player3);
-            PlayerController player4 = new PlayerController(PlayerIndex.Four, agents[3]);
+            PlayerController player4 = new PlayerController(PlayerIndex.Four, Agents[3]);
             TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player4);
+
+
+            Agents[0].Color = Color.Red;
+            Agents[1].Color = Color.Blue;
+            Agents[2].Color = Color.Yellow;
+            Agents[3].Color = Color.Green;
 
             TransformComponent tc = new TransformComponent();
             tc.Position = new Vector2(50, 50);
-            agents[0].TransformComponent = tc;
+            Agents[0].TransformComponent = tc;
             tc.Position = new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 50, 50);
-            agents[1].TransformComponent = tc;
+            Agents[1].TransformComponent = tc;
             tc.Position = new Vector2(50, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 50);
-            agents[2].TransformComponent = tc;
+            Agents[2].TransformComponent = tc;
             tc.Position = new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 50, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 50);
-            agents[3].TransformComponent = tc;
+            Agents[3].TransformComponent = tc;
 
-            this.level = LevelLoader.LoadLevel("level04");
+            // this.level = LevelLoader.LoadLevel("level04");
         }
 
         public void AddToWorld(Object obj)
@@ -114,6 +121,12 @@ namespace GGJ2014
             foreach (IDynamic obj in this.DynamicObjects)
             {
                 obj.HandleMapCollisions();
+            }
+
+            int numAgents = this.Agents.Count;
+            for (int i = 0; i < numAgents; ++i)
+            {
+                this.Agents[i].HandleAgentCollisions(this.Agents, i);
             }
         }
 
