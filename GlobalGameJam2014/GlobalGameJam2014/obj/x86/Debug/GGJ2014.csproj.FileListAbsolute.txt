@@ -1,8 +1,0 @@
-C:\Users\gj\Documents\ggj2014\GlobalGameJam2014\GlobalGameJam2014\obj\x86\Debug\GGJ2014.csprojResolveAssemblyReference.cache
-C:\Users\gj\Documents\ggj2014\GlobalGameJam2014\GlobalGameJam2014\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
-C:\Users\gj\Documents\ggj2014\GlobalGameJam2014\GlobalGameJam2014\obj\x86\Debug\GlobalGameJam2014.exe
-C:\Users\gj\Documents\ggj2014\GlobalGameJam2014\GlobalGameJam2014\obj\x86\Debug\GlobalGameJam2014.pdb
-C:\Users\gj\Documents\ggj2014\GlobalGameJam2014\GlobalGameJam2014\bin\x86\Debug\GlobalGameJam2014.exe
-C:\Users\gj\Documents\ggj2014\GlobalGameJam2014\GlobalGameJam2014\bin\x86\Debug\GlobalGameJam2014.pdb
-C:\Users\gj\Documents\ggj2014\GlobalGameJam2014\GlobalGameJam2014\bin\x86\Debug\Content\SpriteFonts\Arial.xnb
-C:\Users\gj\Documents\ggj2014\GlobalGameJam2014\GlobalGameJam2014\bin\x86\Debug\Content\Sprites\agent.xnb
