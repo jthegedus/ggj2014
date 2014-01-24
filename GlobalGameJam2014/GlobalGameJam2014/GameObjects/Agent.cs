@@ -185,8 +185,32 @@ namespace GGJ2014.GameObjects
             }
         }
 
-        public void HandleBulletCollisions()
+        public void HandleBulletCollisions(List<Bullet> bullets)
         {
+            Bullet bullet;
+            int numBullets = bullets.Count;
+            for (int i = 0; i < numBullets; ++i)
+            {
+                bullet = bullets[i];
+                if (bullet.Owner != this.Color && 
+                    (bullet.CollisionRectangle.Intersects(this.CollisionRectangle) ||
+                    this.CollisionRectangle.Contains(bullet.CollisionRectangle)))
+                {
+                    // despawn that sucker
+                    bullet.Lifespan = -1;
+
+                    // take damage
+                    this.hitpoints -= bullet.Damage;
+
+                    // set the reveal timer (later to be replaced with blood)
+                    this.revealTimer = Agent.RevealDuration;
+
+                    if (this.hitpoints <= 0)
+                    {
+                        // handle death
+                    }
+                }
+            }
         }
 
         public void HandleCollectibleCollisions()

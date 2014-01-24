@@ -193,6 +193,7 @@ namespace GGJ2014
             for (int i = 0; i < numAgents; ++i)
             {
                 this.Agents[i].HandleAgentCollisions(this.Agents, i);
+                this.Agents[i].HandleBulletCollisions(this.bulletPool.Bullets);
             }
         }
 

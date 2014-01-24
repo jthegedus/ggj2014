@@ -13,6 +13,7 @@ namespace GGJ2014
         private const int Size = 100;
         private List<Bullet> active;
         private Stack<Bullet> inactive;
+        public List<Bullet> Bullets { get { return active; } }
 
         public BulletPool()
         {
