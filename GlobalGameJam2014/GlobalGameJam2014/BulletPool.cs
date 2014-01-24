@@ -20,7 +20,7 @@ namespace GGJ2014
             inactive = new Stack<Bullet>(Size);
         }
 
-        public void createBullet(Vector2 ownerPosition, Vector2 direction, Color owner)
+        public void createBullet(Vector2 ownerPosition, Vector2 direction, Color owner, Vector2 initialVelocity)
         {
             Bullet newBullet;
             if (inactive.Count == 0)
@@ -31,7 +31,7 @@ namespace GGJ2014
             {
                 newBullet = inactive.Pop();
             }
-            newBullet.Initialize(ownerPosition, direction, owner);
+            newBullet.Initialize(ownerPosition, direction, owner, initialVelocity);
             TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(newBullet);
             active.Add(newBullet);
         } 

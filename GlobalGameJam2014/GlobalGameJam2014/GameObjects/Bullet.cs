@@ -12,6 +12,7 @@ namespace GGJ2014.GameObjects
 {
     public class Bullet : IMovement, IDraw, IUpdate
     {
+        private const float PlayerBulletSizeRatio = 0.4f;
         public Sprite Sprite { get; set; }
         private TransformComponent transformComponent;
         public TransformComponent TransformComponent { get { return this.transformComponent; } set{this.transformComponent = value; } }
@@ -20,22 +21,22 @@ namespace GGJ2014.GameObjects
 
         public Color Owner { get; set; }
         public Vector2 InitialPosition { get; set; }
-        private const float Speed = 0.5f;
+        private const float Speed = 500f;
         public float Lifespan { get; set; }
 
 
         public Bullet() { }
 
-        public void Initialize(Vector2 ownerPosition, Vector2 direction, Color owner)
+        public void Initialize(Vector2 ownerPosition, Vector2 direction, Color owner, Vector2 initialVelocity)
         {
             Lifespan = 2000f;
             Owner = owner;
             InitialPosition = ownerPosition;
             this.transformComponent.Position = ownerPosition;
-            this.movementComponent.Velocity = direction * Speed;
+            this.movementComponent.Velocity = direction * Speed + initialVelocity * 0f;
             // change sprite based on player?
             // Spritey things
-            this.Sprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/agent"), TheyDontThinkItBeLikeItIsButItDo.PlayerSize, TheyDontThinkItBeLikeItIsButItDo.PlayerSize);
+            this.Sprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/agent"), (int)(TheyDontThinkItBeLikeItIsButItDo.PlayerSize * Bullet.PlayerBulletSizeRatio), (int)(TheyDontThinkItBeLikeItIsButItDo.PlayerSize * Bullet.PlayerBulletSizeRatio));
             this.Sprite.Tint = Color.Beige;
         }
 
@@ -48,8 +49,8 @@ namespace GGJ2014.GameObjects
         public void Update(GameTime gameTime)
         {
             // update position (Y)
-            this.transformComponent.Position += this.movementComponent.Velocity * new Vector2(1, -1) * (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-            this.Lifespan -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            this.transformComponent.Position += this.movementComponent.Velocity * new Vector2(1, -1) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            this.Lifespan -= (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
     }
 }
