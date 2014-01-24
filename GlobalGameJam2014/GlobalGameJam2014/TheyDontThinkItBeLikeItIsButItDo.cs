@@ -23,6 +23,8 @@ namespace GGJ2014
         public static float PlayerSpeed { get; private set; }
         private const float PlayerScreenSizeRatio = 0.02f;
         private const float PlayerScreenSpeedRatio = 0.05f;
+        public static float ScreenWidth { get; private set; }
+        public static float ScreenHeight { get; private set; }
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         public static WorldManager WorldManager { get; set; }
@@ -37,6 +39,8 @@ namespace GGJ2014
             graphics.IsFullScreen = true;
             graphics.SynchronizeWithVerticalRetrace = true;
             graphics.ApplyChanges();
+            ScreenWidth = graphics.PreferredBackBufferWidth;
+            ScreenHeight = graphics.PreferredBackBufferHeight;
             Content.RootDirectory = "Content";
             this.Window.Title = "They Don't Think It Be Like It Is, But It Do";
         }
@@ -71,6 +75,8 @@ namespace GGJ2014
             agents[2].TransformComponent = tc;
             tc.Position = new Vector2(graphics.PreferredBackBufferWidth - 50, graphics.PreferredBackBufferHeight - 50);
             agents[3].TransformComponent = tc;
+
+            TheyDontThinkItBeLikeItIsButItDo.WorldManager.InitGame();
         }
 
         /// <summary>

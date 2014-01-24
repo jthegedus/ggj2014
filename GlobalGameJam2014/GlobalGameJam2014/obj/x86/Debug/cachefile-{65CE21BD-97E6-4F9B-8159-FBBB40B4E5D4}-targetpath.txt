@@ -1,2 +1,4 @@
 Content\SpriteFonts\Arial.xnb
 Content\Sprites\agent.xnb
+Content\Levels\level02.xnb
+Content\Levels\level04.xnb

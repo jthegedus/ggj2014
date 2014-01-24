@@ -119,6 +119,8 @@
     <Compile Include="GameObjects\Agent.cs" />
     <Compile Include="Components\TransformComponent.cs" />
     <Compile Include="Interfaces\IUpdate.cs" />
+    <Compile Include="Levels\Level.cs" />
+    <Compile Include="Levels\LevelLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Graphics\Sprite.cs" />

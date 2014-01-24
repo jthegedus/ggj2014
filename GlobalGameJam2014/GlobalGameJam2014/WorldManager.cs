@@ -5,6 +5,7 @@ using System.Text;
 using GGJ2014.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using GGJ2014.Levels;
 
 namespace GGJ2014
 {
@@ -15,6 +16,7 @@ namespace GGJ2014
         List<IUpdate> UpdateObjects { get; set; }
         List<IMovement> MovementObjects { get; set; }
         public SpriteBatch SpriteBatch { get; set; }
+        private Level level;
 
         public WorldManager()
         {
@@ -22,6 +24,12 @@ namespace GGJ2014
             this.DrawObjects = new List<IDraw>();
             this.UpdateObjects = new List<IUpdate>();
             this.MovementObjects = new List<IMovement>();
+        }
+
+        public void InitGame()
+        {
+            // Load a test level
+            this.level = LevelLoader.LoadLevel("level04");
         }
 
         public void AddToWorld(Object obj)
@@ -61,6 +69,11 @@ namespace GGJ2014
             foreach (IDraw obj in DrawObjects)
             {
                 obj.Draw(this.SpriteBatch, gameTime);
+            }
+            
+            if (this.level != null)
+            {
+                this.level.Draw(this.SpriteBatch, gameTime);
             }
 
             this.SpriteBatch.End();
