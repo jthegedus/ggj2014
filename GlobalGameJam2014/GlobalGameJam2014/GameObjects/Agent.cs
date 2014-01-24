@@ -9,18 +9,27 @@ using GGJ2014.Interfaces;
 using GGJ2014.Components;
 using Microsoft.Xna.Framework.Graphics;
 using GGJ2014.Physics;
+using GGJ2014.Levels;
 
 namespace GGJ2014.GameObjects
 {
     public class Agent : IMovement, IDraw, IUpdate, IDynamic
     {
+        private const float RevealDuration = 0.5f;
+        private float revealTimer;
         private TransformComponent transformComponent;
         private MovementComponent movementComponent;
         private float speed;
         public TransformComponent TransformComponent { get { return this.transformComponent; } set { this.transformComponent = value; } }
         public MovementComponent MovementComponent { get { return this.movementComponent; } set { this.movementComponent = value; } }
         private float hitpoints = 100;
-        private float fireRate = 2;
+        private float fireRate = 20f;
+        private const float BurstDuration = 0.5f;
+        private const float BurstCooldown = 1f;
+        private float burstTimer = 0f;
+        private float timeLastFired = 0.0f;
+        private bool firing = false;
+        private Vector2 lastShootingDirection;
         public Color Color { get; set; }
         public Vector2 ShootDirection { get; set; }
         public Sprite Sprite { get; set; }
@@ -57,7 +66,7 @@ namespace GGJ2014.GameObjects
             this.movementComponent.LastPosition = this.transformComponent.Position;
 
             // attenuate current velocity so the player slows down. Stop them if they're really close to not moving
-            this.movementComponent.Velocity *= 0.9f;
+            this.movementComponent.Velocity *= 54f * (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (this.movementComponent.Velocity.LengthSquared() < 0.5f)
             {
                 this.movementComponent.Velocity = Vector2.Zero;
@@ -70,18 +79,53 @@ namespace GGJ2014.GameObjects
             this.transformComponent.Position += this.movementComponent.Velocity * new Vector2(1, -1) * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             // shoot
-            if (this.ShootDirection != Vector2.Zero)
+            if (((this.ShootDirection != Vector2.Zero && this.burstTimer == 0f) || this.firing))
             {
-                // shoot in the given direction
+                if (((float)gameTime.TotalGameTime.TotalSeconds - timeLastFired) > 1.0f / fireRate)
+                {
+                    // you can still shoot
+                    firing = true;
+
+                    if (this.ShootDirection != Vector2.Zero)
+                    {
+                        this.ShootDirection.Normalize();
+                        this.lastShootingDirection = this.ShootDirection;
+                    }
+                    else
+                    {
+                        this.ShootDirection = this.lastShootingDirection;
+                    }
+                    // shoot in the given direction
+                    TheyDontThinkItBeLikeItIsButItDo.WorldManager.BulletPool.createBullet(this.transformComponent.Position, Vector2.Normalize(this.ShootDirection), this.Color, this.movementComponent.Velocity);
+                    timeLastFired = (float)gameTime.TotalGameTime.TotalSeconds;
+                }
+
+                // increase burst timer
+                this.burstTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                if (this.burstTimer >= Agent.BurstDuration)
+                {
+                    this.burstTimer = Agent.BurstDuration;
+                    this.firing = false;
+                }
+            }
+            else
+            {
+                this.burstTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds / Agent.BurstCooldown;
+                if (this.burstTimer < 0)
+                {
+                    this.burstTimer = 0;
+                }
             }
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
+            this.Sprite.Tint = Color.Lerp(Color.White, this.Color, this.revealTimer / Agent.RevealDuration);
+            this.revealTimer = MathHelper.Clamp(this.revealTimer, 0, this.revealTimer - (float)gameTime.ElapsedGameTime.TotalSeconds);
             this.Sprite.Draw(spriteBatch, this.transformComponent.Position);
         }
 
-        public void HandleMapCollisions()
+        public void HandleMapCollisions(Level level)
         {
             // if the player has moved
             if (this.transformComponent.Position != this.movementComponent.LastPosition)
@@ -93,15 +137,7 @@ namespace GGJ2014.GameObjects
                 // TESTING
                 //this.possibleRectangles.Add(new Rectangle(200, 200, 100, 100));
 
-                // Get grid coordinates from level
-                Rectangle[,] wallRectangles = TheyDontThinkItBeLikeItIsButItDo.WorldManager.Level.WallRectangles;
-                foreach (Rectangle wall in wallRectangles)
-                {
-                    if (wall != null)
-                    {
-                        this.possibleRectangles.Add(wall);
-                    }
-                }
+                level.GetPossibleRectangles(this.possibleRectangles, this.transformComponent.Position, this.movementComponent.LastPosition, this.CollisionRectangle);
 
                 foreach (Rectangle r in possibleRectangles)
                 {
@@ -124,7 +160,7 @@ namespace GGJ2014.GameObjects
                         // this.movementComponent.LastPosition = this.transformComponent.Position;
                         this.transformComponent.Position = this.transformComponent.Position - Vector2.UnitX * xPenetrations[0];
                         this.movementComponent.Velocity *= -Vector2.UnitX;
-                        HandleMapCollisions();
+                        HandleMapCollisions(level);
                     }
                     else
                     {
@@ -132,18 +168,52 @@ namespace GGJ2014.GameObjects
                         // this.movementComponent.LastPosition = this.transformComponent.Position;
                         this.transformComponent.Position = this.transformComponent.Position - Vector2.UnitY * yPenetrations[0];
                         this.movementComponent.Velocity *= -Vector2.UnitY;
-                        HandleMapCollisions();
+                        HandleMapCollisions(level);
                     }
                 }
             }
         }
 
-        public void HandleAgentCollisions()
+        public void HandleAgentCollisions(List<Agent> agents, int myIndex)
         {
+            int numAgents = agents.Count;
+            for (int i = myIndex + 1; i < numAgents; ++i)
+            {
+                if (this.CollisionRectangle.Intersects(agents[i].CollisionRectangle))
+                {
+                    // display colours
+                    this.revealTimer = RevealDuration;
+                    agents[i].revealTimer = RevealDuration;
+                }
+            }
         }
 
-        public void HandleBulletCollisions()
+        public void HandleBulletCollisions(List<Bullet> bullets)
         {
+            Bullet bullet;
+            int numBullets = bullets.Count;
+            for (int i = 0; i < numBullets; ++i)
+            {
+                bullet = bullets[i];
+                if (bullet.Owner != this.Color && 
+                    (bullet.CollisionRectangle.Intersects(this.CollisionRectangle) ||
+                    this.CollisionRectangle.Contains(bullet.CollisionRectangle)))
+                {
+                    // despawn that sucker
+                    bullet.Lifespan = -1;
+
+                    // take damage
+                    this.hitpoints -= bullet.Damage;
+
+                    // set the reveal timer (later to be replaced with blood)
+                    this.revealTimer = Agent.RevealDuration;
+
+                    if (this.hitpoints <= 0)
+                    {
+                        // handle death
+                    }
+                }
+            }
         }
 
         public void HandleCollectibleCollisions()

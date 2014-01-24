@@ -1,4 +1,5 @@
 GlobalGameJam2014.suo
+*.suo
 GlobalGameJam2014/GlobalGameJam2014/GGJ2014.csproj.Debug.cachefile
 GlobalGameJam2014/GlobalGameJam2014/bin/x86/Debug/Content/SpriteFonts/Arial.xnb
 GlobalGameJam2014/GlobalGameJam2014/bin/x86/Debug/Content/Sprites/agent.xnb
