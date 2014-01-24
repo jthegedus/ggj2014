@@ -6,6 +6,9 @@ using GGJ2014.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using GGJ2014.Levels;
+using GGJ2014.GameObjects;
+using GGJ2014.Controllers;
+using GGJ2014.Components;
 
 namespace GGJ2014
 {
@@ -28,6 +31,33 @@ namespace GGJ2014
 
         public void InitGame()
         {
+            List<Agent> agents = new List<Agent>();
+
+            for (int i = 0; i < 4; ++i)
+            {
+                agents.Add(new Agent());
+                this.AddToWorld(agents[i]);
+            }
+
+            PlayerController player1 = new PlayerController(PlayerIndex.One, agents[0]);
+            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player1);
+            PlayerController player2 = new PlayerController(PlayerIndex.Two, agents[1]);
+            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player2);
+            PlayerController player3 = new PlayerController(PlayerIndex.Three, agents[2]);
+            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player3);
+            PlayerController player4 = new PlayerController(PlayerIndex.Four, agents[3]);
+            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player4);
+
+            TransformComponent tc = new TransformComponent();
+            tc.Position = new Vector2(50, 50);
+            agents[0].TransformComponent = tc;
+            tc.Position = new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 50, 50);
+            agents[1].TransformComponent = tc;
+            tc.Position = new Vector2(50, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 50);
+            agents[2].TransformComponent = tc;
+            tc.Position = new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 50, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 50);
+            agents[3].TransformComponent = tc;
+
             // Load a test level
             this.level = LevelLoader.LoadLevel("level04");
         }

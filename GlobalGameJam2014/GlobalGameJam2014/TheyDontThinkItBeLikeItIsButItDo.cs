@@ -43,40 +43,8 @@ namespace GGJ2014
             ScreenHeight = graphics.PreferredBackBufferHeight;
             Content.RootDirectory = "Content";
             this.Window.Title = "They Don't Think It Be Like It Is, But It Do";
-        }
-
-        public void InitGame()
-        {
             TheyDontThinkItBeLikeItIsButItDo.PlayerSize = (int)(TheyDontThinkItBeLikeItIsButItDo.PlayerScreenSizeRatio * this.graphics.PreferredBackBufferWidth);
             TheyDontThinkItBeLikeItIsButItDo.PlayerSpeed = TheyDontThinkItBeLikeItIsButItDo.PlayerScreenSpeedRatio * this.graphics.PreferredBackBufferWidth;
-            List<Agent> agents = new List<Agent>();
-
-            for (int i = 0; i < 4; ++i)
-            {
-                agents.Add(new Agent());
-                WorldManager.AddToWorld(agents[i]);
-            }
-
-            PlayerController player1 = new PlayerController(PlayerIndex.One, agents[0]);
-            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player1);
-            PlayerController player2 = new PlayerController(PlayerIndex.Two, agents[1]);
-            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player2);
-            PlayerController player3 = new PlayerController(PlayerIndex.Three, agents[2]);
-            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player3);
-            PlayerController player4 = new PlayerController(PlayerIndex.Four, agents[3]);
-            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player4);
-
-            TransformComponent tc = new TransformComponent();
-            tc.Position = new Vector2(50, 50);
-            agents[0].TransformComponent = tc;
-            tc.Position = new Vector2(graphics.PreferredBackBufferWidth - 50, 50);
-            agents[1].TransformComponent = tc;
-            tc.Position = new Vector2(50, graphics.PreferredBackBufferHeight - 50);
-            agents[2].TransformComponent = tc;
-            tc.Position = new Vector2(graphics.PreferredBackBufferWidth - 50, graphics.PreferredBackBufferHeight - 50);
-            agents[3].TransformComponent = tc;
-
-            TheyDontThinkItBeLikeItIsButItDo.WorldManager.InitGame();
         }
 
         /// <summary>
@@ -91,7 +59,7 @@ namespace GGJ2014
             TheyDontThinkItBeLikeItIsButItDo.WorldManager = new WorldManager();
             TheyDontThinkItBeLikeItIsButItDo.ContentManager = this.Content;
             TheyDontThinkItBeLikeItIsButItDo.ControllerManager = new ControllerManager();
-            InitGame();
+            WorldManager.InitGame();
             base.Initialize();
         }
 
