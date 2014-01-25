@@ -18,10 +18,10 @@ namespace GGJ2014.Levels
 
         public int Width { get; private set; }
         public int Height { get; private set; }
-        private int CellWidth { get; set; }
-        private int CellHeight { get; set; }
+        public int CellWidth { get; set; }
+        public int CellHeight { get; set; }
 
-        private Sprite sprite;
+        public Sprite sprite;
         private Sprite dirtSprite;
         private Sprite grassSprite;
         private Sprite stoneSprite;
@@ -141,7 +141,7 @@ namespace GGJ2014.Levels
 
 
             // Draw collision objects
-            int offset = this.stoneSprite.Height/5;
+            int offset = (int)(this.stoneSprite.Height / 8.5f);
             this.stoneSprite.zIndex = ZIndex.Collision;
             for (int y = 0; y < Height; ++y)
             {

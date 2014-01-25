@@ -168,11 +168,13 @@ namespace GGJ2014.AI
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
+            Color color = Color.Green;
+            color.A = 128;
             // Draw dem waypoints
             foreach (Vector2 waypoint in Waypoints)
             {
                 Sprite sprite = TheyDontThinkItBeLikeItIsButItDo.WorldManager.Level.sprite;
-                sprite.Tint = Color.Green;
+                sprite.Tint = color;
                 Vector2 drawPos = new Vector2((sprite.Width/2) + waypoint.X * sprite.Width, (sprite.Height/2) + waypoint.Y * sprite.Height);
                 TheyDontThinkItBeLikeItIsButItDo.WorldManager.Level.sprite.Draw(spriteBatch, drawPos);
             }
