@@ -27,7 +27,7 @@ namespace GGJ2014
 
         public void Init()
         {
-            this.GameTimer = new TextElement("60", new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth / 2, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 20), Color.Black, 0) { AnchorPoint = AnchorPoint.Bottom, Font = TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<SpriteFont>("SpriteFonts/Arial64Bold") };
+            this.GameTimer = new TextElement(TheyDontThinkItBeLikeItIsButItDo.WorldManager.GameTimer.ToString(), new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth / 2, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 20), Color.Black, 0) { AnchorPoint = AnchorPoint.Bottom, Font = TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<SpriteFont>("SpriteFonts/Arial64Bold") };
             Color textColor = Color.Black;
             this.Player1Score = new TextElement("Player 1: 0000", new Vector2(20, 20), textColor, 0) { AnchorPoint = AnchorPoint.TopLeft };
             this.Player2Score = new TextElement("Player 2: 0000", new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 20, 20), textColor, 0) { AnchorPoint = AnchorPoint.TopRight };

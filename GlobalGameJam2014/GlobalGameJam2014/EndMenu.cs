@@ -47,6 +47,8 @@ namespace GGJ2014
 
             PlayAgain.OnClick += new Action(this.HideMenu);
             PlayAgain.OnClick += new Action(TheyDontThinkItBeLikeItIsButItDo.WorldManager.InitGame);
+            PlayAgain.OnClick += new Action(TheyDontThinkItBeLikeItIsButItDo.PregameScreen.Init);
+            PlayAgain.OnClick += new Action(TheyDontThinkItBeLikeItIsButItDo.PregameScreen.ShowMenu);
             QuitToMenu.OnClick += new Action(TheyDontThinkItBeLikeItIsButItDo.Menu.ShowMenu);
             QuitToMenu.OnClick += new Action(this.HideMenu);
             QuitToMenu.OnClick += new Action(TheyDontThinkItBeLikeItIsButItDo.GameUI.HideUI);

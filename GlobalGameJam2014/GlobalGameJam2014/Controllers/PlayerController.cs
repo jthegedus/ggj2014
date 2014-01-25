@@ -55,7 +55,7 @@ namespace GGJ2014.Controllers
                 TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(
                     new FadingTextElement(
                         true ? diff.ToString() : PlayerController.BadThings[TheyDontThinkItBeLikeItIsButItDo.Rand.Next(PlayerController.BadThings.Count)],
-                        this.agent.TransformComponent.Position + ScoreDirections[scoreTurn] * 30,
+                        this.Agent.TransformComponent.Position + ScoreDirections[scoreTurn] * 30,
                         Color.Black,
                         0,
                         0.5f,
@@ -67,17 +67,17 @@ namespace GGJ2014.Controllers
                     this.scoreTurn = 0;
             }
         }
-        private Agent agent;
+        public Agent Agent { get; private set; }
         private GamePadState lastGps;
         public PlayerIndex PlayerIndex { get; set; }
 
         public PlayerController(PlayerIndex playerIndex, Agent agent)
         {
-            this.agent = agent;
-            this.agent.Controller = this;
+            this.Agent = agent;
+            this.Agent.Controller = this;
             this.PlayerIndex = playerIndex;
-            this.previousTarget = this.agent.Color;
-            this.Target = this.agent.Color;
+            this.previousTarget = this.Agent.Color;
+            this.Target = this.Agent.Color;
             this.GenerateObjective();
         }
 
@@ -85,23 +85,23 @@ namespace GGJ2014.Controllers
         {
             GamePadState gps = GamePad.GetState(this.PlayerIndex);
 
-            this.agent.DesiredMovementDirection = gps.ThumbSticks.Left;
-            this.agent.ShootDirection = gps.ThumbSticks.Right;
+            this.Agent.DesiredMovementDirection = gps.ThumbSticks.Left;
+            this.Agent.ShootDirection = gps.ThumbSticks.Right;
 
             // Color Identification
-            if (IsButtonJustPressed(Buttons.A, gps, lastGps) && this.agent.Color == Color.Green)
+            if (IsButtonJustPressed(Buttons.A, gps, lastGps) && this.Agent.Color == Color.Green)
             {
                 TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(new TimedVibration(this.PlayerIndex, 1f, 0.25f));
             }
-            else if (IsButtonJustPressed(Buttons.B, gps, lastGps) && this.agent.Color == Color.Red)
+            else if (IsButtonJustPressed(Buttons.B, gps, lastGps) && this.Agent.Color == Color.Red)
             {
                 TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(new TimedVibration(this.PlayerIndex, 1f, 0.25f));
             }
-            else if (IsButtonJustPressed(Buttons.X, gps, lastGps) && this.agent.Color == Color.Blue)
+            else if (IsButtonJustPressed(Buttons.X, gps, lastGps) && this.Agent.Color == Color.Blue)
             {
                 TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(new TimedVibration(this.PlayerIndex, 1f, 0.25f));
             }
-            else if (IsButtonJustPressed(Buttons.Y, gps, lastGps) && this.agent.Color == Color.Yellow)
+            else if (IsButtonJustPressed(Buttons.Y, gps, lastGps) && this.Agent.Color == Color.Yellow)
             {
                 TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(new TimedVibration(this.PlayerIndex, 1f, 0.25f));
             }
@@ -110,7 +110,7 @@ namespace GGJ2014.Controllers
             if (IsButtonJustPressed(Buttons.LeftTrigger, gps, lastGps))
             {
                 // Dash
-                agent.Dash();
+                Agent.Dash();
             }
             this.lastGps = gps;
         }
@@ -122,7 +122,7 @@ namespace GGJ2014.Controllers
 
         public void OnAgentSpawn()
         {
-            FadingTextElement fte = new FadingTextElement("Player " + PlayerIndex, agent, Color.Black, 0, 4f, 1f, 0f);
+            FadingTextElement fte = new FadingTextElement("Player " + PlayerIndex, Agent, Color.Black, 0, 4f, 1f, 0f);
             TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(fte);
         }
 
@@ -187,7 +187,7 @@ namespace GGJ2014.Controllers
                 do
                 {
                     this.Target = PlayerController.Colors[TheyDontThinkItBeLikeItIsButItDo.Rand.Next(4)];
-                } while (Target == this.agent.Color);
+                } while (Target == this.Agent.Color);
 
                 this.Objective = (Objectives)TheyDontThinkItBeLikeItIsButItDo.Rand.Next(2);
             }

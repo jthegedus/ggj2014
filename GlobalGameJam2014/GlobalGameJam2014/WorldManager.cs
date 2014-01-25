@@ -31,7 +31,7 @@ namespace GGJ2014
         private List<Object> objsToRemove;
         private List<Object> objsToAdd;
         public Level Level { get { return this.level; } }
-        private const float TimeLimit = 70;
+        private const float TimeLimit = 3;
 
         public int DisplayedTime { get; set; }
         public int LastDisplayedTime { get; set; }
@@ -136,7 +136,7 @@ namespace GGJ2014
             //tc.Position = new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 50, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 50);
             //agents[3].TransformComponent = tc;
             TheyDontThinkItBeLikeItIsButItDo.GameUI.ShowUI();
-            TheyDontThinkItBeLikeItIsButItDo.Gamestate = GameState.GamePlaying;
+            TheyDontThinkItBeLikeItIsButItDo.Gamestate = GameState.Pregame;
         }
 
         public void AddToWorld(Object obj)

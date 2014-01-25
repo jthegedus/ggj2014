@@ -53,6 +53,8 @@ namespace GGJ2014
             Start.Selected = true;
 
             Start.OnClick += new Action(TheyDontThinkItBeLikeItIsButItDo.WorldManager.InitGame);
+            Start.OnClick += new Action(TheyDontThinkItBeLikeItIsButItDo.PregameScreen.Init);
+            Start.OnClick += new Action(TheyDontThinkItBeLikeItIsButItDo.PregameScreen.ShowMenu);
             Start.OnClick += new Action(this.HideMenu);
             // Instructions.OnClick += new Action();
             Quit.OnClick += new Action(this.QuitGame);

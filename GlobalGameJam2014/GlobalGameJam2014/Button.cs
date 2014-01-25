@@ -92,15 +92,21 @@ namespace GGJ2014
         public event Action OnClick;
         private float clickTimer;
         public static bool ButtonChangedThisUpdate { get; set; }
+        public PlayerIndex PlayerIndex { get; set; }
+        public Buttons SelectButton { get; set; }
 
         public Button()
         {
+            this.PlayerIndex = PlayerIndex.One;
+            this.SelectButton = Buttons.A;
         }
 
         public void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
-            GamePadState gps = TheyDontThinkItBeLikeItIsButItDo.CurrentGPS[PlayerIndex.One];
-            GamePadState lastGps = TheyDontThinkItBeLikeItIsButItDo.LastGPS[PlayerIndex.One];
+            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.Update();
+
+            GamePadState gps = TheyDontThinkItBeLikeItIsButItDo.CurrentGPS[this.PlayerIndex];
+            GamePadState lastGps = TheyDontThinkItBeLikeItIsButItDo.LastGPS[this.PlayerIndex];
 
             if (clickTimer != 0)
             {
@@ -114,7 +120,7 @@ namespace GGJ2014
             }
             else if (this.Selected)
             {
-                if (PlayerController.IsButtonJustPressed(Buttons.A, gps, lastGps))
+                if (PlayerController.IsButtonJustPressed(this.SelectButton, gps, lastGps))
                 {
                     if (this.ClickDuration > 0)
                     {
