@@ -95,7 +95,7 @@ namespace GGJ2014
             }
 
             // Load level
-            this.level = LevelLoader.LoadLevel("level04");
+            this.level = LevelLoader.LoadLevel("level13");
 
             // Assign player positions based on first 4 spawn points
             List<Rectangle> spawns = this.Level.AgentSpawnRectangles;
@@ -307,7 +307,7 @@ namespace GGJ2014
                         shortestDist = dist;
                 }
                 // If at least 64 away, it's suitable (won't duplicate spawn)
-                if (shortestDist > 64f)
+                if (shortestDist > 16f)
                     return pos;
             }
             while (tryCount < 10);

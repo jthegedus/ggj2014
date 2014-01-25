@@ -10,7 +10,7 @@ namespace GGJ2014.Levels
 {
     public class Level
     {
-        private bool[] map;
+        private GroundType[] map;
         private GroundType[] ground;
         public List<Rectangle> AgentSpawnRectangles { get; set; }
         public List<Rectangle> CollectableSpawnRectangles { get; set; }
@@ -32,11 +32,11 @@ namespace GGJ2014.Levels
         private Sprite bushSprite;
         
         public Level(int width, int height)
-            : this(new bool[width * height], new GroundType[width * height], width, height)
+            : this(new GroundType[width * height], new GroundType[width * height], width, height)
         {
         }
 
-        public Level(bool[] map, GroundType[] ground, int width, int height)
+        public Level(GroundType[] map, GroundType[] ground, int width, int height)
         {
             this.map = map;
             this.ground = ground;
@@ -80,10 +80,10 @@ namespace GGJ2014.Levels
 
         public bool getCell(int x, int y)
         {
-            return this.map[y * this.Width + x];
+            return this.map[y * this.Width + x] == GroundType.EMPTY;
         }
 
-        public void setCell(int x, int y, bool state)
+        public void setCell(int x, int y, GroundType state)
         {
             this.map[y * this.Width + x] = state;
         }
@@ -148,11 +148,25 @@ namespace GGJ2014.Levels
             for (int y = 0; y < Height; ++y)
             {
                 this.stoneSprite.zIndex = ZIndex.Collision - (y * 0.001f);
+                this.bushSprite.zIndex = ZIndex.Collision - (y * 0.001f);
+                this.rockSprite.zIndex = ZIndex.Collision - (y * 0.001f);
                 for (int x = 0; x < Width; ++x)
                 {
                     if (WallRectangles[x, y] != null)
                     {
-                        this.stoneSprite.Draw(spriteBatch, new Vector2(WallRectangles[x, y].Left, WallRectangles[x, y].Top - offset), true);
+                        if (this.map[y * this.Width + x] == GroundType.STONE)
+                        {
+                            this.stoneSprite.Draw(spriteBatch, new Vector2(WallRectangles[x, y].Left, WallRectangles[x, y].Top - offset), true);
+                        }
+                        else if (this.map[y * this.Width + x] == GroundType.BUSH)
+                        {
+                            this.bushSprite.Draw(spriteBatch, new Vector2(WallRectangles[x, y].Left, WallRectangles[x, y].Top - offset), true);
+                        }
+                        else if (this.map[y * this.Width + x] == GroundType.ROCK)
+                        {
+                            this.rockSprite.Draw(spriteBatch, new Vector2(WallRectangles[x, y].Left, WallRectangles[x, y].Top - offset), true);
+                        }
+                        
                     }
                 }
             }
