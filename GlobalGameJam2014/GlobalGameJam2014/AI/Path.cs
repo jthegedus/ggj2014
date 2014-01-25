@@ -39,7 +39,7 @@ namespace GGJ2014.AI
         {
             List<Node> openList = new List<Node>();
             List<Node> closedList = new List<Node>();
-            openList.Add(new Node(origin));
+            openList.Add(new Node(origin, calculateFCost(origin, target));
 
             while (openList.Count > 0)
             {
@@ -53,7 +53,7 @@ namespace GGJ2014.AI
                     if (adjacent != null)
                     {
                         // Calculate fCost (need target to do so)
-
+                        adjacent.fCost = calculateFCost(adjacent.Pos, target);
                         // Adds node to list if not found
                         // OR
                         // If node found with higher cost, replaces with new parent and cost
@@ -82,18 +82,37 @@ namespace GGJ2014.AI
                 if (pos.X >= 0 && pos.Y >= 0 && pos.X < level.Width && pos.Y < level.Height && level.getCell((int)pos.X, (int)pos.Y))
                 {
                     float gCost = node.gCost + (float)Math.Sqrt(Math.Pow(node.Pos.X - pos.X, 2) + Math.Pow(node.Pos.Y - pos.Y, 2));
-                    adjacents[i] = new Node(pos, node, gCost);
+                    adjacents[i] = new Node(pos, node, gCost, 0);
                 }
             }
             return adjacents;
         }
 
+        private static int calculateFCost(Vector2 pos1, Vector2 pos2)
+        {
+            return (int)(Math.Abs(pos1.X - pos2.X) + Math.Abs(pos1.Y - pos2.Y));
+        }
         private static void tryAddToOpen(Node newNode, List<Node> list)
         {
-            for(int i = 0; i < list.Count; ++i)
+            for (int i = 0; i < list.Count; ++i)
             {
                 Node node = list[i];
-                if(node.gCost > newNode.gCost
+                // If node exists in open list
+                if (node.Pos.Equals(newNode.Pos))
+                {
+                    // If node in list has higher cost, replace
+                    if(newNode.gCost < node.gCost)
+                        list[i] = newNode;
+                    return;
+                }
+                // Sorted list, so need to add just in front of next biggest fCost
+                if (node.fCost > newNode.fCost)
+                {
+                    list.Insert(i, newNode);
+                    return;
+                }
+            }
+
         }
     }
 }
