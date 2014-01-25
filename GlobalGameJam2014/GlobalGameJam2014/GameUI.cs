@@ -19,9 +19,15 @@ namespace GGJ2014
         public TextElement Player2Objective { get; set; }
         public TextElement Player3Objective { get; set; }
         public TextElement Player4Objective { get; set; }
+        public TextElement GameTimer { get; set; }
 
         public GameUI()
         {
+        }
+
+        public void Init()
+        {
+            this.GameTimer = new TextElement("60", new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth / 2, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 60), Color.White, 0) { AnchorPoint = AnchorPoint.Bottom, Font = TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<SpriteFont>("SpriteFonts/Arial64Bold") };
             Color textColor = Color.Black;
             this.Player1Score = new TextElement("Player 1: 0000", new Vector2(20, 20), textColor, 0) { AnchorPoint = AnchorPoint.TopLeft };
             this.Player2Score = new TextElement("Player 2: 0000", new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 20, 20), textColor, 0) { AnchorPoint = AnchorPoint.TopRight };
@@ -45,14 +51,15 @@ namespace GGJ2014
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            Player1Score.Draw(spriteBatch, gameTime);
-            Player2Score.Draw(spriteBatch, gameTime);
-            Player3Score.Draw(spriteBatch, gameTime);
-            Player4Score.Draw(spriteBatch, gameTime);
-            Player1Objective.Draw(spriteBatch, gameTime);
-            Player2Objective.Draw(spriteBatch, gameTime);
-            Player3Objective.Draw(spriteBatch, gameTime);
-            Player4Objective.Draw(spriteBatch, gameTime);
+            this.GameTimer.Draw(spriteBatch, gameTime);
+            this.Player1Score.Draw(spriteBatch, gameTime);
+            this.Player2Score.Draw(spriteBatch, gameTime);
+            this.Player3Score.Draw(spriteBatch, gameTime);
+            this.Player4Score.Draw(spriteBatch, gameTime);
+            this.Player1Objective.Draw(spriteBatch, gameTime);
+            this.Player2Objective.Draw(spriteBatch, gameTime);
+            this.Player3Objective.Draw(spriteBatch, gameTime);
+            this.Player4Objective.Draw(spriteBatch, gameTime);
         }
     }
 }

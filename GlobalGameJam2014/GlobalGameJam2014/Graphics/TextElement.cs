@@ -16,6 +16,7 @@ namespace GGJ2014
         public float zIndex { get; set; }
         public AnchorPoint AnchorPoint { get; set; }
         public Vector2 Scale { get; set; }
+        public SpriteFont Font { get; set; }
 
         public TextElement(String text, Vector2 pos, Color color, float zIndex)
         {
@@ -24,17 +25,19 @@ namespace GGJ2014
             this.color = color;
             this.zIndex = zIndex;
             this.Scale = new Vector2(1);
+            this.Font = TheyDontThinkItBeLikeItIsButItDo.font;
+            this.AnchorPoint = GGJ2014.AnchorPoint.Centre;
         }
 
         public void Draw(SpriteBatch spritebatch, GameTime gameTime)
         {
             spritebatch.DrawString(
-                TheyDontThinkItBeLikeItIsButItDo.font, 
+                this.Font, 
                 this.text, 
                 this.pos, 
                 this.color, 
                 0, 
-                GetOrigin((int)TheyDontThinkItBeLikeItIsButItDo.font.MeasureString(this.text).X, (int)TheyDontThinkItBeLikeItIsButItDo.font.MeasureString(this.text).Y, this.AnchorPoint),
+                GetOrigin((int)this.Font.MeasureString(this.text).X, (int)this.Font.MeasureString(this.text).Y, this.AnchorPoint),
                 this.Scale,
                 SpriteEffects.None,
                 zIndex);

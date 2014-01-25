@@ -7,9 +7,11 @@ namespace GGJ2014
 {
     public enum GameState
     {
-        MAINMENU,
-        INSTRUCTIONS,
-        GAMEPLAYING,
-        GAMEENDED
+        MainMenu,
+        Instructions,
+        Pregame,
+        GamePlaying,
+        GameEnded,
+        Quit
     }
 }

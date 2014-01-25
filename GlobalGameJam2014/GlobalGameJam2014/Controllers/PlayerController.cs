@@ -35,7 +35,7 @@ namespace GGJ2014.Controllers
             {
                 int diff = value - score;
                 this.score = value;
-                switch (this.playerIndex)
+                switch (this.PlayerIndex)
                 {
                     case PlayerIndex.One:
                             TheyDontThinkItBeLikeItIsButItDo.GameUI.Player1Score.text = "Player 1: " + String.Format("{0:d4}", this.score);
@@ -69,13 +69,13 @@ namespace GGJ2014.Controllers
         }
         private Agent agent;
         private GamePadState lastGps;
-        private PlayerIndex playerIndex;
+        public PlayerIndex PlayerIndex { get; set; }
 
         public PlayerController(PlayerIndex playerIndex, Agent agent)
         {
             this.agent = agent;
             this.agent.Controller = this;
-            this.playerIndex = playerIndex;
+            this.PlayerIndex = playerIndex;
             this.previousTarget = this.agent.Color;
             this.Target = this.agent.Color;
             this.GenerateObjective();
@@ -83,31 +83,31 @@ namespace GGJ2014.Controllers
 
         public void HandleInput()
         {
-            GamePadState gps = GamePad.GetState(this.playerIndex);
+            GamePadState gps = GamePad.GetState(this.PlayerIndex);
 
             this.agent.DesiredMovementDirection = gps.ThumbSticks.Left;
             this.agent.ShootDirection = gps.ThumbSticks.Right;
 
             // Color Identification
-            if (isButtonJustPressed(Buttons.A, gps, lastGps) && this.agent.Color == Color.Green)
+            if (IsButtonJustPressed(Buttons.A, gps, lastGps) && this.agent.Color == Color.Green)
             {
-                TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(new TimedVibration(this.playerIndex, 1f, 0.25f));
+                TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(new TimedVibration(this.PlayerIndex, 1f, 0.25f));
             }
-            else if (isButtonJustPressed(Buttons.B, gps, lastGps) && this.agent.Color == Color.Red)
+            else if (IsButtonJustPressed(Buttons.B, gps, lastGps) && this.agent.Color == Color.Red)
             {
-                TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(new TimedVibration(this.playerIndex, 1f, 0.25f));
+                TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(new TimedVibration(this.PlayerIndex, 1f, 0.25f));
             }
-            else if (isButtonJustPressed(Buttons.X, gps, lastGps) && this.agent.Color == Color.Blue)
+            else if (IsButtonJustPressed(Buttons.X, gps, lastGps) && this.agent.Color == Color.Blue)
             {
-                TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(new TimedVibration(this.playerIndex, 1f, 0.25f));
+                TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(new TimedVibration(this.PlayerIndex, 1f, 0.25f));
             }
-            else if (isButtonJustPressed(Buttons.Y, gps, lastGps) && this.agent.Color == Color.Yellow)
+            else if (IsButtonJustPressed(Buttons.Y, gps, lastGps) && this.agent.Color == Color.Yellow)
             {
-                TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(new TimedVibration(this.playerIndex, 1f, 0.25f));
+                TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(new TimedVibration(this.PlayerIndex, 1f, 0.25f));
             }
 
             // Dash
-            if (isButtonJustPressed(Buttons.LeftTrigger, gps, lastGps))
+            if (IsButtonJustPressed(Buttons.LeftTrigger, gps, lastGps))
             {
                 // Dash
                 agent.Dash();
@@ -115,11 +115,10 @@ namespace GGJ2014.Controllers
             this.lastGps = gps;
         }
 
-        public static bool isButtonJustPressed(Buttons button, GamePadState current, GamePadState last)
+        public static bool IsButtonJustPressed(Buttons button, GamePadState current, GamePadState last)
         {
             return current.IsButtonDown(button) && last.IsButtonUp(button);
         }
-
 
         public void DamagedPlayer(Agent victim)
         {
@@ -164,7 +163,7 @@ namespace GGJ2014.Controllers
         {
             if (!first)
             {
-                TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(new TimedVibration(this.playerIndex, 0.5f, 0.25f));
+                TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(new TimedVibration(this.PlayerIndex, 0.5f, 0.25f));
             }
             else
             {
@@ -186,7 +185,7 @@ namespace GGJ2014.Controllers
                 }
             } while (this.Target == this.previousTarget && this.previousObjective == this.Objective);
 
-            switch (this.playerIndex)
+            switch (this.PlayerIndex)
             {
                 case PlayerIndex.One:
                     TheyDontThinkItBeLikeItIsButItDo.GameUI.Player1Objective.text = this.GetObjectiveString();

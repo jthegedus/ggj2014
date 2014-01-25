@@ -31,9 +31,17 @@ namespace GGJ2014
         private List<Object> objsToRemove;
         private List<Object> objsToAdd;
         public Level Level { get { return this.level; } }
+        private const float TimeLimit = 5;
+
+        public int DisplayedTime { get; set; }
+        public int LastDisplayedTime { get; set; }
+        public float GameTimer { get; private set; }
 
         public WorldManager()
         {
+            this.DisplayedTime = (int)GameTimer;
+            this.LastDisplayedTime = (int)GameTimer;
+            this.GameTimer = TimeLimit;
             this.TransformObjects = new List<ITransform>();
             this.DrawObjects = new List<IDraw>();
             this.UpdateObjects = new List<IUpdate>();
@@ -49,6 +57,9 @@ namespace GGJ2014
 
         public void InitGame()
         {
+            this.GameTimer = TimeLimit;
+            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.ClearLists();
+            TheyDontThinkItBeLikeItIsButItDo.GameUI.Init();
 
             for (int i = 0; i < 6; ++i)
             {
@@ -127,11 +138,27 @@ namespace GGJ2014
             //tc.Position = new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 50, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 50);
             //agents[3].TransformComponent = tc;
             TheyDontThinkItBeLikeItIsButItDo.GameUI.ShowUI();
+            TheyDontThinkItBeLikeItIsButItDo.Gamestate = GameState.GamePlaying;
         }
 
         public void AddToWorld(Object obj)
         {
             this.objsToAdd.Add(obj);
+        }
+
+        public void ClearLists()
+        {
+            this.TransformObjects.Clear();
+            this.UpdateObjects.Clear();
+            this.DrawObjects.Clear();
+            this.StaticObjects.Clear();
+            this.DynamicObjects.Clear();
+            this.Agents.Clear();
+            this.Collectibles.Clear();
+            this.MovementObjects.Clear();
+            this.objsToAdd.Clear();
+            this.objsToRemove.Clear();
+            this.bulletPool = new BulletPool();
         }
 
         public void AddObjsToLists()
@@ -221,6 +248,28 @@ namespace GGJ2014
 
         public void Update(GameTime gameTime)
         {
+            float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (TheyDontThinkItBeLikeItIsButItDo.Gamestate == GameState.GamePlaying)
+            {
+                this.GameTimer -= elapsedTime;
+                this.DisplayedTime = (int)Math.Ceiling(this.GameTimer);
+                if (this.DisplayedTime != this.LastDisplayedTime)
+                {
+                    TheyDontThinkItBeLikeItIsButItDo.GameUI.GameTimer.text = this.DisplayedTime.ToString();
+                    this.LastDisplayedTime = this.DisplayedTime;
+                }
+
+
+                if (this.GameTimer <= 0)
+                {
+                    TheyDontThinkItBeLikeItIsButItDo.Gamestate = GameState.GameEnded;
+                    this.ClearLists();
+                    TheyDontThinkItBeLikeItIsButItDo.EndMenu.ShowMenu();
+
+                }
+            }
+
             AddObjsToLists();
             bulletPool.Update(gameTime);
             foreach (IUpdate obj in UpdateObjects)
