@@ -22,6 +22,8 @@ namespace GGJ2014.Controllers
         public Color Target { get; set; }
         public Objectives Objective { get; set; }
         private int score;
+        private bool first = true;
+
         public int Score
         {
             get
@@ -58,7 +60,7 @@ namespace GGJ2014.Controllers
                         0,
                         0.5f,
                         1,
-                        0) { AnchorPoint = AnchorPoint.Centre });
+                        0.1f) { AnchorPoint = AnchorPoint.Centre });
 
                 ++this.scoreTurn;
                 if (this.scoreTurn >= 8)
@@ -86,25 +88,21 @@ namespace GGJ2014.Controllers
             this.agent.DesiredMovementDirection = gps.ThumbSticks.Left;
             this.agent.ShootDirection = gps.ThumbSticks.Right;
 
-            if (gps.IsButtonDown(Buttons.A) && this.agent.Color == Color.Green)
+            if (isButtonJustPressed(Buttons.A, gps, lastGps) && this.agent.Color == Color.Green)
             {
-                GamePad.SetVibration(this.playerIndex, 1, 1);
+                TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(new TimedVibration(this.playerIndex, 1f, 0.25f));
             }
-            else if (gps.IsButtonDown(Buttons.B) && this.agent.Color == Color.Red)
+            else if (isButtonJustPressed(Buttons.B, gps, lastGps) && this.agent.Color == Color.Red)
             {
-                GamePad.SetVibration(this.playerIndex, 1, 1);
+                TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(new TimedVibration(this.playerIndex, 1f, 0.25f));
             }
-            else if (gps.IsButtonDown(Buttons.X) && this.agent.Color == Color.Blue)
+            else if (isButtonJustPressed(Buttons.X, gps, lastGps) && this.agent.Color == Color.Blue)
             {
-                GamePad.SetVibration(this.playerIndex, 1, 1);
+                TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(new TimedVibration(this.playerIndex, 1f, 0.25f));
             }
-            else if (gps.IsButtonDown(Buttons.Y) && this.agent.Color == Color.Yellow)
+            else if (isButtonJustPressed(Buttons.Y, gps, lastGps) && this.agent.Color == Color.Yellow)
             {
-                GamePad.SetVibration(this.playerIndex, 1, 1);
-            }
-            else
-            {
-                GamePad.SetVibration(this.playerIndex, 0, 0);
+                TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(new TimedVibration(this.playerIndex, 1f, 0.25f));
             }
 
             this.lastGps = gps;
@@ -138,7 +136,6 @@ namespace GGJ2014.Controllers
             else
             {
                 this.Score += Scores.PlayerKilledPenalty;
-                this.GenerateObjective();
             }
         }
 
@@ -158,6 +155,15 @@ namespace GGJ2014.Controllers
 
         public void GenerateObjective()
         {
+            if (!first)
+            {
+                TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(new TimedVibration(this.playerIndex, 0.5f, 0.25f));
+            }
+            else
+            {
+                first = false;
+            }
+
             this.previousObjective = this.Objective;
             this.previousTarget = this.Target;
 
