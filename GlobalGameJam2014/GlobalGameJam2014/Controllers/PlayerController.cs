@@ -29,24 +29,25 @@ namespace GGJ2014.Controllers
             this.agent.DesiredMovementDirection = gps.ThumbSticks.Left;
             this.agent.ShootDirection = gps.ThumbSticks.Right;
 
-            if (isButtonJustPressed(Buttons.A, gps, lastGps) && this.agent.Color == Color.Green)
+            if (gps.IsButtonDown(Buttons.A) && this.agent.Color == Color.Green)
             {
-                // vibrate
+                GamePad.SetVibration(this.playerIndex, 1, 1);
             }
-
-            if (isButtonJustPressed(Buttons.B, gps, lastGps) && this.agent.Color == Color.Red)
+            else if (gps.IsButtonDown(Buttons.B) && this.agent.Color == Color.Red)
             {
-                // vibrate
+                GamePad.SetVibration(this.playerIndex, 1, 1);
             }
-
-            if (isButtonJustPressed(Buttons.X, gps, lastGps) && this.agent.Color == Color.Blue)
+            else if (gps.IsButtonDown(Buttons.X) && this.agent.Color == Color.Blue)
             {
-                // vibrate
+                GamePad.SetVibration(this.playerIndex, 1, 1);
             }
-
-            if (isButtonJustPressed(Buttons.Y, gps, lastGps) && this.agent.Color == Color.Yellow)
+            else if (gps.IsButtonDown(Buttons.Y) && this.agent.Color == Color.Yellow)
             {
-                // vibrate
+                GamePad.SetVibration(this.playerIndex, 1, 1);
+            }
+            else
+            {
+                GamePad.SetVibration(this.playerIndex, 0, 0);
             }
 
             this.lastGps = gps;

@@ -27,7 +27,12 @@ namespace GGJ2014.Levels
                     level.setCell(x, y, state);
                     if (color == Color.Red)
                     {
-                        level.addSpawn(x, y);
+                        level.addAgentSpawn(x, y);
+                        Console.Out.WriteLine(color);
+                    }
+                    else if (color == Color.Blue)
+                    {
+                        level.addCollectableSpawn(x, y);
                     }
                 }
             }

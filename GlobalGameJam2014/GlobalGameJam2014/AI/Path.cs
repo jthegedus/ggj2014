@@ -76,7 +76,7 @@ namespace GGJ2014.AI
                 Node[] adjacentNodes = getAdjacents(adjacentVectors, current, level);
                 foreach(Node adjacent in adjacentNodes)
                 {
-                    if (adjacent != null)
+                    if (adjacent != null && !isInClosed(closedList, adjacent))
                     {
                         // Calculate fCost (need target to do so)
                         adjacent.fCost = calculateFCost(adjacent.Pos, target);
@@ -128,6 +128,16 @@ namespace GGJ2014.AI
             return adjacents;
         }
 
+        private static bool isInClosed(List<Node> nodes, Node node)
+        {
+            foreach (Node n in nodes)
+            {
+                if (n.Pos.Equals(node.Pos))
+                    return true;
+            }
+            return false;
+        }
+
         private static int calculateFCost(Vector2 pos1, Vector2 pos2)
         {
             return (int)(Math.Abs(pos1.X - pos2.X) + Math.Abs(pos1.Y - pos2.Y));
@@ -163,7 +173,7 @@ namespace GGJ2014.AI
             {
                 Sprite sprite = TheyDontThinkItBeLikeItIsButItDo.WorldManager.Level.sprite;
                 sprite.Tint = Color.Green;
-                Vector2 drawPos = new Vector2(waypoint.X * sprite.Width, waypoint.Y * sprite.Height);
+                Vector2 drawPos = new Vector2((sprite.Width/2) + waypoint.X * sprite.Width, (sprite.Height/2) + waypoint.Y * sprite.Height);
                 TheyDontThinkItBeLikeItIsButItDo.WorldManager.Level.sprite.Draw(spriteBatch, drawPos);
             }
         }
