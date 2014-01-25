@@ -6,12 +6,14 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using GGJ2014.Interfaces;
+using GGJ2014.Graphics;
 
 namespace GGJ2014
 {
     public class Menu : IDraw, IUpdate
     {
         public List<Button> Buttons { get; set; }
+        public Sprite Splash { get; set; }
         public Button Start { get; set; }
         public Button Instructions { get; set; }
         public Button Quit { get; set; }
@@ -19,6 +21,8 @@ namespace GGJ2014
         public Menu()
         {
             this.Buttons = new List<Button>();
+            Texture2D img = TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Backgrounds/titleScreen1080");
+            this.Splash = new Sprite(img, img.Width, img.Height, 1) { AnchorPoint = AnchorPoint.TopLeft, Zoom = TheyDontThinkItBeLikeItIsButItDo.ScreenWidth / img.Width };
 
             Vector2 position = new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth / 2, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight / 4);
             this.Start = new Button()
@@ -97,6 +101,8 @@ namespace GGJ2014
             {
                 b.Draw(spriteBatch, gameTime);
             }
+
+            this.Splash.Draw(spriteBatch, Vector2.Zero);
         }
 
         public void Update(GameTime gameTime)
