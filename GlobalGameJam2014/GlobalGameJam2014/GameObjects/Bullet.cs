@@ -54,7 +54,7 @@ namespace GGJ2014.GameObjects
             this.movementComponent.Velocity = direction * speed + initialVelocity * 0f;
             // change sprite based on player?
             // Spritey things
-            this.Sprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/agent"), (int)this.size, (int)this.size);
+            this.Sprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/agent"), (int)this.size, (int)this.size, ZIndex.Player);
             this.Sprite.Tint = Color.Beige;
         }
 

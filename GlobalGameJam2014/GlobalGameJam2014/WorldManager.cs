@@ -240,7 +240,7 @@ namespace GGJ2014
 
         public void Draw(GameTime gameTime)
         {
-            this.SpriteBatch.Begin();
+            this.SpriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied);
 
             if (this.Level != null)
                 this.Level.Draw(this.SpriteBatch, gameTime);

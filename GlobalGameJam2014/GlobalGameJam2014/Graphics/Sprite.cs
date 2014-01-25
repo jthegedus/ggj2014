@@ -48,7 +48,6 @@ namespace GGJ2014.Graphics
         public void Draw(SpriteBatch spriteBatch, Vector2 point, bool fromTopLeft = false)
         {
             Color multipliedTint = this.Tint * this.Alpha;
-
             spriteBatch.Draw(
                 this.Texture2D,
                 point,
@@ -58,7 +57,7 @@ namespace GGJ2014.Graphics
                 this.GetOrigin(fromTopLeft),
                 this.Zoom,
                 SpriteEffects.None,
-                0f);
+                this.zIndex);
         }
 
         private Vector2 GetOrigin(bool fromTopLeft)
