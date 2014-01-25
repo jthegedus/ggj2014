@@ -45,8 +45,6 @@ namespace GGJ2014
             ScreenHeight = graphics.PreferredBackBufferHeight;
             Content.RootDirectory = "Content";
             this.Window.Title = "They Don't Think It Be Like It Is, But It Do";
-            TheyDontThinkItBeLikeItIsButItDo.PlayerSize = (int)(TheyDontThinkItBeLikeItIsButItDo.PlayerScreenSizeRatio * this.graphics.PreferredBackBufferWidth);
-            TheyDontThinkItBeLikeItIsButItDo.PlayerSpeed = TheyDontThinkItBeLikeItIsButItDo.PlayerScreenSpeedRatio * this.graphics.PreferredBackBufferWidth;
             TheyDontThinkItBeLikeItIsButItDo.Rand = new Random(DateTime.Now.Millisecond);
         }
 
