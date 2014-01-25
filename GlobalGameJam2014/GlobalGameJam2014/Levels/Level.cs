@@ -24,6 +24,8 @@ namespace GGJ2014.Levels
 
         private Sprite sprite;
 
+        public Sprite Sprite { get { return this.sprite; } }
+
         private Sprite dirtSprite;
         private Sprite grassSprite;
         private Sprite stoneSprite;
