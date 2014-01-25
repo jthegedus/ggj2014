@@ -88,6 +88,7 @@ namespace GGJ2014.Controllers
             this.agent.DesiredMovementDirection = gps.ThumbSticks.Left;
             this.agent.ShootDirection = gps.ThumbSticks.Right;
 
+            // Color Identification
             if (isButtonJustPressed(Buttons.A, gps, lastGps) && this.agent.Color == Color.Green)
             {
                 TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(new TimedVibration(this.playerIndex, 1f, 0.25f));
@@ -105,6 +106,12 @@ namespace GGJ2014.Controllers
                 TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(new TimedVibration(this.playerIndex, 1f, 0.25f));
             }
 
+            // Dash
+            if (isButtonJustPressed(Buttons.LeftTrigger, gps, lastGps))
+            {
+                // Dash
+                agent.Dash();
+            }
             this.lastGps = gps;
         }
 

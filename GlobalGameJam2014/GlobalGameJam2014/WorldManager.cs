@@ -69,6 +69,7 @@ namespace GGJ2014
             AIController ai = new AIController(Agents[4]);
             TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(ai);
             ai.Target = Agents[0];
+            Agents[4].Controller = ai;
 
             // Randomise dem colours, MAAAAAAAAAAHN
             List<Color> colors = new List<Color>();

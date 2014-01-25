@@ -24,14 +24,18 @@ namespace GGJ2014.GameObjects
         private const float BaseSize = 10;
         private const float BaseSpeed = 20;
         private float size;
-        private float speed;
+        public float Speed { get; set; }
         public TransformComponent TransformComponent { get { return this.transformComponent; } set { this.transformComponent = value; } }
         public MovementComponent MovementComponent { get { return this.movementComponent; } set { this.movementComponent = value; } }
         private float hitpoints = 100;
         private float fireRate = 20f;
         private const float BurstDuration = 0.5f;
-        private const float BurstCooldown = 1f;
+        private const float DashDuration = 0.10f;
+        private const float BurstCooldown = 0.8f;
+        private const float DashCooldown = 1f;
+        private const float DashMultiplier = 6f;
         private float burstTimer = 0f;
+        private float dashTimer = 0f;
         private float timeLastFired = 0.0f;
         private bool firing = false;
         private Vector2 lastShootingDirection;
@@ -64,7 +68,7 @@ namespace GGJ2014.GameObjects
 
         public Agent()
         {
-            this.speed = TheyDontThinkItBeLikeItIsButItDo.Scale * Agent.BaseSpeed;
+            this.Speed = TheyDontThinkItBeLikeItIsButItDo.Scale * Agent.BaseSpeed;
             this.size = TheyDontThinkItBeLikeItIsButItDo.Scale * Agent.BaseSize;
             this.Sprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/agent"), (int)this.size, (int)this.size, ZIndex.Player);
             this.xPenetrations = new List<float>();
@@ -103,7 +107,7 @@ namespace GGJ2014.GameObjects
                 }
 
                 // add the current impulse to the velocity
-                this.movementComponent.Velocity += this.DesiredMovementDirection * speed;
+                this.movementComponent.Velocity += this.DesiredMovementDirection * Speed;
 
                 // apply the current velocity to the position
                 this.transformComponent.Position += this.movementComponent.Velocity * new Vector2(1, -1) * (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -143,16 +147,24 @@ namespace GGJ2014.GameObjects
                     this.burstTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
                     if (this.burstTimer >= Agent.BurstDuration)
                     {
-                        this.burstTimer = Agent.BurstDuration;
+                        this.burstTimer = Agent.BurstCooldown;
                         this.firing = false;
                     }
                 }
                 else
                 {
-                    this.burstTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds / Agent.BurstCooldown;
+                    this.burstTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
                     if (this.burstTimer < 0)
                     {
+                        // Have now cooled down from shooting or from dash
                         this.burstTimer = 0;
+                    }
+                    // Dash duration timer!
+                    this.dashTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    if (this.dashTimer < 0)
+                    {
+                        this.dashTimer = 0;
+                        Speed = BaseSpeed;
                     }
                 }
             }
@@ -179,6 +191,17 @@ namespace GGJ2014.GameObjects
             this.revealTimer = 0;
             this.Enabled = true;
             this.firing = false;
+        }
+
+        public void Dash()
+        {
+            if (burstTimer == 0)
+            {
+                firing = false;
+                Speed = BaseSpeed * DashMultiplier;
+                burstTimer = Agent.DashCooldown;
+                dashTimer = Agent.DashDuration;
+            }
         }
 
         public void HandleMapCollisions(Level level)

@@ -85,22 +85,22 @@ namespace GGJ2014.Controllers
 
         public void DamagedPlayer(Agent victim)
         {
-            throw new NotImplementedException();
+            
         }
 
         public void KilledPlayer(Agent victim)
         {
-            throw new NotImplementedException();
+            
         }
 
         public void BumpedPlayer(Agent victim)
         {
-            throw new NotImplementedException();
+            
         }
 
         public void CollectedCollectible()
         {
-            throw new NotImplementedException();
+            
         }
     }
 }
