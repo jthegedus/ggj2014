@@ -15,8 +15,9 @@ namespace GGJ2014.Graphics
         public Texture2D Texture2D { get; private set; }
         public int Width { get; set; }
         public int Height { get; set; }
+        public float zIndex { get; set; }
 
-        public Sprite(Texture2D texture, int width, int height)
+        public Sprite(Texture2D texture, int width, int height, float zIndex)
         {
             this.Texture2D = texture;
             this.Width = width;
@@ -25,13 +26,24 @@ namespace GGJ2014.Graphics
             this.Zoom = 1.0f;
 
             this.Alpha = 1f;
+
+            if (zIndex < 0)
+                this.zIndex = 0f;
+            else if (zIndex > 1)
+                this.zIndex = 1f;
+            else
+                this.zIndex = zIndex;
         }
 
         public Sprite(Sprite sprite)
-            : this(sprite.Texture2D, sprite.Width, sprite.Height)
+            : this(sprite.Texture2D, sprite.Width, sprite.Height, 0f)
         {
         }
 
+        public Sprite(Texture2D texture, int width, int height)
+            : this(texture, width, height, 0f)
+        {
+        }
     
         public void Draw(SpriteBatch spriteBatch, Vector2 point, bool fromTopLeft = false)
         {

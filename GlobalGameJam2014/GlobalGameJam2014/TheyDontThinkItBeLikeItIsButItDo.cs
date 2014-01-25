@@ -20,6 +20,10 @@ namespace GGJ2014
     /// </summary>
     public class TheyDontThinkItBeLikeItIsButItDo : Microsoft.Xna.Framework.Game
     {
+        public static GameState Gamestate { get; set; }
+        public static Menu Menu { get; set; }
+        public static SpriteFont font { get; set; }
+
         public static int PlayerSize { get; private set; }
         public static float PlayerSpeed { get; private set; }
         private const float PlayerScreenSizeRatio = 0.02f;
@@ -57,10 +61,15 @@ namespace GGJ2014
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            TheyDontThinkItBeLikeItIsButItDo.Gamestate = GameState.MAINMENU;
+
             TheyDontThinkItBeLikeItIsButItDo.WorldManager = new WorldManager();
             TheyDontThinkItBeLikeItIsButItDo.ContentManager = this.Content;
             TheyDontThinkItBeLikeItIsButItDo.ControllerManager = new ControllerManager();
             WorldManager.InitGame();
+
+            TheyDontThinkItBeLikeItIsButItDo.Menu = new Menu();
+
             base.Initialize();
         }
 
@@ -73,7 +82,10 @@ namespace GGJ2014
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             WorldManager.SpriteBatch = spriteBatch;
+            Menu.spritebatch = spriteBatch;
             // TODO: use this.Content to load your game content here
+
+            TheyDontThinkItBeLikeItIsButItDo.font = Content.Load<SpriteFont>("SpriteFonts/Arial");
         }
 
         /// <summary>
@@ -95,10 +107,17 @@ namespace GGJ2014
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 this.Exit();
-            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.Update();
-            TheyDontThinkItBeLikeItIsButItDo.WorldManager.Update(gameTime);
-            TheyDontThinkItBeLikeItIsButItDo.WorldManager.HandleCollisions();
-            // TODO: Add your update logic here
+
+            if (TheyDontThinkItBeLikeItIsButItDo.Gamestate == GameState.GAMEPLAYING)
+            {
+                TheyDontThinkItBeLikeItIsButItDo.ControllerManager.Update();
+                TheyDontThinkItBeLikeItIsButItDo.WorldManager.Update(gameTime);
+                TheyDontThinkItBeLikeItIsButItDo.WorldManager.HandleCollisions();
+            }
+            else if (TheyDontThinkItBeLikeItIsButItDo.Gamestate == GameState.MAINMENU)
+            {
+                Menu.Update(gameTime);
+            }
 
             base.Update(gameTime);
         }
@@ -111,7 +130,13 @@ namespace GGJ2014
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             // TODO: Add your drawing code here
-            TheyDontThinkItBeLikeItIsButItDo.WorldManager.Draw(gameTime);
+
+            if(TheyDontThinkItBeLikeItIsButItDo.Gamestate == GameState.GAMEPLAYING)
+                TheyDontThinkItBeLikeItIsButItDo.WorldManager.Draw(gameTime);
+            else if(TheyDontThinkItBeLikeItIsButItDo.Gamestate == GameState.MAINMENU)
+            {
+                Menu.Draw();
+            }
 
             base.Draw(gameTime);
         }
