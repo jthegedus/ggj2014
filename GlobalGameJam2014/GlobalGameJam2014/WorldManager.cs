@@ -10,6 +10,7 @@ using GGJ2014.Levels;
 using GGJ2014.GameObjects;
 using GGJ2014.Controllers;
 using GGJ2014.Components;
+using GGJ2014.AI;
 
 namespace GGJ2014
 {
@@ -40,7 +41,7 @@ namespace GGJ2014
         {
             List<Agent> agents = new List<Agent>();
 
-            for (int i = 0; i < 4; ++i)
+            for (int i = 0; i < 5; ++i)
             {
                 agents.Add(new Agent());
                 this.AddToWorld(agents[i]);
@@ -55,16 +56,20 @@ namespace GGJ2014
             PlayerController player4 = new PlayerController(PlayerIndex.Four, agents[3]);
             TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player4);
 
+            // AI Controller
+            AIController ai = new AIController(agents[4]);
+            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(ai);
+
             // Load level
             this.Level = LevelLoader.LoadLevel("level04");
 
             // Assign player positions based on first 4 spawn points
             List<Rectangle> spawns = this.Level.SpawnRectangles;
             TransformComponent tc = new TransformComponent();
-            for (int i = 0; i < 4; ++i)
+            for (int i = 0; i < 5; ++i)
             {
-                tc.Position = new Vector2(spawns[i].Center.X, spawns[i].Center.Y);
-                agents[i].TransformComponent = tc;
+
+                agents[i].Spawn();
             }
 
             //tc.Position = new Vector2(50, 50);

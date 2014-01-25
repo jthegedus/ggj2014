@@ -15,7 +15,7 @@ namespace GGJ2014.Levels
         public Rectangle[,] WallRectangles { get; set; }
         public int Width { get; private set; }
         public int Height { get; private set; }
-        private Sprite sprite;
+        public Sprite sprite;
 
         private int CellWidth { get; set; }
         private int CellHeight { get; set; }

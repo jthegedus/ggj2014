@@ -4,12 +4,15 @@ using System.Linq;
 using System.Text;
 using GGJ2014.Interfaces;
 using GGJ2014.GameObjects;
+using GGJ2014.AI;
+using Microsoft.Xna.Framework;
 
 namespace GGJ2014.Controllers
 {
     class AIController : IController
     {
         private Agent agent;
+        private Path path;
 
         private Agent Target { get; set; }
 
@@ -20,7 +23,13 @@ namespace GGJ2014.Controllers
 
         public void HandleInput()
         {
-            throw new NotImplementedException();
+            if (path == null)
+            {
+                // TESTING PATHFINDING
+                path = Path.pathfind(new Vector2(14, 15), new Vector2(46, 11), TheyDontThinkItBeLikeItIsButItDo.WorldManager.Level);
+                TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(path);
+            }
+            // Do nothing
         }
     }
 }

@@ -5,10 +5,13 @@ using System.Text;
 using GGJ2014.Levels;
 using GGJ2014.Components;
 using Microsoft.Xna.Framework;
+using GGJ2014.Interfaces;
+using Microsoft.Xna.Framework.Graphics;
+using GGJ2014.Graphics;
 
 namespace GGJ2014.AI
 {
-    public class Path
+    public class Path : IDraw
     {
         private class Node
         {
@@ -31,23 +34,46 @@ namespace GGJ2014.AI
                 : this(pos, null, 0, fCost)
             {
             }
+
+            public override string ToString()
+            {
+                return "Node [" + Pos.X + ", " + Pos.Y + "] gCost: " + gCost + " fCost: " + fCost;
+            }
         }
 
-        private List<Vector2> Waypoints { get; private set; }
+        public List<Vector2> Waypoints { get; private set; }
+
+        public Path()
+        {
+            Waypoints = new List<Vector2>();
+        }
 
         public static Path pathfind(Vector2 origin, Vector2 target, Level level)
         {
             List<Node> openList = new List<Node>();
             List<Node> closedList = new List<Node>();
-            openList.Add(new Node(origin, calculateFCost(origin, target));
+            openList.Add(new Node(origin, calculateFCost(origin, target)));
+
+            Console.Out.WriteLine("Pathfinding - Origin: " + origin + ", Target: " + target);
+
+            Node current = null;
+
+            // Create adjacent vector array here, to avoid re-allocating each node
+            Vector2[] adjacentVectors = { Vector2.Zero, Vector2.Zero, Vector2.Zero,
+                                        Vector2.Zero, Vector2.Zero, Vector2.Zero, 
+                                        Vector2.Zero, Vector2.Zero};
 
             while (openList.Count > 0)
             {
                 // Get first node (lowest cost) and remove from open list (add to closed)
-                Node current = openList[0];
+                current = openList[0];
+                if(current.Pos.Equals(target))
+                {
+                    break;
+                }
                 openList.RemoveAt(0);
                 closedList.Add(current);
-                Node[] adjacentNodes = getAdjacents(current, level);
+                Node[] adjacentNodes = getAdjacents(adjacentVectors, current, level);
                 foreach(Node adjacent in adjacentNodes)
                 {
                     if (adjacent != null)
@@ -61,19 +87,33 @@ namespace GGJ2014.AI
                     }
                 }
             }
+            
+            if(current != null)
+            {
+                Path path = new Path();
+                // Construct path and return
+                while (current != null)
+                {
+                    path.Waypoints.Add(current.Pos);
+                    current = current.Parent;
+                }
+                path.Waypoints.Reverse();
+                return path;
+            }
             return null;
         }
 
-        private static Node[] getAdjacents(Node node, Level level)
+        private static Node[] getAdjacents(Vector2[] positions, Node node, Level level)
         {
-            Vector2[] positions = { new Vector2(node.Pos.X-1, node.Pos.Y-1), 
-                                  new Vector2(node.Pos.X, node.Pos.Y-1),
-                                  new Vector2(node.Pos.X+1, node.Pos.Y-1), 
-                                  new Vector2(node.Pos.X+1, node.Pos.Y),
-                                  new Vector2(node.Pos.X+1, node.Pos.Y+1), 
-                                  new Vector2(node.Pos.X, node.Pos.Y+1),
-                                  new Vector2(node.Pos.X-1, node.Pos.Y+1),
-                                  new Vector2(node.Pos.X-1, node.Pos.Y)};
+            positions[0].X = node.Pos.X-1; positions[0].Y = node.Pos.Y-1;
+            positions[1].X = node.Pos.X;   positions[1].Y = node.Pos.Y-1;
+            positions[2].X = node.Pos.X+1; positions[2].Y = node.Pos.Y-1;
+            positions[3].X = node.Pos.X+1; positions[3].Y = node.Pos.Y;
+            positions[4].X = node.Pos.X+1; positions[4].Y = node.Pos.Y+1;
+            positions[5].X = node.Pos.X;   positions[5].Y = node.Pos.Y+1;
+            positions[6].X = node.Pos.X-1; positions[6].Y = node.Pos.Y+1;
+            positions[7].X = node.Pos.X-1; positions[7].Y = node.Pos.Y;
+
             Node[] adjacents = new Node[positions.Length];
             for(int i = 0; i < positions.Length; ++i)
             {
@@ -92,6 +132,7 @@ namespace GGJ2014.AI
         {
             return (int)(Math.Abs(pos1.X - pos2.X) + Math.Abs(pos1.Y - pos2.Y));
         }
+
         private static void tryAddToOpen(Node newNode, List<Node> list)
         {
             for (int i = 0; i < list.Count; ++i)
@@ -112,7 +153,19 @@ namespace GGJ2014.AI
                     return;
                 }
             }
+            list.Add(newNode);
+        }
 
+        public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
+        {
+            // Draw dem waypoints
+            foreach (Vector2 waypoint in Waypoints)
+            {
+                Sprite sprite = TheyDontThinkItBeLikeItIsButItDo.WorldManager.Level.sprite;
+                sprite.Tint = Color.Green;
+                Vector2 drawPos = new Vector2(waypoint.X * sprite.Width, waypoint.Y * sprite.Height);
+                TheyDontThinkItBeLikeItIsButItDo.WorldManager.Level.sprite.Draw(spriteBatch, drawPos);
+            }
         }
     }
 }
