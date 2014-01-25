@@ -18,10 +18,6 @@ namespace GGJ2014.Levels
         public int Width { get; private set; }
         public int Height { get; private set; }
         public Sprite sprite;
-
-        private int Width { get; set; }
-        private int Height { get; set; }
-        private Sprite sprite;
         private Sprite dirtSprite;
         private Sprite grassSprite;
         private Sprite stoneSprite;
