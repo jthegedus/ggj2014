@@ -15,17 +15,22 @@ namespace GGJ2014.Levels
         public List<Rectangle> AgentSpawnRectangles { get; set; }
         public List<Rectangle> CollectableSpawnRectangles { get; set; }
         public Rectangle[,] WallRectangles { get; set; }
+
         private int Width { get; set; }
         private int Height { get; set; }
+
+        private int CellWidth { get; set; }
+        private int CellHeight { get; set; }
+
         private Sprite sprite;
         private Sprite dirtSprite;
         private Sprite grassSprite;
         private Sprite stoneSprite;
         private Sprite groundStoneSprite;
-        
-        private int CellWidth { get; set; }
-        private int CellHeight { get; set; }
 
+        private Sprite rockSprite;
+        private Sprite bushSprite;
+        
         public Level(int width, int height)
             : this(new bool[width * height], new GroundType[width * height], width, height)
         {
@@ -40,26 +45,34 @@ namespace GGJ2014.Levels
             CellWidth = (int)(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth / width);
             CellHeight = (int)(TheyDontThinkItBeLikeItIsButItDo.ScreenHeight / height);
 
-
+            // set sprites to textures
             this.sprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/agent"), CellWidth, CellHeight);
             Texture2D texture = TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Dirt");
             this.grassSprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Grass"), texture.Width, texture.Height);
             this.stoneSprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Stone"), texture.Width, texture.Height);
             this.groundStoneSprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Stone"), texture.Width, texture.Height);
+            this.rockSprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Rock"), texture.Width, texture.Height);
+            this.bushSprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Bush"), texture.Width, texture.Height);
 
+            // determine scale
             this.dirtSprite = new Sprite(texture, texture.Width, texture.Height);
             float scale = (float)CellWidth / texture.Width;
 
+            // set scale
             dirtSprite.Zoom = scale;
             grassSprite.Zoom = scale;
             stoneSprite.Zoom = scale;
             groundStoneSprite.Zoom = scale;
+            rockSprite.Zoom = scale;
+            bushSprite.Zoom = scale;
 
+            // set z-depths
             grassSprite.zIndex = ZIndex.Ground;
             dirtSprite.zIndex = ZIndex.Ground;
             groundStoneSprite.zIndex = ZIndex.Ground;
             this.sprite.zIndex = ZIndex.Object;
 
+            // spawn agents and collectables
             this.AgentSpawnRectangles = new List<Rectangle>();
             this.CollectableSpawnRectangles = new List<Rectangle>();
            
@@ -128,7 +141,8 @@ namespace GGJ2014.Levels
             //    this.sprite.Draw(spriteBatch, new Vector2(spawn.Center.X, spawn.Center.Y));
             //}
 
-            // Draw rectangles
+
+            // Draw collision objects
             int offset = this.stoneSprite.Height/5;
             this.stoneSprite.zIndex = ZIndex.Collision;
             for (int y = 0; y < Height; ++y)
