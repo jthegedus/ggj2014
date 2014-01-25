@@ -10,6 +10,7 @@ using GGJ2014.Levels;
 using GGJ2014.GameObjects;
 using GGJ2014.Controllers;
 using GGJ2014.Components;
+using GGJ2014.AI;
 
 namespace GGJ2014
 {
@@ -30,9 +31,17 @@ namespace GGJ2014
         private List<Object> objsToRemove;
         private List<Object> objsToAdd;
         public Level Level { get { return this.level; } }
+        private const float TimeLimit = 5;
+
+        public int DisplayedTime { get; set; }
+        public int LastDisplayedTime { get; set; }
+        public float GameTimer { get; private set; }
 
         public WorldManager()
         {
+            this.DisplayedTime = (int)GameTimer;
+            this.LastDisplayedTime = (int)GameTimer;
+            this.GameTimer = TimeLimit;
             this.TransformObjects = new List<ITransform>();
             this.DrawObjects = new List<IDraw>();
             this.UpdateObjects = new List<IUpdate>();
@@ -48,13 +57,17 @@ namespace GGJ2014
 
         public void InitGame()
         {
+            this.GameTimer = TimeLimit;
+            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.ClearLists();
+            TheyDontThinkItBeLikeItIsButItDo.GameUI.Init();
 
-            for (int i = 0; i < 4; ++i)
+            for (int i = 0; i < 6; ++i)
             {
                 Agents.Add(new Agent());
                 this.AddToWorld(Agents[i]);
             }
 
+            // Player Controllers
             PlayerController player1 = new PlayerController(PlayerIndex.One, Agents[0]);
             TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player1);
             PlayerController player2 = new PlayerController(PlayerIndex.Two, Agents[1]);
@@ -63,7 +76,18 @@ namespace GGJ2014
             TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player3);
             PlayerController player4 = new PlayerController(PlayerIndex.Four, Agents[3]);
             TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player4);
-            
+
+            // AI Controllers
+            AIController ai1 = new AIController(Agents[4]);
+            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(ai1);
+            TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(ai1);
+            Agents[4].Controller = ai1;
+
+            AIController ai2 = new AIController(Agents[5]);
+            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(ai2);
+            TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(ai2);
+            Agents[5].Controller = ai2;
+
             // Randomise dem colours, MAAAAAAAAAAHN
             List<Color> colors = new List<Color>();
             colors.Add(Color.Red);
@@ -81,7 +105,7 @@ namespace GGJ2014
             }
 
             // Assign colours
-            for (int i = 0; i < Agents.Count; ++i)
+            for (int i = 0; i < colors.Count; ++i)
             {
                 Agents[i].Color = colors[i];
             }
@@ -94,15 +118,15 @@ namespace GGJ2014
             }
 
             // Load level
-            this.level = LevelLoader.LoadLevel("level04");
+            // WARNING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! - ONLY USE LEVELS THAT HAVE A levelXX.png and a levelXXg.png (10 -> 16)
+            this.level = LevelLoader.LoadLevel("level16");
 
             // Assign player positions based on first 4 spawn points
             List<Rectangle> spawns = this.Level.AgentSpawnRectangles;
             TransformComponent tc = new TransformComponent();
-            for (int i = 0; i < 4; ++i)
+            for (int i = 0; i < 6; ++i)
             {
-                tc.Position = new Vector2(spawns[i].Center.X, spawns[i].Center.Y);
-                Agents[i].TransformComponent = tc;
+                Agents[i].Spawn();
             }
 
             //tc.Position = new Vector2(50, 50);
@@ -114,11 +138,27 @@ namespace GGJ2014
             //tc.Position = new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 50, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 50);
             //agents[3].TransformComponent = tc;
             TheyDontThinkItBeLikeItIsButItDo.GameUI.ShowUI();
+            TheyDontThinkItBeLikeItIsButItDo.Gamestate = GameState.GamePlaying;
         }
 
         public void AddToWorld(Object obj)
         {
             this.objsToAdd.Add(obj);
+        }
+
+        public void ClearLists()
+        {
+            this.TransformObjects.Clear();
+            this.UpdateObjects.Clear();
+            this.DrawObjects.Clear();
+            this.StaticObjects.Clear();
+            this.DynamicObjects.Clear();
+            this.Agents.Clear();
+            this.Collectibles.Clear();
+            this.MovementObjects.Clear();
+            this.objsToAdd.Clear();
+            this.objsToRemove.Clear();
+            this.bulletPool = new BulletPool();
         }
 
         public void AddObjsToLists()
@@ -208,6 +248,28 @@ namespace GGJ2014
 
         public void Update(GameTime gameTime)
         {
+            float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (TheyDontThinkItBeLikeItIsButItDo.Gamestate == GameState.GamePlaying)
+            {
+                this.GameTimer -= elapsedTime;
+                this.DisplayedTime = (int)Math.Ceiling(this.GameTimer);
+                if (this.DisplayedTime != this.LastDisplayedTime)
+                {
+                    TheyDontThinkItBeLikeItIsButItDo.GameUI.GameTimer.text = this.DisplayedTime.ToString();
+                    this.LastDisplayedTime = this.DisplayedTime;
+                }
+
+
+                if (this.GameTimer <= 0)
+                {
+                    TheyDontThinkItBeLikeItIsButItDo.Gamestate = GameState.GameEnded;
+                    this.ClearLists();
+                    TheyDontThinkItBeLikeItIsButItDo.EndMenu.ShowMenu();
+
+                }
+            }
+
             AddObjsToLists();
             bulletPool.Update(gameTime);
             foreach (IUpdate obj in UpdateObjects)
@@ -235,7 +297,7 @@ namespace GGJ2014
 
         public void Draw(GameTime gameTime)
         {
-            this.SpriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+            this.SpriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied);
 
             if (this.Level != null)
                 this.Level.Draw(this.SpriteBatch, gameTime);
@@ -250,6 +312,23 @@ namespace GGJ2014
             }
 
             this.SpriteBatch.End();
+        }
+
+        public List<ITransform> GetActiveTransforms()
+        {
+            List<ITransform> list = new List<ITransform>();
+            foreach(ITransform t in TransformObjects)
+            {
+                if (t is Collectible && ((Collectible)t).Enabled)
+                {
+                    list.Add(t);
+                }
+                else if (t is Agent && ((Agent)t).Enabled)
+                {
+                    list.Add(t);
+                }
+            }
+            return list;
         }
 
         public Vector2 FindSpawnPoint()
@@ -307,7 +386,7 @@ namespace GGJ2014
                         shortestDist = dist;
                 }
                 // If at least 64 away, it's suitable (won't duplicate spawn)
-                if (shortestDist > 64f)
+                if (shortestDist > 16f)
                     return pos;
             }
             while (tryCount < 10);

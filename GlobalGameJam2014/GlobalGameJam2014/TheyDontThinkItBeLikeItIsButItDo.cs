@@ -20,15 +20,19 @@ namespace GGJ2014
     /// </summary>
     public class TheyDontThinkItBeLikeItIsButItDo : Microsoft.Xna.Framework.Game
     {
+        public static Dictionary<PlayerIndex, GamePadState> CurrentGPS { get; private set; }
+        public static Dictionary<PlayerIndex, GamePadState> LastGPS { get; private set; }
         public static GameUI GameUI { get; set; }
         public static GameState Gamestate { get; set; }
         public static Menu Menu { get; set; }
+        public static EndMenu EndMenu { get; set; }
         public static SpriteFont font { get; set; }
+        public static SpriteFont LargeFont { get; set; }
         public static float Scale { get; set; }
         public static float ScreenWidth { get; private set; }
         public static float ScreenHeight { get; private set; }
         GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        static SpriteBatch spriteBatch;
         public static WorldManager WorldManager { get; set; }
         public static ContentManager ContentManager { get; set; }
         public static ControllerManager ControllerManager { get; set; }
@@ -37,10 +41,20 @@ namespace GGJ2014
 
         public TheyDontThinkItBeLikeItIsButItDo()
         {
+            TheyDontThinkItBeLikeItIsButItDo.CurrentGPS = new Dictionary<PlayerIndex, GamePadState>();
+            TheyDontThinkItBeLikeItIsButItDo.CurrentGPS[PlayerIndex.One] = new GamePadState();
+            TheyDontThinkItBeLikeItIsButItDo.CurrentGPS[PlayerIndex.Two] = new GamePadState();
+            TheyDontThinkItBeLikeItIsButItDo.CurrentGPS[PlayerIndex.Three] = new GamePadState();
+            TheyDontThinkItBeLikeItIsButItDo.CurrentGPS[PlayerIndex.Four] = new GamePadState();
+            TheyDontThinkItBeLikeItIsButItDo.LastGPS = new Dictionary<PlayerIndex, GamePadState>();
+            TheyDontThinkItBeLikeItIsButItDo.LastGPS[PlayerIndex.One] = new GamePadState();
+            TheyDontThinkItBeLikeItIsButItDo.LastGPS[PlayerIndex.Two] = new GamePadState();
+            TheyDontThinkItBeLikeItIsButItDo.LastGPS[PlayerIndex.Three] = new GamePadState();
+            TheyDontThinkItBeLikeItIsButItDo.LastGPS[PlayerIndex.Four] = new GamePadState();
             graphics = new GraphicsDeviceManager(this);
             // graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             // graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-            // graphics.IsFullScreen = true;
+            //graphics.IsFullScreen = true;
             graphics.PreferredBackBufferWidth = 64 * 25;
             graphics.PreferredBackBufferHeight = 36 * 25;
             TheyDontThinkItBeLikeItIsButItDo.Scale = (float)graphics.PreferredBackBufferWidth / (64 * 15);
@@ -62,16 +76,12 @@ namespace GGJ2014
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            TheyDontThinkItBeLikeItIsButItDo.Gamestate = GameState.MAINMENU;
+            TheyDontThinkItBeLikeItIsButItDo.Gamestate = GameState.MainMenu;
 
-            TheyDontThinkItBeLikeItIsButItDo.GameUI = new GameUI();
-            TheyDontThinkItBeLikeItIsButItDo.WorldManager = new WorldManager();
             TheyDontThinkItBeLikeItIsButItDo.ContentManager = this.Content;
+            TheyDontThinkItBeLikeItIsButItDo.WorldManager = new WorldManager();
             TheyDontThinkItBeLikeItIsButItDo.ControllerManager = new ControllerManager();
             TheyDontThinkItBeLikeItIsButItDo.AudioManager = new AudioManager();
-
-            TheyDontThinkItBeLikeItIsButItDo.Menu = new Menu();
-            TheyDontThinkItBeLikeItIsButItDo.Menu.ShowMenu();
 
             base.Initialize();
         }
@@ -87,7 +97,13 @@ namespace GGJ2014
             WorldManager.SpriteBatch = spriteBatch;
             // TODO: use this.Content to load your game content here
 
-            TheyDontThinkItBeLikeItIsButItDo.font = Content.Load<SpriteFont>("SpriteFonts/Arial");
+            TheyDontThinkItBeLikeItIsButItDo.font = Content.Load<SpriteFont>("SpriteFonts/Arial14");
+            TheyDontThinkItBeLikeItIsButItDo.LargeFont = Content.Load<SpriteFont>("SpriteFonts/Arial64Bold");
+
+            TheyDontThinkItBeLikeItIsButItDo.GameUI = new GameUI();
+            TheyDontThinkItBeLikeItIsButItDo.Menu = new Menu();
+            TheyDontThinkItBeLikeItIsButItDo.EndMenu = new EndMenu();
+            TheyDontThinkItBeLikeItIsButItDo.Menu.ShowMenu();
         }
 
         /// <summary>
@@ -106,21 +122,36 @@ namespace GGJ2014
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            if (TheyDontThinkItBeLikeItIsButItDo.Gamestate == GameState.Quit)
+            {
+                this.Exit();
+            }
+            Button.ButtonChangedThisUpdate = false;
+            TheyDontThinkItBeLikeItIsButItDo.CurrentGPS[PlayerIndex.One] = GamePad.GetState(PlayerIndex.One);
+            TheyDontThinkItBeLikeItIsButItDo.CurrentGPS[PlayerIndex.Two] = GamePad.GetState(PlayerIndex.Two);
+            TheyDontThinkItBeLikeItIsButItDo.CurrentGPS[PlayerIndex.Three] = GamePad.GetState(PlayerIndex.Three);
+            TheyDontThinkItBeLikeItIsButItDo.CurrentGPS[PlayerIndex.Four] = GamePad.GetState(PlayerIndex.Four);
+
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 this.Exit();
 
             TheyDontThinkItBeLikeItIsButItDo.WorldManager.Update(gameTime);
 
-            if (TheyDontThinkItBeLikeItIsButItDo.Gamestate == GameState.GAMEPLAYING)
+            if (TheyDontThinkItBeLikeItIsButItDo.Gamestate == GameState.GamePlaying)
             {
                 TheyDontThinkItBeLikeItIsButItDo.ControllerManager.Update();
                 TheyDontThinkItBeLikeItIsButItDo.WorldManager.HandleCollisions();
             }
-            else if (TheyDontThinkItBeLikeItIsButItDo.Gamestate == GameState.MAINMENU)
+            else if (TheyDontThinkItBeLikeItIsButItDo.Gamestate == GameState.MainMenu)
             {
                 Menu.Update(gameTime);
             }
+
+            TheyDontThinkItBeLikeItIsButItDo.LastGPS[PlayerIndex.One] = TheyDontThinkItBeLikeItIsButItDo.CurrentGPS[PlayerIndex.One]; 
+            TheyDontThinkItBeLikeItIsButItDo.LastGPS[PlayerIndex.Two] = TheyDontThinkItBeLikeItIsButItDo.CurrentGPS[PlayerIndex.Two]; 
+            TheyDontThinkItBeLikeItIsButItDo.LastGPS[PlayerIndex.Three] = TheyDontThinkItBeLikeItIsButItDo.CurrentGPS[PlayerIndex.Three]; 
+            TheyDontThinkItBeLikeItIsButItDo.LastGPS[PlayerIndex.Four] = TheyDontThinkItBeLikeItIsButItDo.CurrentGPS[PlayerIndex.Four]; 
 
             base.Update(gameTime);
         }

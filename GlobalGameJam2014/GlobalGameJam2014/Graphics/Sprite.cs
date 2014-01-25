@@ -5,6 +5,7 @@ namespace GGJ2014.Graphics
     using System.Collections.Generic;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
+    using GGJ2014.Graphics.SpriteAnimations;
 
     public class Sprite
     {
@@ -16,9 +17,12 @@ namespace GGJ2014.Graphics
         public int Width { get; set; }
         public int Height { get; set; }
         public float zIndex { get; set; }
+        public List<SpriteEffect> Effects { get; set; }
+        public AnchorPoint AnchorPoint { get; set; }
 
         public Sprite(Texture2D texture, int width, int height, float zIndex)
         {
+            this.AnchorPoint = AnchorPoint.Centre;
             this.Texture2D = texture;
             this.Width = width;
             this.Height = height;
@@ -33,6 +37,8 @@ namespace GGJ2014.Graphics
                 this.zIndex = 1f;
             else
                 this.zIndex = zIndex;
+
+            this.Effects = new List<SpriteEffect>();
         }
 
         public Sprite(Sprite sprite)
@@ -44,21 +50,33 @@ namespace GGJ2014.Graphics
             : this(texture, width, height, 0f)
         {
         }
-    
-        public void Draw(SpriteBatch spriteBatch, Vector2 point, bool fromTopLeft = false)
+
+        public void UpdateEffects(GameTime time)
+        {
+            for (int i = Effects.Count - 1; i >= 0; --i)
+            {
+                Effects[i].Update(this, time);
+
+                if (Effects[i].HasFinished())
+                {
+                    Effects.RemoveAt(i);
+                }
+            }
+        }
+
+        public void Draw(SpriteBatch spriteBatch, Vector2 point)
         {
             Color multipliedTint = this.Tint * this.Alpha;
-
             spriteBatch.Draw(
                 this.Texture2D,
                 point,
                 this.GetSourceRectangle(),
                 multipliedTint,
                 this.Rotation,
-                this.GetOrigin(fromTopLeft),
+                TextElement.GetOrigin(this.Width, this.Height, this.AnchorPoint),
                 this.Zoom,
                 SpriteEffects.None,
-                zIndex);
+                this.zIndex);
         }
 
         private Vector2 GetOrigin(bool fromTopLeft)

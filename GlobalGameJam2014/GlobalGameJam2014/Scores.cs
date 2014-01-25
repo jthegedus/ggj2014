@@ -8,10 +8,10 @@ namespace GGJ2014
     public class Scores
     {
         public const int PlayerDamagedReward = 10;
-        public const int PlayerDamagedPenalty = -20;
+        public const int PlayerDamagedPenalty = -5;
         public const int PlayerKilledReward = 30;
-        public const int PlayerKilledPenalty = -50;
-        public const int CollectibleReward = 30;
-        public const int BumpReward = 30;
+        public const int PlayerKilledPenalty = -15;
+        public const int CollectibleReward = 50;
+        public const int BumpReward = 50;
     }
 }

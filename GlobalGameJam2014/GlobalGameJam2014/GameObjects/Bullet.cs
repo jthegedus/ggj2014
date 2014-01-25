@@ -54,7 +54,10 @@ namespace GGJ2014.GameObjects
             this.movementComponent.Velocity = direction * speed + initialVelocity * 0f;
             // change sprite based on player?
             // Spritey things
-            this.Sprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/agent"), (int)this.size, (int)this.size);
+            Texture2D baseball = TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Baseball");
+            this.Sprite = new Sprite(baseball, baseball.Width, baseball.Height, ZIndex.Player);
+            
+            this.Sprite.Zoom = TheyDontThinkItBeLikeItIsButItDo.Scale * Bullet.BaseSize / baseball.Width;
             this.Sprite.Tint = Color.Beige;
         }
 

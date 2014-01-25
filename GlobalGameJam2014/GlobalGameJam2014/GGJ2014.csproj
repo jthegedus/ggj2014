@@ -108,15 +108,32 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AnchorPoint.cs" />
+	<Compile Include="AI\Path.cs" />
     <Compile Include="AudioManager.cs" />
     <Compile Include="BulletPool.cs" />
+    <Compile Include="Button.cs" />
     <Compile Include="ControllerManager.cs" />
     <Compile Include="Controllers\AIController.cs" />
     <Compile Include="Controllers\PlayerController.cs" />
+    <Compile Include="Controllers\TimedVibration.cs" />
+    <Compile Include="Menu.cs" />
     <Compile Include="GameObjects\Bullet.cs" />
+    <Compile Include="GameOverScreen.cs" />
     <Compile Include="GameState.cs" />
     <Compile Include="GameObjects\Collectible.cs" />
     <Compile Include="GameUI.cs" />
+    <Compile Include="Graphics\FadingTextElement.cs" />
+    <Compile Include="Graphics\SpriteAnimations\Delay.cs" />
+    <Compile Include="Graphics\SpriteAnimations\ExpandDeathEffect.cs" />
+    <Compile Include="Graphics\SpriteAnimations\FadeEffect.cs" />
+    <Compile Include="Graphics\SpriteAnimations\GrowShrinkEffect.cs" />
+    <Compile Include="Graphics\SpriteAnimations\PainEffect.cs" />
+    <Compile Include="Graphics\SpriteAnimations\PopInEffect.cs" />
+    <Compile Include="Graphics\SpriteAnimations\PulsateEffect.cs" />
+    <Compile Include="Graphics\SpriteAnimations\PurgatoryEffect.cs" />
+    <Compile Include="Graphics\SpriteAnimations\SpinEffect.cs" />
+    <Compile Include="Graphics\SpriteAnimations\SpriteEffect.cs" />
+    <Compile Include="Graphics\SpriteAnimations\TemporarySpinEffect.cs" />
     <Compile Include="Interfaces\IController.cs" />
     <Compile Include="Interfaces\IDraw.cs" />
     <Compile Include="Interfaces\IDynamic.cs" />
@@ -127,9 +144,10 @@
     <Compile Include="GameObjects\Agent.cs" />
     <Compile Include="Components\TransformComponent.cs" />
     <Compile Include="Interfaces\IUpdate.cs" />
+    <Compile Include="Levels\GroundType.cs" />
     <Compile Include="Levels\Level.cs" />
     <Compile Include="Levels\LevelLoader.cs" />
-    <Compile Include="Menu.cs" />
+    <Compile Include="EndMenu.cs" />
     <Compile Include="Objectives.cs" />
     <Compile Include="Physics\CollisionSolver.cs" />
     <Compile Include="Physics\CorrectionVector2.cs" />
@@ -144,6 +162,7 @@
     <Compile Include="Scores.cs" />
     <Compile Include="TheyDontThinkItBeLikeItIsButItDo.cs" />
     <Compile Include="WorldManager.cs" />
+    <Compile Include="ZIndex.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
