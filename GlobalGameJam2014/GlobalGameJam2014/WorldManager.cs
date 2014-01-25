@@ -50,12 +50,13 @@ namespace GGJ2014
         public void InitGame()
         {
 
-            for (int i = 0; i < 5; ++i)
+            for (int i = 0; i < 6; ++i)
             {
                 Agents.Add(new Agent());
                 this.AddToWorld(Agents[i]);
             }
 
+            // Player Controllers
             PlayerController player1 = new PlayerController(PlayerIndex.One, Agents[0]);
             TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player1);
             PlayerController player2 = new PlayerController(PlayerIndex.Two, Agents[1]);
@@ -65,11 +66,16 @@ namespace GGJ2014
             PlayerController player4 = new PlayerController(PlayerIndex.Four, Agents[3]);
             TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player4);
 
-            // AI Controller
-            AIController ai = new AIController(Agents[4]);
-            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(ai);
-            ai.Target = Agents[0];
-            Agents[4].Controller = ai;
+            // AI Controllers
+            AIController ai1 = new AIController(Agents[4]);
+            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(ai1);
+            TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(ai1);
+            Agents[4].Controller = ai1;
+
+            AIController ai2 = new AIController(Agents[5]);
+            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(ai2);
+            TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(ai2);
+            Agents[5].Controller = ai2;
 
             // Randomise dem colours, MAAAAAAAAAAHN
             List<Color> colors = new List<Color>();
@@ -107,7 +113,7 @@ namespace GGJ2014
             // Assign player positions based on first 4 spawn points
             List<Rectangle> spawns = this.Level.AgentSpawnRectangles;
             TransformComponent tc = new TransformComponent();
-            for (int i = 0; i < 5; ++i)
+            for (int i = 0; i < 6; ++i)
             {
                 Agents[i].Spawn();
             }
@@ -257,6 +263,23 @@ namespace GGJ2014
             }
 
             this.SpriteBatch.End();
+        }
+
+        public List<ITransform> GetActiveTransforms()
+        {
+            List<ITransform> list = new List<ITransform>();
+            foreach(ITransform t in TransformObjects)
+            {
+                if (t is Collectible && ((Collectible)t).Enabled)
+                {
+                    list.Add(t);
+                }
+                else if (t is Agent && ((Agent)t).Enabled)
+                {
+                    list.Add(t);
+                }
+            }
+            return list;
         }
 
         public Vector2 FindSpawnPoint()

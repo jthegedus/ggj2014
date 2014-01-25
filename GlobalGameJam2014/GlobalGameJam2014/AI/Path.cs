@@ -54,8 +54,6 @@ namespace GGJ2014.AI
             List<Node> closedList = new List<Node>();
             openList.Add(new Node(origin, calculateFCost(origin, target)));
 
-            Console.Out.WriteLine("Pathfinding - Origin: " + origin + ", Target: " + target);
-
             Node current = null;
 
             // Create adjacent vector array here, to avoid re-allocating each node

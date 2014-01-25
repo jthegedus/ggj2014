@@ -22,14 +22,15 @@ namespace GGJ2014
 
         public GameUI()
         {
-            this.Player1Score = new TextElement("Player 1: 0000", new Vector2(20, 20), Color.White, 0) { AnchorPoint = AnchorPoint.TopLeft };
-            this.Player2Score = new TextElement("Player 2: 0000", new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 20, 20), Color.White, 0) { AnchorPoint = AnchorPoint.TopRight };
-            this.Player3Score = new TextElement("Player 3: 0000", new Vector2(20, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 50), Color.White, 0) { AnchorPoint = AnchorPoint.BottomLeft };
-            this.Player4Score = new TextElement("Player 4: 0000", new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 20, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 50), Color.White, 0) { AnchorPoint = AnchorPoint.BottomRight };
-            this.Player1Objective = new TextElement("", new Vector2(20, 50), Color.White, 0) { AnchorPoint = AnchorPoint.TopLeft };
-            this.Player2Objective = new TextElement("", new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 20, 50), Color.White, 0) { AnchorPoint = AnchorPoint.TopRight };
-            this.Player3Objective = new TextElement("", new Vector2(20, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 20), Color.White, 0) { AnchorPoint = AnchorPoint.BottomLeft };
-            this.Player4Objective = new TextElement("", new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 20, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 20), Color.White, 0) { AnchorPoint = AnchorPoint.BottomRight };
+            Color textColor = Color.Black;
+            this.Player1Score = new TextElement("Player 1: 0000", new Vector2(20, 20), textColor, 0) { AnchorPoint = AnchorPoint.TopLeft };
+            this.Player2Score = new TextElement("Player 2: 0000", new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 20, 20), textColor, 0) { AnchorPoint = AnchorPoint.TopRight };
+            this.Player3Score = new TextElement("Player 3: 0000", new Vector2(20, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 50), textColor, 0) { AnchorPoint = AnchorPoint.BottomLeft };
+            this.Player4Score = new TextElement("Player 4: 0000", new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 20, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 50), textColor, 0) { AnchorPoint = AnchorPoint.BottomRight };
+            this.Player1Objective = new TextElement("", new Vector2(20, 50), textColor, 0) { AnchorPoint = AnchorPoint.TopLeft };
+            this.Player2Objective = new TextElement("", new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 20, 50), textColor, 0) { AnchorPoint = AnchorPoint.TopRight };
+            this.Player3Objective = new TextElement("", new Vector2(20, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 20), textColor, 0) { AnchorPoint = AnchorPoint.BottomLeft };
+            this.Player4Objective = new TextElement("", new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 20, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 20), textColor, 0) { AnchorPoint = AnchorPoint.BottomRight };
         }
 
         public void ShowUI()

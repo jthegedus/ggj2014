@@ -195,7 +195,7 @@ namespace GGJ2014.GameObjects
 
         public void Dash()
         {
-            if (burstTimer == 0)
+            if (burstTimer == 0 || firing)
             {
                 firing = false;
                 Speed = BaseSpeed * DashMultiplier;

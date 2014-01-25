@@ -7,15 +7,16 @@ using GGJ2014.GameObjects;
 using GGJ2014.AI;
 using Microsoft.Xna.Framework;
 using GGJ2014.Levels;
+using GGJ2014.Components;
 
 namespace GGJ2014.Controllers
 {
-    class AIController : IController
+    class AIController : IController, IUpdate
     {
         private Agent agent;
         private Path path;
 
-        public Agent Target { get; set; }
+        public ITransform Target { get; set; }
 
         private Vector2 oldGridPos = Vector2.Zero;
 
@@ -24,6 +25,13 @@ namespace GGJ2014.Controllers
         public const float AvoidanceWeighting = 0.9f;
         public const float WaypointMargin = 1f;
 
+        public  const int MinDecisionCooldown = 5;
+        public const int MaxDecisionCooldown = 15;
+        private float decisionTimer = MinDecisionCooldown;
+
+        public const float PathfindCooldown = 0.5f;
+        private float pathfindTimer = PathfindCooldown;
+
         public AIController(Agent agent)
         {
             this.agent = agent;
@@ -31,7 +39,6 @@ namespace GGJ2014.Controllers
 
         public void HandleInput()
         {
-
             if (agent.Enabled)
             {
                 Level level = TheyDontThinkItBeLikeItIsButItDo.WorldManager.Level;
@@ -82,7 +89,6 @@ namespace GGJ2014.Controllers
                                 Vector2 wallPos = new Vector2(wall.Center.X, wall.Center.Y);
                                 Vector2 vec = (agent.TransformComponent.Position - wallPos);
                                 float distance = vec.Length();
-                                Console.Out.WriteLine(distance + "/" + gridWidth);
                                 if (vec != Vector2.Zero)
                                     vec.Normalize();
                                 vec.Y *= -1;
@@ -98,6 +104,74 @@ namespace GGJ2014.Controllers
             }
         }
 
+        public void Update(GameTime gameTime)
+        {
+            if (agent.Enabled)
+            {
+                agent.ShootDirection = Vector2.Zero;
+                // Check if target still active (if not, find something else to do)
+                if (Target != null)
+                {
+                    if (Target is Collectible && ((Collectible)Target).Enabled == false)
+                    {
+                        OnDecisionTimer();
+                        return;
+                    }
+                    else if (Target is Agent && ((Agent)Target).Enabled == false)
+                    {
+                        OnDecisionTimer();
+                        return;
+                    }
+                    Vector2 aimingVec = Target.TransformComponent.Position - agent.TransformComponent.Position;
+                    aimingVec.Y *= -1;
+                    if (aimingVec.Length() < 10)
+                        agent.ShootDirection = aimingVec;
+                }
+
+                // Decrease timers
+                decisionTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                if (decisionTimer < 0)
+                {
+                    OnDecisionTimer();
+                }
+                pathfindTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                if(pathfindTimer < 0)
+                {
+                    OnPathfindTimer();
+                }
+            }
+        }
+
+        private void OnDecisionTimer()
+        {
+            // Reset timer
+            decisionTimer = TheyDontThinkItBeLikeItIsButItDo.Rand.Next(MinDecisionCooldown, MaxDecisionCooldown);
+            // Choose Action
+            // Create list of valid targets
+            List<ITransform> targets = TheyDontThinkItBeLikeItIsButItDo.WorldManager.GetActiveTransforms();
+            int index = TheyDontThinkItBeLikeItIsButItDo.Rand.Next(0, targets.Count);
+            Target = targets[index];
+        }
+
+        private void OnPathfindTimer()
+        {
+            // Reset timer
+            pathfindTimer = PathfindCooldown;
+            // Recalculate a path
+            Level level = TheyDontThinkItBeLikeItIsButItDo.WorldManager.Level;
+            Vector2 gridPos = new Vector2(level.GetGridX(agent.TransformComponent.Position.X), level.GetGridY(agent.TransformComponent.Position.Y));
+
+            if (Target != null)
+            {
+                // Uncomment these lines to draw path for AI!
+                //TheyDontThinkItBeLikeItIsButItDo.WorldManager.RemoveFromWorld(path);
+                Vector2 targetGrid = new Vector2(level.GetGridX(Target.TransformComponent.Position.X), level.GetGridY(Target.TransformComponent.Position.Y));
+                path = Path.pathfind(gridPos, targetGrid, level);
+                //TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(path);
+                oldGridPos = Vector2.Zero;
+            }
+        }
+
         public void DamagedPlayer(Agent victim)
         {
             
@@ -105,17 +179,33 @@ namespace GGJ2014.Controllers
 
         public void KilledPlayer(Agent victim)
         {
-            
+            if (Target == victim)
+            {
+                OnDecisionTimer();
+            }
         }
 
         public void BumpedPlayer(Agent victim)
         {
-            
+            // If AI is interruptible, chase new victim 20% of the time
+            if (Target == victim)
+            {
+                if (TheyDontThinkItBeLikeItIsButItDo.Rand.NextDouble() < 0.2)
+                {
+                    OnDecisionTimer();
+                }
+            }
+            else if (TheyDontThinkItBeLikeItIsButItDo.Rand.NextDouble() < 0.2)
+            {
+                // Reset timer
+                decisionTimer = TheyDontThinkItBeLikeItIsButItDo.Rand.Next(MinDecisionCooldown, MaxDecisionCooldown);
+                Target = victim;
+            }
         }
 
         public void CollectedCollectible()
         {
-            
+            OnDecisionTimer();
         }
     }
 }
