@@ -120,6 +120,12 @@ namespace GGJ2014.Controllers
             return current.IsButtonDown(button) && last.IsButtonUp(button);
         }
 
+        public void OnAgentSpawn()
+        {
+            FadingTextElement fte = new FadingTextElement("Player " + PlayerIndex, agent, Color.Black, 0, 4f, 1f, 0f);
+            TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(fte);
+        }
+
         public void DamagedPlayer(Agent victim)
         {
             if (victim.Color == this.Target && this.Objective == Objectives.Kill)

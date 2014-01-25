@@ -10,6 +10,7 @@ using GGJ2014.Components;
 using Microsoft.Xna.Framework.Graphics;
 using GGJ2014.Physics;
 using GGJ2014.Levels;
+using GGJ2014.Controllers;
 
 namespace GGJ2014.GameObjects
 {
@@ -49,6 +50,20 @@ namespace GGJ2014.GameObjects
         private const float SprayAngle = MathHelper.Pi / 18;
         public bool Enabled { get; set; }
 
+        // Sprites
+        private Sprite sprCap;
+        private Sprite sprRefCap;
+        private Sprite sprArm;
+        private bool isFeet1;
+        private Sprite sprFeet1;
+        private Sprite sprFeet2;
+        private bool isGlove1;
+        private Sprite sprGlove1;
+        private Sprite sprGlove2;
+        private Vector2 lastFacing = Vector2.UnitY;
+        public const float BaseAnimDuration = 0.2f;
+        private float animTimer = BaseAnimDuration;
+
         private const float RespawnDuration = 2f;
         private float spawnTimer = RespawnDuration;
 
@@ -61,8 +76,8 @@ namespace GGJ2014.GameObjects
                     new Rectangle(
                         (int)this.transformComponent.Position.X,
                         (int)this.transformComponent.Position.Y,
-                        this.Sprite.Width,
-                        this.Sprite.Height));
+                        (int)(this.sprCap.Width * 0.8f),
+                        (int)(this.sprCap.Height * 0.8f)));
             }
         }
 
@@ -75,6 +90,23 @@ namespace GGJ2014.GameObjects
             this.yPenetrations = new List<float>();
             this.possibleRectangles = new List<Rectangle>();
             this.Enabled = true;
+
+            // Load sprites (jesus)
+            Texture2D texCap = TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Player/Cap");
+            sprCap = new Sprite(texCap, texCap.Width, texCap.Height, ZIndex.Player);
+            Texture2D texRefCap = TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Player/RefCap");
+            sprRefCap = new Sprite(texRefCap, texRefCap.Width, texRefCap.Height, ZIndex.Player);
+            sprRefCap.zIndex += 0.00001f;
+            Texture2D texArm = TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Player/Arm");
+            sprArm = new Sprite(texArm, texArm.Width, texArm.Height, ZIndex.Player);
+            Texture2D texGlove1 = TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Player/Glove1");
+            sprGlove1 = new Sprite(texGlove1, texGlove1.Width, texGlove1.Height, ZIndex.Player);
+            Texture2D texGlove2 = TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Player/Glove2");
+            sprGlove2 = new Sprite(texGlove2, texGlove2.Width, texGlove2.Height, ZIndex.Player);
+            Texture2D texFeet1 = TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Player/Feet1");
+            sprFeet1 = new Sprite(texFeet1, texFeet1.Width, texFeet1.Height, ZIndex.Player);
+            Texture2D texFeet2 = TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Player/Feet2");
+            sprFeet2 = new Sprite(texFeet2, texFeet2.Width, texFeet2.Height, ZIndex.Player);
         }
 
         public void Update(GameTime gameTime)
@@ -167,6 +199,16 @@ namespace GGJ2014.GameObjects
                         Speed = BaseSpeed;
                     }
                 }
+
+                // Update Animation Stuff
+                float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                animTimer -= elapsedTime;
+                if (animTimer < 0)
+                {
+                    animTimer = BaseAnimDuration;
+                    isGlove1 = !isGlove1;
+                    isFeet1 = !isFeet1;
+                }
             }
         }
 
@@ -174,9 +216,57 @@ namespace GGJ2014.GameObjects
         {
             if (Enabled)
             {
-                this.Sprite.Tint = Color.Lerp(Color.White, this.Color, this.revealTimer / Agent.RevealDuration);
+                // Get direction
+                Vector2 direction = lastFacing;
+                if (!DesiredMovementDirection.Equals(Vector2.Zero))
+                    direction = DesiredMovementDirection;
+                direction.Normalize();
+                // Calculate rotation
+                float rotation = (float)Math.Atan2(direction.Y, -direction.X) - MathHelper.PiOver2;
+                // Set feet rotation (so they follow movement direction)
+                this.sprFeet1.Rotation = rotation;
+                this.sprFeet2.Rotation = rotation;
+
+                // Check shoot direction
+                if (!ShootDirection.Equals(Vector2.Zero))
+                {
+                    direction = ShootDirection;
+                    //Recalculate rotation
+                    rotation = (float)Math.Atan2(direction.Y, -direction.X) - MathHelper.PiOver2;
+                }
+                lastFacing = direction;
+
+                this.sprCap.Tint = Color.Lerp(Color.White, this.Color, this.revealTimer / Agent.RevealDuration);
                 this.revealTimer = MathHelper.Clamp(this.revealTimer, 0, this.revealTimer - (float)gameTime.ElapsedGameTime.TotalSeconds);
-                this.Sprite.Draw(spriteBatch, this.transformComponent.Position);
+                this.sprCap.Rotation = rotation;
+                this.sprCap.Draw(spriteBatch, this.transformComponent.Position);
+                this.sprRefCap.Rotation = rotation;
+                this.sprRefCap.Draw(spriteBatch, this.transformComponent.Position);
+                if (firing)
+                {
+                    this.sprArm.Rotation = rotation;
+                    this.sprArm.Draw(spriteBatch, this.transformComponent.Position);
+                }
+                if (isGlove1)
+                {
+                    this.sprGlove1.Rotation = rotation;
+                    this.sprGlove1.Draw(spriteBatch, this.transformComponent.Position);
+                }
+                else
+                {
+                    this.sprGlove2.Rotation = rotation;
+                    this.sprGlove2.Draw(spriteBatch, this.transformComponent.Position);
+                }
+
+                if (!DesiredMovementDirection.Equals(Vector2.Zero))
+                {
+                    // Draw feet
+                    if (isFeet1)
+                        this.sprFeet1.Draw(spriteBatch, this.transformComponent.Position);
+                    else
+                        this.sprFeet2.Draw(spriteBatch, this.transformComponent.Position);
+                }
+                //this.Sprite.Draw(spriteBatch, this.transformComponent.Position);
             }
         }
 
@@ -191,6 +281,10 @@ namespace GGJ2014.GameObjects
             this.revealTimer = 0;
             this.Enabled = true;
             this.firing = false;
+            if (Controller != null && Controller is PlayerController)
+            {
+                ((PlayerController)Controller).OnAgentSpawn();
+            }
         }
 
         public void Dash()

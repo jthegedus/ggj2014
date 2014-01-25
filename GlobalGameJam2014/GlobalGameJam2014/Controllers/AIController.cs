@@ -110,7 +110,7 @@ namespace GGJ2014.Controllers
         {
             if (agent.Enabled)
             {
-                agent.ShootDirection = Vector2.Zero;
+                //agent.ShootDirection = Vector2.Zero;
                 // Check if target still active (if not, find something else to do)
                 if (Target != null)
                 {
@@ -124,10 +124,11 @@ namespace GGJ2014.Controllers
                         OnDecisionTimer();
                         return;
                     }
-                    Vector2 aimingVec = Target.TransformComponent.Position - agent.TransformComponent.Position;
-                    aimingVec.Y *= -1;
-                    if (aimingVec.Length() > MinAttackDistance && aimingVec.Length() < MinAttackDistance)
-                        agent.ShootDirection = aimingVec;
+                    // Uncomment below for AI shooting (crazy accurate)
+                    //Vector2 aimingVec = Target.TransformComponent.Position - agent.TransformComponent.Position;
+                    //aimingVec.Y *= -1;
+                    //if (aimingVec.Length() > MinAttackDistance && aimingVec.Length() < MaxAttackDistance)
+                    //    agent.ShootDirection = aimingVec;
                 }
 
                 // Decrease timers
