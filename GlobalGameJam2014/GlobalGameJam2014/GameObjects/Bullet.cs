@@ -19,7 +19,10 @@ namespace GGJ2014.GameObjects
         // private List<float> yPenetrations;
         private List<Rectangle> possibleRectangles;
 
-        private const float PlayerBulletSizeRatio = 0.4f;
+        private const float BaseSize = 5;
+        private const float BaseSpeed = 300;
+        private float size;
+        private float speed;
         public Sprite Sprite { get; set; }
         private TransformComponent transformComponent;
         public TransformComponent TransformComponent { get { return this.transformComponent; } set{this.transformComponent = value; } }
@@ -28,7 +31,6 @@ namespace GGJ2014.GameObjects
 
         public Color Owner { get; set; }
         public Vector2 InitialPosition { get; set; }
-        private const float Speed = 500f;
         public float Lifespan { get; set; }
         public float Damage { get; set; }
 
@@ -39,6 +41,8 @@ namespace GGJ2014.GameObjects
             // this.xPenetrations = new List<float>();
             // this.yPenetrations = new List<float>();
             this.possibleRectangles = new List<Rectangle>();
+            this.speed = TheyDontThinkItBeLikeItIsButItDo.Scale * Bullet.BaseSpeed;
+            this.size = TheyDontThinkItBeLikeItIsButItDo.Scale * Bullet.BaseSize;
         }
 
         public void Initialize(Vector2 ownerPosition, Vector2 direction, Color owner, Vector2 initialVelocity)
@@ -47,10 +51,10 @@ namespace GGJ2014.GameObjects
             Owner = owner;
             InitialPosition = ownerPosition;
             this.transformComponent.Position = ownerPosition;
-            this.movementComponent.Velocity = direction * Speed + initialVelocity * 0f;
+            this.movementComponent.Velocity = direction * speed + initialVelocity * 0f;
             // change sprite based on player?
             // Spritey things
-            this.Sprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/agent"), (int)(TheyDontThinkItBeLikeItIsButItDo.PlayerSize * Bullet.PlayerBulletSizeRatio), (int)(TheyDontThinkItBeLikeItIsButItDo.PlayerSize * Bullet.PlayerBulletSizeRatio));
+            this.Sprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/agent"), (int)this.size, (int)this.size);
             this.Sprite.Tint = Color.Beige;
         }
 

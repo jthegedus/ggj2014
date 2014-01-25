@@ -19,6 +19,9 @@ namespace GGJ2014.GameObjects
         private float revealTimer;
         private TransformComponent transformComponent;
         private MovementComponent movementComponent;
+        private const float BaseSize = 10;
+        private const float BaseSpeed = 20;
+        private float size;
         private float speed;
         public TransformComponent TransformComponent { get { return this.transformComponent; } set { this.transformComponent = value; } }
         public MovementComponent MovementComponent { get { return this.movementComponent; } set { this.movementComponent = value; } }
@@ -53,8 +56,9 @@ namespace GGJ2014.GameObjects
 
         public Agent()
         {
-            this.speed = TheyDontThinkItBeLikeItIsButItDo.PlayerSpeed;
-            this.Sprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/agent"), TheyDontThinkItBeLikeItIsButItDo.PlayerSize, TheyDontThinkItBeLikeItIsButItDo.PlayerSize);
+            this.speed = TheyDontThinkItBeLikeItIsButItDo.Scale * Agent.BaseSpeed;
+            this.size = TheyDontThinkItBeLikeItIsButItDo.Scale * Agent.BaseSize;
+            this.Sprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/agent"), (int)this.size, (int)this.size);
             this.xPenetrations = new List<float>();
             this.yPenetrations = new List<float>();
             this.possibleRectangles = new List<Rectangle>();

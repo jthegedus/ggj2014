@@ -20,10 +20,7 @@ namespace GGJ2014
     /// </summary>
     public class TheyDontThinkItBeLikeItIsButItDo : Microsoft.Xna.Framework.Game
     {
-        public static int PlayerSize { get; private set; }
-        public static float PlayerSpeed { get; private set; }
-        private const float PlayerScreenSizeRatio = 0.02f;
-        private const float PlayerScreenSpeedRatio = 0.05f;
+        public static float Scale { get; set; }
         public static float ScreenWidth { get; private set; }
         public static float ScreenHeight { get; private set; }
         GraphicsDeviceManager graphics;
@@ -40,14 +37,13 @@ namespace GGJ2014
             // graphics.IsFullScreen = true;
             graphics.PreferredBackBufferWidth = 64 * 15;
             graphics.PreferredBackBufferHeight = 36 * 15;
+            TheyDontThinkItBeLikeItIsButItDo.Scale = (float)graphics.PreferredBackBufferWidth / (64 * 15);
             graphics.SynchronizeWithVerticalRetrace = true;
             graphics.ApplyChanges();
             ScreenWidth = graphics.PreferredBackBufferWidth;
             ScreenHeight = graphics.PreferredBackBufferHeight;
             Content.RootDirectory = "Content";
             this.Window.Title = "They Don't Think It Be Like It Is, But It Do";
-            TheyDontThinkItBeLikeItIsButItDo.PlayerSize = (int)(TheyDontThinkItBeLikeItIsButItDo.PlayerScreenSizeRatio * this.graphics.PreferredBackBufferWidth);
-            TheyDontThinkItBeLikeItIsButItDo.PlayerSpeed = TheyDontThinkItBeLikeItIsButItDo.PlayerScreenSpeedRatio * this.graphics.PreferredBackBufferWidth;
         }
 
         /// <summary>
