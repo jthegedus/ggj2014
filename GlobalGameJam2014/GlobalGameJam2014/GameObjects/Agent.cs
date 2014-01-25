@@ -297,17 +297,19 @@ namespace GGJ2014.GameObjects
                     this.CollisionRectangle.Contains(collectible.CollisionRectangle) ||
                     collectible.CollisionRectangle.Contains(this.CollisionRectangle))
                 {
-                    if (collectible.Colours.Contains(this.Color))
+                    if (collectible.Enabled && (collectible.color == this.Color || collectible.color == Color.White))
                     {
-                        collectible.Colours.Remove(this.Color);
-                        
                         // add points
                         this.Controller.CollectedCollectible();
 
-                        if (collectible.Colours.Count == 0)
-                        {
-                            TheyDontThinkItBeLikeItIsButItDo.WorldManager.RemoveFromWorld(collectible);
-                        }
+                        collectible.Remove();
+
+                        //play sound
+                        Microsoft.Xna.Framework.Audio.Cue collectCue = TheyDontThinkItBeLikeItIsButItDo.AudioManager.LoadCue("powerup");
+                        TheyDontThinkItBeLikeItIsButItDo.AudioManager.PlayCue(ref collectCue, true);
+
+                        //remove from world
+                        TheyDontThinkItBeLikeItIsButItDo.WorldManager.RemoveFromWorld(collectible);
                     }
                 }
             }

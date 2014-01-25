@@ -19,7 +19,7 @@ namespace GGJ2014.GameObjects
         private float size;
         private const float FlickerDuration = 0.5f;
         private float flickerTimer;
-        public List<Color> Colours { get; set; }
+        public Color color;
         private TransformComponent transformComponent;
         public Sprite Sprite { get; set; }
 
@@ -44,11 +44,30 @@ namespace GGJ2014.GameObjects
             durationTimer = Duration;
             spawnTimer = (float)(TheyDontThinkItBeLikeItIsButItDo.Rand.NextDouble() * (MaxSpawnDuration - MinSpawnDuration) + MinSpawnDuration);
             spawnTimer = MathHelper.Clamp(spawnTimer, MinSpawnDuration, MaxSpawnDuration);
-            this.Colours = new List<Color>();
-            Colours.Add(Color.Red);
-            Colours.Add(Color.Yellow);
-            Colours.Add(Color.Green);
-            Colours.Add(Color.Blue);
+
+            Random rand = new Random();
+            int col = rand.Next(1, 6);
+
+            switch (col)
+            {
+                case 1:
+                    color = Color.Red;
+                    break;
+                case 2:
+                    color = Color.Green;
+                    break;
+                case 3:
+                    color = Color.Blue;
+                    break;
+                case 4:
+                    color = Color.Yellow;
+                    break;
+                case 5:
+                    color = Color.White;
+                    break;
+                default:
+                    break;
+            }
         }
 
         public Rectangle CollisionRectangle
@@ -87,19 +106,7 @@ namespace GGJ2014.GameObjects
 
                 if (durationTimer <= 0)
                 {
-                    Enabled = false;
-                    Reset();
-                }
-                else
-                {
-                    this.flickerTimer += elapsedTime;
-                    if (this.flickerTimer >= Collectible.FlickerDuration * this.Colours.Count)
-                    {
-                        this.flickerTimer -= Collectible.FlickerDuration * this.Colours.Count;
-                    }
-
-                    Color tint = Colours[(int)(flickerTimer / Collectible.FlickerDuration)];
-                    this.Sprite.Tint = tint;
+                    Remove();
                 }
             }
             else
@@ -118,6 +125,7 @@ namespace GGJ2014.GameObjects
         {
             if (Enabled)
             {
+                this.Sprite.Tint = this.color;
                 this.Sprite.Draw(spriteBatch, this.transformComponent.Position);
             }
         }
@@ -127,6 +135,12 @@ namespace GGJ2014.GameObjects
             // Get spawn point from WorldManager
             Vector2 spawn = TheyDontThinkItBeLikeItIsButItDo.WorldManager.FindCollectableSpawnPoint();
             this.transformComponent.Position = spawn;
+        }
+
+        public void Remove()
+        {
+            Enabled = false;
+            Reset();
         }
     }
 }
