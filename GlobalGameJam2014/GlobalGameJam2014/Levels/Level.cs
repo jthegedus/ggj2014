@@ -11,31 +11,40 @@ namespace GGJ2014.Levels
     public class Level
     {
         private bool[] map;
+        private GroundType[] ground;
         public List<Rectangle> AgentSpawnRectangles { get; set; }
         public List<Rectangle> CollectableSpawnRectangles { get; set; }
         public Rectangle[,] WallRectangles { get; set; }
         private int Width { get; set; }
         private int Height { get; set; }
         private Sprite sprite;
-
+        private Sprite dirtSprite;
+        private Sprite grassSprite;
+        private Sprite stoneSprite;
+        
         private int CellWidth { get; set; }
         private int CellHeight { get; set; }
 
         public Level(int width, int height)
-            : this(new bool[width * height], width, height)
+            : this(new bool[width * height], new GroundType[width * height], width, height)
         {
         }
 
-        public Level(bool[] map, int width, int height)
+        public Level(bool[] map, GroundType[] ground, int width, int height)
         {
             this.map = map;
+            this.ground = ground;
             this.Width = width;
             this.Height = height;
             CellWidth = (int)(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth / width);
             CellHeight = (int)(TheyDontThinkItBeLikeItIsButItDo.ScreenHeight / height);
             this.sprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/agent"), CellWidth, CellHeight);
+            this.dirtSprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Dirt"), CellWidth, CellHeight);
+            this.grassSprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Grass"), CellWidth, CellHeight);
+            this.stoneSprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Stone"), CellWidth, CellHeight);
             this.AgentSpawnRectangles = new List<Rectangle>();
             this.CollectableSpawnRectangles = new List<Rectangle>();
+           
         }
 
         public bool getCell(int x, int y)
@@ -58,6 +67,11 @@ namespace GGJ2014.Levels
             CollectableSpawnRectangles.Add(new Rectangle(x * CellWidth, y * CellHeight, CellWidth, CellHeight));
         }
 
+        public void setGround(int x, int y, GroundType gType)
+        {
+            this.ground[y * this.Width + x] = gType;
+        }
+
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
             // Draw walls
@@ -73,6 +87,27 @@ namespace GGJ2014.Levels
             //        }
             //    }
             //}
+
+            // Draw ground
+            for (int y = 0; y < Height; ++y)
+            {
+                for (int x = 0; x < Width; ++x)
+                {
+                    Vector2 pos = new Vector2(x * this.sprite.Width, y * this.sprite.Height);
+                    if (this.ground[y * this.Width + x] == GroundType.DIRT)
+                    {
+                        this.dirtSprite.Draw(spriteBatch, pos);
+                    }
+                    else if (this.ground[y * this.Width + x] == GroundType.GRASS)
+                    {
+                        this.grassSprite.Draw(spriteBatch, pos);
+                    }
+                    else if (this.ground[y * this.Width + x] == GroundType.STONE)
+                    {
+                        this.stoneSprite.Draw(spriteBatch, pos);
+                    }
+                }
+            }
 
             // Draw spawns
             foreach (Rectangle spawn in AgentSpawnRectangles)

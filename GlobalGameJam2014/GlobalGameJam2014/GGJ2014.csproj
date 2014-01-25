@@ -125,6 +125,7 @@
     <Compile Include="GameObjects\Agent.cs" />
     <Compile Include="Components\TransformComponent.cs" />
     <Compile Include="Interfaces\IUpdate.cs" />
+    <Compile Include="Levels\GroundType.cs" />
     <Compile Include="Levels\Level.cs" />
     <Compile Include="Levels\LevelLoader.cs" />
     <Compile Include="Menu.cs" />
