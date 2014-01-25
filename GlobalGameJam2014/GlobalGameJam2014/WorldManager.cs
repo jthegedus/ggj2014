@@ -22,6 +22,7 @@ namespace GGJ2014
         List<IStatic> StaticObjects { get; set; }
         List<IDynamic> DynamicObjects { get; set; }
         List<Agent> Agents { get; set; }
+        List<Collectible> Collectibles { get; set; }
         public SpriteBatch SpriteBatch { get; set; }
         private Sprite s;
         private Level level;
@@ -43,6 +44,7 @@ namespace GGJ2014
             this.bulletPool = new BulletPool();
             this.objsToRemove = new List<Object>();
             this.objsToAdd = new List<Object>();
+            this.Collectibles = new List<Collectible>();
         }
 
         public void InitGame()
@@ -84,6 +86,8 @@ namespace GGJ2014
             {
                 Agents[i].Color = colors[i];
             }
+            Collectible c = new Collectible(new Vector2(300, 300));
+            this.AddToWorld(c);
 
             // Load level
             this.level = LevelLoader.LoadLevel("level04");
@@ -147,6 +151,11 @@ namespace GGJ2014
                     {
                         this.DynamicObjects.Add(obj as IDynamic);
                     }
+
+                    if (obj is Collectible)
+                    {
+                        this.Collectibles.Add(obj as Collectible);
+                    }
                 }
                 objsToAdd.Clear();
             }
@@ -192,6 +201,11 @@ namespace GGJ2014
                     {
                         this.DynamicObjects.Remove(obj as IDynamic);
                     }
+
+                    if (obj is Collectible)
+                    {
+                        this.Collectibles.Remove(obj as Collectible);
+                    }
                 }
                 this.objsToRemove.Clear();
             }
@@ -220,6 +234,7 @@ namespace GGJ2014
             {
                 this.Agents[i].HandleAgentCollisions(this.Agents, i);
                 this.Agents[i].HandleBulletCollisions(this.bulletPool.Bullets);
+                this.Agents[i].HandleCollectibleCollisions(this.Collectibles);
             }
         }
 

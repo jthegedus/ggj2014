@@ -39,8 +39,8 @@ namespace GGJ2014
             // graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             // graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
             // graphics.IsFullScreen = true;
-            graphics.PreferredBackBufferWidth = 64 * 15;
-            graphics.PreferredBackBufferHeight = 36 * 15;
+            graphics.PreferredBackBufferWidth = 64 * 25;
+            graphics.PreferredBackBufferHeight = 36 * 25;
             TheyDontThinkItBeLikeItIsButItDo.Scale = (float)graphics.PreferredBackBufferWidth / (64 * 15);
             graphics.SynchronizeWithVerticalRetrace = true;
             graphics.ApplyChanges();
