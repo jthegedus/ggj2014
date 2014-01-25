@@ -10,6 +10,7 @@ using GGJ2014.Components;
 using Microsoft.Xna.Framework.Graphics;
 using GGJ2014.Physics;
 using GGJ2014.Levels;
+using GGJ2014.Controllers;
 
 namespace GGJ2014.GameObjects
 {
@@ -191,6 +192,10 @@ namespace GGJ2014.GameObjects
             this.revealTimer = 0;
             this.Enabled = true;
             this.firing = false;
+            if (Controller != null && Controller is PlayerController)
+            {
+                ((PlayerController)Controller).OnAgentSpawn();
+            }
         }
 
         public void Dash()
