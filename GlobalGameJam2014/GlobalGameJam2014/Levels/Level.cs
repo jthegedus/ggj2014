@@ -39,9 +39,15 @@ namespace GGJ2014.Levels
             CellWidth = (int)(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth / width);
             CellHeight = (int)(TheyDontThinkItBeLikeItIsButItDo.ScreenHeight / height);
             this.sprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/agent"), CellWidth, CellHeight);
-            this.dirtSprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Dirt"), CellWidth, CellHeight);
-            this.grassSprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Grass"), CellWidth, CellHeight);
-            this.stoneSprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Stone"), CellWidth, CellHeight);
+
+            Texture2D texture = TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Dirt");
+            this.dirtSprite = new Sprite(texture, texture.Width, texture.Height);
+            float scale = (float)CellWidth / texture.Width;
+            this.dirtSprite.Zoom = scale;
+            this.grassSprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Grass"), texture.Width, texture.Height);
+            grassSprite.Zoom = scale;
+            this.stoneSprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Stone"), texture.Width, texture.Height);
+            stoneSprite.Zoom = scale;
             this.AgentSpawnRectangles = new List<Rectangle>();
             this.CollectableSpawnRectangles = new List<Rectangle>();
            
@@ -96,15 +102,15 @@ namespace GGJ2014.Levels
                     Vector2 pos = new Vector2(x * this.sprite.Width, y * this.sprite.Height);
                     if (this.ground[y * this.Width + x] == GroundType.DIRT)
                     {
-                        this.dirtSprite.Draw(spriteBatch, pos);
+                        this.dirtSprite.Draw(spriteBatch, pos, true);
                     }
                     else if (this.ground[y * this.Width + x] == GroundType.GRASS)
                     {
-                        this.grassSprite.Draw(spriteBatch, pos);
+                        this.grassSprite.Draw(spriteBatch, pos, true);
                     }
                     else if (this.ground[y * this.Width + x] == GroundType.STONE)
                     {
-                        this.stoneSprite.Draw(spriteBatch, pos);
+                        this.stoneSprite.Draw(spriteBatch, pos, true);
                     }
                 }
             }
@@ -123,11 +129,14 @@ namespace GGJ2014.Levels
 
             // Draw rectangles
             this.sprite.Tint = Color.Gray;
+            int offset = this.stoneSprite.Height/5;
+            this.stoneSprite.zIndex = 0.5f;
             foreach (Rectangle wall in WallRectangles)
             {
                 if (wall != null)
                 {
-                    this.sprite.Draw(spriteBatch, new Vector2(wall.Center.X, wall.Center.Y));
+                    this.stoneSprite.Draw(spriteBatch, new Vector2(wall.Left, wall.Top - offset), true);
+                    //this.sprite.Draw(spriteBatch, new Vector2(wall.Center.X, wall.Center.Y));
                 }
             }
         }
