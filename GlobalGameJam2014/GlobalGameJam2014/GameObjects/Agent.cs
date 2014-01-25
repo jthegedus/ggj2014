@@ -123,6 +123,11 @@ namespace GGJ2014.GameObjects
                         }
                         // shoot in the given direction
                         TheyDontThinkItBeLikeItIsButItDo.WorldManager.BulletPool.createBullet(this.transformComponent.Position, Vector2.Normalize(this.ShootDirection), this.Color, this.movementComponent.Velocity);
+
+                        //Play shooting sound
+                        Microsoft.Xna.Framework.Audio.Cue shootCue = TheyDontThinkItBeLikeItIsButItDo.AudioManager.LoadCue("shoot");
+                        TheyDontThinkItBeLikeItIsButItDo.AudioManager.PlayCue(ref shootCue, true);
+
                         timeLastFired = (float)gameTime.TotalGameTime.TotalSeconds;
                     }
 
@@ -258,9 +263,17 @@ namespace GGJ2014.GameObjects
                         // set the reveal timer (later to be replaced with blood)
                         this.revealTimer = Agent.RevealDuration;
 
+                        //Play Hit Sound
+                        Microsoft.Xna.Framework.Audio.Cue hitCue = TheyDontThinkItBeLikeItIsButItDo.AudioManager.LoadCue("hit");
+                        TheyDontThinkItBeLikeItIsButItDo.AudioManager.PlayCue(ref hitCue, true);
+
                         if (this.hitpoints <= 0)
                         {
                             // handle death
+
+                            //Play Death Sound
+                            Microsoft.Xna.Framework.Audio.Cue deathCue = TheyDontThinkItBeLikeItIsButItDo.AudioManager.LoadCue("death");
+                            TheyDontThinkItBeLikeItIsButItDo.AudioManager.PlayCue(ref deathCue, true);
                         }
                     }
                 }
