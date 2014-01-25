@@ -43,6 +43,7 @@ namespace GGJ2014.GameObjects
         private List<float> yPenetrations;
         private List<Rectangle> possibleRectangles;
         private bool Enabled { get; set; }
+        private const float SprayAngle = MathHelper.Pi / 18;
 
         private const float RespawnDuration = 2f;
         private float spawnTimer = RespawnDuration;
@@ -117,6 +118,10 @@ namespace GGJ2014.GameObjects
 
                         if (this.ShootDirection != Vector2.Zero)
                         {
+                            float angle = (float)Math.Atan2(this.ShootDirection.Y, this.ShootDirection.X);
+                            float variation = (float)(TheyDontThinkItBeLikeItIsButItDo.Rand.NextDouble() - 0.5f) * Agent.SprayAngle;
+                            angle += variation;
+                            this.ShootDirection = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
                             this.ShootDirection.Normalize();
                             this.lastShootingDirection = this.ShootDirection;
                         }
