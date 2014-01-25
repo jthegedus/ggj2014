@@ -19,7 +19,7 @@ namespace GGJ2014.GameObjects
         // private List<float> yPenetrations;
         private List<Rectangle> possibleRectangles;
 
-        private const float BaseSize = 5;
+        private const float BaseSize = 7.5f;
         private const float BaseSpeed = 300;
         private float size;
         private float speed;
@@ -56,7 +56,7 @@ namespace GGJ2014.GameObjects
             // Spritey things
             Texture2D baseball = TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Baseball");
             this.Sprite = new Sprite(baseball, baseball.Width, baseball.Height, ZIndex.Player);
-            
+            this.Sprite.zIndex += 0.0001f;
             this.Sprite.Zoom = TheyDontThinkItBeLikeItIsButItDo.Scale * Bullet.BaseSize / baseball.Width;
             this.Sprite.Tint = Color.Beige;
         }
@@ -70,6 +70,7 @@ namespace GGJ2014.GameObjects
         public void Update(GameTime gameTime)
         {
             // update position (Y)
+            this.Sprite.Rotation += (float)(Math.PI * 2 * gameTime.ElapsedGameTime.TotalSeconds);
             this.transformComponent.Position += this.movementComponent.Velocity * new Vector2(1, -1) * (float)gameTime.ElapsedGameTime.TotalSeconds;
             this.Lifespan -= (float)gameTime.ElapsedGameTime.TotalSeconds;
         }

@@ -122,7 +122,7 @@ namespace GGJ2014.Controllers
 
         public void OnAgentSpawn()
         {
-            FadingTextElement fte = new FadingTextElement("Player " + PlayerIndex, agent, Color.Black, 0, 2f, 1f, 0f);
+            FadingTextElement fte = new FadingTextElement("Player " + PlayerIndex, agent, Color.Black, 0, 4f, 1f, 0f);
             TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(fte);
         }
 
