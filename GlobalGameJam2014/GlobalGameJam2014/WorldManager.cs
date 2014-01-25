@@ -22,6 +22,7 @@ namespace GGJ2014
         List<IStatic> StaticObjects { get; set; }
         List<IDynamic> DynamicObjects { get; set; }
         List<Agent> Agents { get; set; }
+        List<Collectible> Collectibles { get; set; }
         public SpriteBatch SpriteBatch { get; set; }
         private Sprite s;
         private Level level;
@@ -43,6 +44,7 @@ namespace GGJ2014
             this.bulletPool = new BulletPool();
             this.objsToRemove = new List<Object>();
             this.objsToAdd = new List<Object>();
+            this.Collectibles = new List<Collectible>();
         }
 
         public void InitGame()
@@ -62,6 +64,9 @@ namespace GGJ2014
             TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player3);
             PlayerController player4 = new PlayerController(PlayerIndex.Four, Agents[3]);
             TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player4);
+
+            Collectible c = new Collectible(new Vector2(300, 300));
+            this.AddToWorld(c);
 
             Agents[0].Color = Color.Red;
             Agents[1].Color = Color.Blue;
@@ -130,6 +135,11 @@ namespace GGJ2014
                     {
                         this.DynamicObjects.Add(obj as IDynamic);
                     }
+
+                    if (obj is Collectible)
+                    {
+                        this.Collectibles.Add(obj as Collectible);
+                    }
                 }
                 objsToAdd.Clear();
             }
@@ -175,6 +185,11 @@ namespace GGJ2014
                     {
                         this.DynamicObjects.Remove(obj as IDynamic);
                     }
+
+                    if (obj is Collectible)
+                    {
+                        this.Collectibles.Remove(obj as Collectible);
+                    }
                 }
                 this.objsToRemove.Clear();
             }
@@ -203,6 +218,7 @@ namespace GGJ2014
             {
                 this.Agents[i].HandleAgentCollisions(this.Agents, i);
                 this.Agents[i].HandleBulletCollisions(this.bulletPool.Bullets);
+                this.Agents[i].HandleCollectibleCollisions(this.Collectibles);
             }
         }
 

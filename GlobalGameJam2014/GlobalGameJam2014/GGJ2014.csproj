@@ -112,6 +112,7 @@
     <Compile Include="Controllers\AIController.cs" />
     <Compile Include="Controllers\PlayerController.cs" />
     <Compile Include="GameObjects\Bullet.cs" />
+    <Compile Include="GameObjects\Collectible.cs" />
     <Compile Include="Interfaces\IController.cs" />
     <Compile Include="Interfaces\IDraw.cs" />
     <Compile Include="Interfaces\IDynamic.cs" />

@@ -28,6 +28,7 @@ namespace GGJ2014
         public static WorldManager WorldManager { get; set; }
         public static ContentManager ContentManager { get; set; }
         public static ControllerManager ControllerManager { get; set; }
+        public static Random Rand { get; set; }
 
         public TheyDontThinkItBeLikeItIsButItDo()
         {
@@ -35,8 +36,8 @@ namespace GGJ2014
             // graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             // graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
             // graphics.IsFullScreen = true;
-            graphics.PreferredBackBufferWidth = 64 * 15;
-            graphics.PreferredBackBufferHeight = 36 * 15;
+            graphics.PreferredBackBufferWidth = 64 * 25;
+            graphics.PreferredBackBufferHeight = 36 * 25;
             TheyDontThinkItBeLikeItIsButItDo.Scale = (float)graphics.PreferredBackBufferWidth / (64 * 15);
             graphics.SynchronizeWithVerticalRetrace = true;
             graphics.ApplyChanges();
@@ -44,6 +45,7 @@ namespace GGJ2014
             ScreenHeight = graphics.PreferredBackBufferHeight;
             Content.RootDirectory = "Content";
             this.Window.Title = "They Don't Think It Be Like It Is, But It Do";
+            TheyDontThinkItBeLikeItIsButItDo.Rand = new Random(DateTime.Now.Millisecond);
         }
 
         /// <summary>

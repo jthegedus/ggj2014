@@ -220,8 +220,26 @@ namespace GGJ2014.GameObjects
             }
         }
 
-        public void HandleCollectibleCollisions()
+        public void HandleCollectibleCollisions(List<Collectible> collectibles)
         {
+            foreach (Collectible collectible in collectibles)
+            {
+                if (this.CollisionRectangle.Intersects(collectible.CollisionRectangle) ||
+                    this.CollisionRectangle.Contains(collectible.CollisionRectangle) ||
+                    collectible.CollisionRectangle.Contains(this.CollisionRectangle))
+                {
+                    if (collectible.Colours.Contains(this.Color))
+                    {
+                        collectible.Colours.Remove(this.Color);
+                        // add points
+
+                        if (collectible.Colours.Count == 0)
+                        {
+                            TheyDontThinkItBeLikeItIsButItDo.WorldManager.RemoveFromWorld(collectible);
+                        }
+                    }
+                }
+            }
         }
     }
 }
