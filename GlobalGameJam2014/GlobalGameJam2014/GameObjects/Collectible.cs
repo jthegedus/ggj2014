@@ -13,7 +13,7 @@ namespace GGJ2014.GameObjects
 {
     public class Collectible : IStatic, IDraw, IUpdate
     {
-        private const float Duration = 10;
+        private const float Duration = 10f;
         private float durationTimer;
         private const float BaseSize = 20;
         private float size;
@@ -23,18 +23,32 @@ namespace GGJ2014.GameObjects
         private TransformComponent transformComponent;
         public Sprite Sprite { get; set; }
 
+        public bool Enabled { get; set; }
+        public float spawnTimer;
+        public const int MinSpawnDuration = 4;
+        public const int MaxSpawnDuration = 10;
+
         public Collectible(Vector2 position)
         {
             this.size = TheyDontThinkItBeLikeItIsButItDo.Scale * Collectible.BaseSize;
             this.transformComponent.Position = position;
             this.Sprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/agent"),(int)this.size, (int)this.size);
+            Reset();
+            this.flickerTimer = TheyDontThinkItBeLikeItIsButItDo.Rand.Next(0, 4);
+            this.durationTimer = Collectible.Duration;
+        }
+
+        private void Reset()
+        {
+            // Reset both timers and the colours
+            durationTimer = Duration;
+            spawnTimer = (float)(TheyDontThinkItBeLikeItIsButItDo.Rand.NextDouble() * (MaxSpawnDuration - MinSpawnDuration) + MinSpawnDuration);
+            spawnTimer = MathHelper.Clamp(spawnTimer, MinSpawnDuration, MaxSpawnDuration);
             this.Colours = new List<Color>();
             Colours.Add(Color.Red);
             Colours.Add(Color.Yellow);
             Colours.Add(Color.Green);
             Colours.Add(Color.Blue);
-            this.flickerTimer = TheyDontThinkItBeLikeItIsButItDo.Rand.Next(0, 4);
-            this.durationTimer = Collectible.Duration;
         }
 
         public Rectangle CollisionRectangle
@@ -66,28 +80,53 @@ namespace GGJ2014.GameObjects
         public void Update(GameTime gameTime)
         {
             float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            this.durationTimer -= elapsedTime;
 
-            if (durationTimer <= 0)
+            if (Enabled)
             {
-                TheyDontThinkItBeLikeItIsButItDo.WorldManager.RemoveFromWorld(this);
+                this.durationTimer -= elapsedTime;
+
+                if (durationTimer <= 0)
+                {
+                    Enabled = false;
+                    Reset();
+                }
+                else
+                {
+                    this.flickerTimer += elapsedTime;
+                    if (this.flickerTimer >= Collectible.FlickerDuration * this.Colours.Count)
+                    {
+                        this.flickerTimer -= Collectible.FlickerDuration * this.Colours.Count;
+                    }
+
+                    Color tint = Colours[(int)(flickerTimer / Collectible.FlickerDuration)];
+                    this.Sprite.Tint = tint;
+                }
             }
             else
             {
-                this.flickerTimer += elapsedTime;
-                if (this.flickerTimer >= Collectible.FlickerDuration * this.Colours.Count)
+                this.spawnTimer -= elapsedTime;
+                if (spawnTimer <= 0)
                 {
-                    this.flickerTimer -= Collectible.FlickerDuration * this.Colours.Count;
+                    Enabled = true;
+                    Reset();
+                    Spawn();
                 }
-
-                Color tint = Colours[(int)(flickerTimer / Collectible.FlickerDuration)];
-                this.Sprite.Tint = tint;
             }
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            this.Sprite.Draw(spriteBatch, this.transformComponent.Position);
+            if (Enabled)
+            {
+                this.Sprite.Draw(spriteBatch, this.transformComponent.Position);
+            }
+        }
+
+        private void Spawn()
+        {
+            // Get spawn point from WorldManager
+            Vector2 spawn = TheyDontThinkItBeLikeItIsButItDo.WorldManager.FindCollectableSpawnPoint();
+            this.transformComponent.Position = spawn;
         }
     }
 }
