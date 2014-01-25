@@ -113,6 +113,7 @@
     <Compile Include="ControllerManager.cs" />
     <Compile Include="Controllers\AIController.cs" />
     <Compile Include="Controllers\PlayerController.cs" />
+    <Compile Include="Controllers\TimedVibration.cs" />
     <Compile Include="GameObjects\Bullet.cs" />
     <Compile Include="GameState.cs" />
     <Compile Include="GameObjects\Collectible.cs" />
