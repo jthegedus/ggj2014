@@ -7,8 +7,11 @@ namespace GGJ2014.Levels
 {
     public enum GroundType
     {
+        EMPTY,
         GRASS,
         DIRT,
-        STONE
+        STONE,
+        ROCK,
+        BUSH
     }
 }

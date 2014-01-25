@@ -14,12 +14,16 @@ namespace GGJ2014.Levels
         {
             Texture2D levelImage = TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Levels/" + filename);
             Texture2D groundImage = TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Levels/" + filename + "g");
+
             int width = levelImage.Width;
             int height = levelImage.Height;
+
             Color[] levelColors = new Color[width * height];
             Color[] groundColors = new Color[width * height];
+
             levelImage.GetData<Color>(levelColors);
             groundImage.GetData<Color>(groundColors);
+
             Level level = new Level(width, height);
             for (int y = 0; y < height; ++y)
             {
@@ -42,16 +46,26 @@ namespace GGJ2014.Levels
 
                     // Object color check
                     color = levelColors[y * width + x];
-                    bool state = (color == Color.White) ? false : true;
-                    level.setCell(x, y, state);
+                    level.setCell(x, y, GroundType.EMPTY);
                     if (color == Color.Red)
                     {
                         level.addAgentSpawn(x, y);
-                        Console.Out.WriteLine(color);
                     }
                     else if (color == Color.Blue)
                     {
                         level.addCollectableSpawn(x, y);
+                    }
+                    else if (color == Color.Cyan)
+                    {
+                        level.setCell(x, y, GroundType.BUSH);
+                    }
+                    else if (color == Color.Orange)
+                    {
+                        level.setCell(x, y, GroundType.ROCK);
+                    }
+                    else if (color == Color.White)
+                    {
+                        level.setCell(x, y, GroundType.STONE);
                     }
                 }
             }
