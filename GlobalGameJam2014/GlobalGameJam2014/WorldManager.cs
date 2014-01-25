@@ -62,11 +62,28 @@ namespace GGJ2014
             TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player3);
             PlayerController player4 = new PlayerController(PlayerIndex.Four, Agents[3]);
             TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player4);
+            
+            // Randomise dem colours, MAAAAAAAAAAHN
+            List<Color> colors = new List<Color>();
+            colors.Add(Color.Red);
+            colors.Add(Color.Blue);
+            colors.Add(Color.Yellow);
+            colors.Add(Color.Green);
 
-            Agents[0].Color = Color.Red;
-            Agents[1].Color = Color.Blue;
-            Agents[2].Color = Color.Yellow;
-            Agents[3].Color = Color.Green;
+            // Do 10 random swaps on colors list
+            for (int i = 0; i < 10; ++i)
+            {
+                int index = TheyDontThinkItBeLikeItIsButItDo.Rand.Next(0, colors.Count);
+                Color temp = colors[index];
+                colors.RemoveAt(index);
+                colors.Add(temp);
+            }
+
+            // Assign colours
+            for (int i = 0; i < Agents.Count; ++i)
+            {
+                Agents[i].Color = colors[i];
+            }
 
             // Load level
             this.level = LevelLoader.LoadLevel("level04");
@@ -223,6 +240,44 @@ namespace GGJ2014
             }
 
             this.SpriteBatch.End();
+        }
+
+        public Vector2 FindSpawnPoint()
+        {
+            List<Rectangle> spawns = Level.SpawnRectangles;
+            float[] spawnsDistance = new float[spawns.Count];
+            // Initially populate big distances
+            for (int i = 0; i < spawnsDistance.Length; ++i)
+            {
+                spawnsDistance[i] = TheyDontThinkItBeLikeItIsButItDo.ScreenWidth;
+            }
+            
+            // Find smallest distance for each spawn point
+            for(int i = 0; i < spawns.Count; ++i)
+            {
+                // If agent is closer than last closest distance, store the distance
+                foreach (Agent agent in Agents)
+                {
+                    Vector2 spawnVec = new Vector2(spawns[i].Center.X, spawns[i].Center.Y);
+                    float dist = Vector2.Distance(spawnVec, agent.TransformComponent.Position);
+                    if (dist < spawnsDistance[i])
+                    {
+                        spawnsDistance[i] = dist; 
+                    }
+                }
+            }
+
+            // Find spawn point with largest distance
+            int largestDistIndex = 0;
+            for (int i = 0; i < spawnsDistance.Length; ++i)
+            {
+                if (spawnsDistance[i] > spawnsDistance[largestDistIndex])
+                {
+                    largestDistIndex = i;
+                }
+            }
+
+            return new Vector2(spawns[largestDistIndex].Center.X, spawns[largestDistIndex].Center.Y);
         }
     }
 }

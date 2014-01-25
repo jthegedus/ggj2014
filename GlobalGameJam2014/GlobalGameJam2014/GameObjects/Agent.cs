@@ -40,6 +40,11 @@ namespace GGJ2014.GameObjects
         private List<float> xPenetrations;
         private List<float> yPenetrations;
         private List<Rectangle> possibleRectangles;
+        private bool Enabled { get; set; }
+
+        private const float RespawnDuration = 2f;
+        private float spawnTimer = RespawnDuration;
+
         public Rectangle CollisionRectangle
         {
             get
@@ -66,113 +71,149 @@ namespace GGJ2014.GameObjects
 
         public void Update(GameTime gameTime)
         {
-            // set the last position
-            this.movementComponent.LastPosition = this.transformComponent.Position;
-
-            // attenuate current velocity so the player slows down. Stop them if they're really close to not moving
-            this.movementComponent.Velocity *= 54f * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            if (this.movementComponent.Velocity.LengthSquared() < 0.5f)
+            if (hitpoints <= 0)
             {
-                this.movementComponent.Velocity = Vector2.Zero;
+                Enabled = false;
             }
-
-            // add the current impulse to the velocity
-            this.movementComponent.Velocity += this.DesiredMovementDirection * speed;
-
-            // apply the current velocity to the position
-            this.transformComponent.Position += this.movementComponent.Velocity * new Vector2(1, -1) * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            // shoot
-            if (((this.ShootDirection != Vector2.Zero && this.burstTimer == 0f) || this.firing))
+            if (!Enabled)
             {
-                if (((float)gameTime.TotalGameTime.TotalSeconds - timeLastFired) > 1.0f / fireRate)
+                Enabled = false;
+                // Count down spawn timer
+                spawnTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                if (spawnTimer <= 0)
                 {
-                    // you can still shoot
-                    firing = true;
-
-                    if (this.ShootDirection != Vector2.Zero)
-                    {
-                        this.ShootDirection.Normalize();
-                        this.lastShootingDirection = this.ShootDirection;
-                    }
-                    else
-                    {
-                        this.ShootDirection = this.lastShootingDirection;
-                    }
-                    // shoot in the given direction
-                    TheyDontThinkItBeLikeItIsButItDo.WorldManager.BulletPool.createBullet(this.transformComponent.Position, Vector2.Normalize(this.ShootDirection), this.Color, this.movementComponent.Velocity);
-                    timeLastFired = (float)gameTime.TotalGameTime.TotalSeconds;
-                }
-
-                // increase burst timer
-                this.burstTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
-                if (this.burstTimer >= Agent.BurstDuration)
-                {
-                    this.burstTimer = Agent.BurstDuration;
-                    this.firing = false;
+                    spawnTimer = RespawnDuration;
+                    Spawn();
                 }
             }
-            else
+            else // Alive, do update!
             {
-                this.burstTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds / Agent.BurstCooldown;
-                if (this.burstTimer < 0)
+                // set the last position
+                this.movementComponent.LastPosition = this.transformComponent.Position;
+
+                // attenuate current velocity so the player slows down. Stop them if they're really close to not moving
+                this.movementComponent.Velocity *= 54f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                if (this.movementComponent.Velocity.LengthSquared() < 0.5f)
                 {
-                    this.burstTimer = 0;
+                    this.movementComponent.Velocity = Vector2.Zero;
+                }
+
+                // add the current impulse to the velocity
+                this.movementComponent.Velocity += this.DesiredMovementDirection * speed;
+
+                // apply the current velocity to the position
+                this.transformComponent.Position += this.movementComponent.Velocity * new Vector2(1, -1) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                // shoot
+                if (((this.ShootDirection != Vector2.Zero && this.burstTimer == 0f) || this.firing))
+                {
+                    if (((float)gameTime.TotalGameTime.TotalSeconds - timeLastFired) > 1.0f / fireRate)
+                    {
+                        // you can still shoot
+                        firing = true;
+
+                        if (this.ShootDirection != Vector2.Zero)
+                        {
+                            this.ShootDirection.Normalize();
+                            this.lastShootingDirection = this.ShootDirection;
+                        }
+                        else
+                        {
+                            this.ShootDirection = this.lastShootingDirection;
+                        }
+                        // shoot in the given direction
+                        TheyDontThinkItBeLikeItIsButItDo.WorldManager.BulletPool.createBullet(this.transformComponent.Position, Vector2.Normalize(this.ShootDirection), this.Color, this.movementComponent.Velocity);
+                        timeLastFired = (float)gameTime.TotalGameTime.TotalSeconds;
+                    }
+
+                    // increase burst timer
+                    this.burstTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    if (this.burstTimer >= Agent.BurstDuration)
+                    {
+                        this.burstTimer = Agent.BurstDuration;
+                        this.firing = false;
+                    }
+                }
+                else
+                {
+                    this.burstTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds / Agent.BurstCooldown;
+                    if (this.burstTimer < 0)
+                    {
+                        this.burstTimer = 0;
+                    }
                 }
             }
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            this.Sprite.Tint = Color.Lerp(Color.White, this.Color, this.revealTimer / Agent.RevealDuration);
-            this.revealTimer = MathHelper.Clamp(this.revealTimer, 0, this.revealTimer - (float)gameTime.ElapsedGameTime.TotalSeconds);
-            this.Sprite.Draw(spriteBatch, this.transformComponent.Position);
+            if (Enabled)
+            {
+                this.Sprite.Tint = Color.Lerp(Color.White, this.Color, this.revealTimer / Agent.RevealDuration);
+                this.revealTimer = MathHelper.Clamp(this.revealTimer, 0, this.revealTimer - (float)gameTime.ElapsedGameTime.TotalSeconds);
+                this.Sprite.Draw(spriteBatch, this.transformComponent.Position);
+            }
+        }
+
+        public void Spawn()
+        {
+            // Get suitable spawn point from WorldManager
+            Vector2 spawn = TheyDontThinkItBeLikeItIsButItDo.WorldManager.FindSpawnPoint();
+            // Reset stuff
+            this.movementComponent.Velocity = Vector2.Zero;
+            this.transformComponent.Position = spawn;
+            this.hitpoints = 100;
+            this.revealTimer = 0;
+            this.Enabled = true;
         }
 
         public void HandleMapCollisions(Level level)
         {
-            // if the player has moved
-            if (this.transformComponent.Position != this.movementComponent.LastPosition)
+            if (Enabled)
             {
-                this.xPenetrations.Clear();
-                this.yPenetrations.Clear();
-                this.possibleRectangles.Clear();
-
-                // TESTING
-                //this.possibleRectangles.Add(new Rectangle(200, 200, 100, 100));
-
-                level.GetPossibleRectangles(this.possibleRectangles, this.transformComponent.Position, this.movementComponent.LastPosition, this.CollisionRectangle);
-
-                foreach (Rectangle r in possibleRectangles)
+                // if the player has moved
+                if (this.transformComponent.Position != this.movementComponent.LastPosition)
                 {
-                    Vector2 penetration = CollisionSolver.SolveCollision(this, r);
-                    if (penetration.X != 0)
-                    {
-                        this.xPenetrations.Add(penetration.X);
-                    }
-                    if (penetration.Y != 0)
-                    {
-                        this.yPenetrations.Add(penetration.Y);
-                    }
-                }
+                    this.xPenetrations.Clear();
+                    this.yPenetrations.Clear();
+                    this.possibleRectangles.Clear();
 
-                if (xPenetrations.Count != 0 || yPenetrations.Count != 0)
-                {
-                    if (xPenetrations.Count >= yPenetrations.Count)
+                    // TESTING
+                    //this.possibleRectangles.Add(new Rectangle(200, 200, 100, 100));
+
+                    level.GetPossibleRectangles(this.possibleRectangles, this.transformComponent.Position, this.movementComponent.LastPosition, this.CollisionRectangle);
+
+                    foreach (Rectangle r in possibleRectangles)
                     {
-                        this.xPenetrations.Sort();
-                        // this.movementComponent.LastPosition = this.transformComponent.Position;
-                        this.transformComponent.Position = this.transformComponent.Position - Vector2.UnitX * xPenetrations[0];
-                        this.movementComponent.Velocity *= -Vector2.UnitX;
-                        HandleMapCollisions(level);
+                        Vector2 penetration = CollisionSolver.SolveCollision(this, r);
+                        if (penetration.X != 0)
+                        {
+                            this.xPenetrations.Add(penetration.X);
+                        }
+                        if (penetration.Y != 0)
+                        {
+                            this.yPenetrations.Add(penetration.Y);
+                        }
                     }
-                    else
+
+                    if (xPenetrations.Count != 0 || yPenetrations.Count != 0)
                     {
-                        this.yPenetrations.Sort();
-                        // this.movementComponent.LastPosition = this.transformComponent.Position;
-                        this.transformComponent.Position = this.transformComponent.Position - Vector2.UnitY * yPenetrations[0];
-                        this.movementComponent.Velocity *= -Vector2.UnitY;
-                        HandleMapCollisions(level);
+                        if (xPenetrations.Count >= yPenetrations.Count)
+                        {
+                            this.xPenetrations.Sort();
+                            // this.movementComponent.LastPosition = this.transformComponent.Position;
+                            this.transformComponent.Position = this.transformComponent.Position - Vector2.UnitX * xPenetrations[0];
+                            this.movementComponent.Velocity *= -Vector2.UnitX;
+                            HandleMapCollisions(level);
+                        }
+                        else
+                        {
+                            this.yPenetrations.Sort();
+                            // this.movementComponent.LastPosition = this.transformComponent.Position;
+                            this.transformComponent.Position = this.transformComponent.Position - Vector2.UnitY * yPenetrations[0];
+                            this.movementComponent.Velocity *= -Vector2.UnitY;
+                            HandleMapCollisions(level);
+                        }
                     }
                 }
             }
@@ -180,41 +221,47 @@ namespace GGJ2014.GameObjects
 
         public void HandleAgentCollisions(List<Agent> agents, int myIndex)
         {
-            int numAgents = agents.Count;
-            for (int i = myIndex + 1; i < numAgents; ++i)
+            if (Enabled)
             {
-                if (this.CollisionRectangle.Intersects(agents[i].CollisionRectangle))
+                int numAgents = agents.Count;
+                for (int i = myIndex + 1; i < numAgents; ++i)
                 {
-                    // display colours
-                    this.revealTimer = RevealDuration;
-                    agents[i].revealTimer = RevealDuration;
+                    if (agents[i].Enabled && this.CollisionRectangle.Intersects(agents[i].CollisionRectangle))
+                    {
+                        // display colours
+                        this.revealTimer = RevealDuration;
+                        agents[i].revealTimer = RevealDuration;
+                    }
                 }
             }
         }
 
         public void HandleBulletCollisions(List<Bullet> bullets)
         {
-            Bullet bullet;
-            int numBullets = bullets.Count;
-            for (int i = 0; i < numBullets; ++i)
+            if (Enabled)
             {
-                bullet = bullets[i];
-                if (bullet.Owner != this.Color && 
-                    (bullet.CollisionRectangle.Intersects(this.CollisionRectangle) ||
-                    this.CollisionRectangle.Contains(bullet.CollisionRectangle)))
+                Bullet bullet;
+                int numBullets = bullets.Count;
+                for (int i = 0; i < numBullets; ++i)
                 {
-                    // despawn that sucker
-                    bullet.Lifespan = -1;
-
-                    // take damage
-                    this.hitpoints -= bullet.Damage;
-
-                    // set the reveal timer (later to be replaced with blood)
-                    this.revealTimer = Agent.RevealDuration;
-
-                    if (this.hitpoints <= 0)
+                    bullet = bullets[i];
+                    if (bullet.Owner != this.Color &&
+                        (bullet.CollisionRectangle.Intersects(this.CollisionRectangle) ||
+                        this.CollisionRectangle.Contains(bullet.CollisionRectangle)))
                     {
-                        // handle death
+                        // despawn that sucker
+                        bullet.Lifespan = -1;
+
+                        // take damage
+                        this.hitpoints -= bullet.Damage;
+
+                        // set the reveal timer (later to be replaced with blood)
+                        this.revealTimer = Agent.RevealDuration;
+
+                        if (this.hitpoints <= 0)
+                        {
+                            // handle death
+                        }
                     }
                 }
             }

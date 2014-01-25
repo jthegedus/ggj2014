@@ -28,6 +28,7 @@ namespace GGJ2014
         public static WorldManager WorldManager { get; set; }
         public static ContentManager ContentManager { get; set; }
         public static ControllerManager ControllerManager { get; set; }
+        public static Random Rand { get; set; }
 
         public TheyDontThinkItBeLikeItIsButItDo()
         {
@@ -44,6 +45,9 @@ namespace GGJ2014
             ScreenHeight = graphics.PreferredBackBufferHeight;
             Content.RootDirectory = "Content";
             this.Window.Title = "They Don't Think It Be Like It Is, But It Do";
+            TheyDontThinkItBeLikeItIsButItDo.PlayerSize = (int)(TheyDontThinkItBeLikeItIsButItDo.PlayerScreenSizeRatio * this.graphics.PreferredBackBufferWidth);
+            TheyDontThinkItBeLikeItIsButItDo.PlayerSpeed = TheyDontThinkItBeLikeItIsButItDo.PlayerScreenSpeedRatio * this.graphics.PreferredBackBufferWidth;
+            TheyDontThinkItBeLikeItIsButItDo.Rand = new Random(DateTime.Now.Millisecond);
         }
 
         /// <summary>
