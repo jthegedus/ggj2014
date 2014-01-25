@@ -10,27 +10,31 @@ namespace GGJ2014.Levels
 {
     public class Level
     {
-        private bool[] map;
+        private GroundType[] map;
         private GroundType[] ground;
         public List<Rectangle> AgentSpawnRectangles { get; set; }
         public List<Rectangle> CollectableSpawnRectangles { get; set; }
         public Rectangle[,] WallRectangles { get; set; }
+
         public int Width { get; private set; }
         public int Height { get; private set; }
-        public Sprite sprite;
+        private int CellWidth { get; set; }
+        private int CellHeight { get; set; }
+
+        private Sprite sprite;
         private Sprite dirtSprite;
         private Sprite grassSprite;
         private Sprite stoneSprite;
         private Sprite groundStoneSprite;
-        private int CellWidth { get; set; }
-        private int CellHeight { get; set; }
+        private Sprite rockSprite;
+        private Sprite bushSprite;
 
         public Level(int width, int height)
-            : this(new bool[width * height], new GroundType[width * height], width, height)
+            : this(new GroundType[width * height], new GroundType[width * height], width, height)
         {
         }
 
-        public Level(bool[] map, GroundType[] ground, int width, int height)
+        public Level(GroundType[] map, GroundType[] ground, int width, int height)
         {
             this.map = map;
             this.ground = ground;
@@ -39,26 +43,34 @@ namespace GGJ2014.Levels
             CellWidth = (int)(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth / width);
             CellHeight = (int)(TheyDontThinkItBeLikeItIsButItDo.ScreenHeight / height);
 
-            this.sprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/agent"), CellWidth, CellHeight, 1);
-
+            // set sprites to textures
+            this.sprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/agent"), CellWidth, CellHeight);
             Texture2D texture = TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Dirt");
             this.grassSprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Grass"), texture.Width, texture.Height);
             this.stoneSprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Stone"), texture.Width, texture.Height);
             this.groundStoneSprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Stone"), texture.Width, texture.Height);
+            this.rockSprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Rock"), texture.Width, texture.Height);
+            this.bushSprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Bush"), texture.Width, texture.Height);
 
+            // determine scale
             this.dirtSprite = new Sprite(texture, texture.Width, texture.Height);
             float scale = (float)CellWidth / texture.Width;
 
+            // set scale
             dirtSprite.Zoom = scale;
             grassSprite.Zoom = scale;
             stoneSprite.Zoom = scale;
             groundStoneSprite.Zoom = scale;
+            rockSprite.Zoom = scale;
+            bushSprite.Zoom = scale;
 
+            // set z-depths
             grassSprite.zIndex = ZIndex.Ground;
             dirtSprite.zIndex = ZIndex.Ground;
             groundStoneSprite.zIndex = ZIndex.Ground;
             this.sprite.zIndex = ZIndex.Object;
 
+            // spawn agents and collectables
             this.AgentSpawnRectangles = new List<Rectangle>();
             this.CollectableSpawnRectangles = new List<Rectangle>();
            
@@ -66,10 +78,10 @@ namespace GGJ2014.Levels
 
         public bool getCell(int x, int y)
         {
-            return this.map[y * this.Width + x];
+            return this.map[y * this.Width + x] == GroundType.EMPTY;
         }
 
-        public void setCell(int x, int y, bool state)
+        public void setCell(int x, int y, GroundType state)
         {
             this.map[y * this.Width + x] = state;
         }
@@ -127,17 +139,32 @@ namespace GGJ2014.Levels
             //    this.sprite.Draw(spriteBatch, new Vector2(spawn.Center.X, spawn.Center.Y));
             //}
 
-            // Draw rectangles
+
+            // Draw collision objects
             int offset = this.stoneSprite.Height/5;
             this.stoneSprite.zIndex = ZIndex.Collision;
             for (int y = 0; y < Height; ++y)
             {
                 this.stoneSprite.zIndex = ZIndex.Collision - (y * 0.001f);
+                this.bushSprite.zIndex = ZIndex.Collision - (y * 0.001f);
+                this.rockSprite.zIndex = ZIndex.Collision - (y * 0.001f);
                 for (int x = 0; x < Width; ++x)
                 {
                     if (WallRectangles[x, y] != null)
                     {
-                        this.stoneSprite.Draw(spriteBatch, new Vector2(WallRectangles[x, y].Left, WallRectangles[x, y].Top - offset), true);
+                        if (this.map[y * this.Width + x] == GroundType.STONE)
+                        {
+                            this.stoneSprite.Draw(spriteBatch, new Vector2(WallRectangles[x, y].Left, WallRectangles[x, y].Top - offset), true);
+                        }
+                        else if (this.map[y * this.Width + x] == GroundType.BUSH)
+                        {
+                            this.bushSprite.Draw(spriteBatch, new Vector2(WallRectangles[x, y].Left, WallRectangles[x, y].Top - offset), true);
+                        }
+                        else if (this.map[y * this.Width + x] == GroundType.ROCK)
+                        {
+                            this.rockSprite.Draw(spriteBatch, new Vector2(WallRectangles[x, y].Left, WallRectangles[x, y].Top - offset), true);
+                        }
+                        
                     }
                 }
             }
