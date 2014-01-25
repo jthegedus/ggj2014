@@ -21,6 +21,7 @@ namespace GGJ2014.Levels
         private Sprite dirtSprite;
         private Sprite grassSprite;
         private Sprite stoneSprite;
+        private Sprite groundStoneSprite;
         
         private int CellWidth { get; set; }
         private int CellHeight { get; set; }
@@ -38,16 +39,27 @@ namespace GGJ2014.Levels
             this.Height = height;
             CellWidth = (int)(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth / width);
             CellHeight = (int)(TheyDontThinkItBeLikeItIsButItDo.ScreenHeight / height);
-            this.sprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/agent"), CellWidth, CellHeight);
 
+
+            this.sprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/agent"), CellWidth, CellHeight);
             Texture2D texture = TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Dirt");
+            this.grassSprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Grass"), texture.Width, texture.Height);
+            this.stoneSprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Stone"), texture.Width, texture.Height);
+            this.groundStoneSprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Stone"), texture.Width, texture.Height);
+
             this.dirtSprite = new Sprite(texture, texture.Width, texture.Height);
             float scale = (float)CellWidth / texture.Width;
-            this.dirtSprite.Zoom = scale;
-            this.grassSprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Grass"), texture.Width, texture.Height);
+
+            dirtSprite.Zoom = scale;
             grassSprite.Zoom = scale;
-            this.stoneSprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Stone"), texture.Width, texture.Height);
             stoneSprite.Zoom = scale;
+            groundStoneSprite.Zoom = scale;
+
+            grassSprite.zIndex = ZIndex.Ground;
+            dirtSprite.zIndex = ZIndex.Ground;
+            groundStoneSprite.zIndex = ZIndex.Ground;
+            this.sprite.zIndex = ZIndex.Object;
+
             this.AgentSpawnRectangles = new List<Rectangle>();
             this.CollectableSpawnRectangles = new List<Rectangle>();
            
@@ -80,23 +92,12 @@ namespace GGJ2014.Levels
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            // Draw walls
-            //this.sprite.Tint = Color.DarkGray;
-            //for (int y = 0; y < Height; ++y)
-            //{
-            //    for (int x = 0; x < Width; ++x)
-            //    {
-            //        Vector2 pos = new Vector2(x * this.sprite.Width, y * this.sprite.Height);
-            //        if (this.getCell(x, y) == false)
-            //        {
-            //            this.sprite.Draw(spriteBatch, pos);
-            //        }
-            //    }
-            //}
-
             // Draw ground
             for (int y = 0; y < Height; ++y)
             {
+                this.dirtSprite.zIndex = ZIndex.Ground - (y * 0.001f);
+                this.grassSprite.zIndex = ZIndex.Ground - (y * 0.001f);
+                this.groundStoneSprite.zIndex = ZIndex.Ground - (y * 0.001f);
                 for (int x = 0; x < Width; ++x)
                 {
                     Vector2 pos = new Vector2(x * this.sprite.Width, y * this.sprite.Height);
@@ -110,33 +111,35 @@ namespace GGJ2014.Levels
                     }
                     else if (this.ground[y * this.Width + x] == GroundType.STONE)
                     {
-                        this.stoneSprite.Draw(spriteBatch, pos, true);
+                        this.groundStoneSprite.Draw(spriteBatch, pos, true);
                     }
                 }
             }
 
             // Draw spawns
-            foreach (Rectangle spawn in AgentSpawnRectangles)
-            {
-                this.sprite.Tint = Color.Red;
-                this.sprite.Draw(spriteBatch, new Vector2(spawn.Center.X, spawn.Center.Y));
-            }
-            foreach (Rectangle spawn in CollectableSpawnRectangles)
-            {
-                this.sprite.Tint = Color.Blue;
-                this.sprite.Draw(spriteBatch, new Vector2(spawn.Center.X, spawn.Center.Y));
-            }
+            //foreach (Rectangle spawn in AgentSpawnRectangles)
+            //{
+            //    this.sprite.Tint = Color.Red;
+            //    this.sprite.Draw(spriteBatch, new Vector2(spawn.Center.X, spawn.Center.Y));
+            //}
+            //foreach (Rectangle spawn in CollectableSpawnRectangles)
+            //{
+            //    this.sprite.Tint = Color.Blue;
+            //    this.sprite.Draw(spriteBatch, new Vector2(spawn.Center.X, spawn.Center.Y));
+            //}
 
             // Draw rectangles
-            this.sprite.Tint = Color.Gray;
             int offset = this.stoneSprite.Height/5;
-            this.stoneSprite.zIndex = 0.5f;
-            foreach (Rectangle wall in WallRectangles)
+            this.stoneSprite.zIndex = ZIndex.Collision;
+            for (int y = 0; y < Height; ++y)
             {
-                if (wall != null)
+                this.stoneSprite.zIndex = ZIndex.Collision - (y * 0.001f);
+                for (int x = 0; x < Width; ++x)
                 {
-                    this.stoneSprite.Draw(spriteBatch, new Vector2(wall.Left, wall.Top - offset), true);
-                    //this.sprite.Draw(spriteBatch, new Vector2(wall.Center.X, wall.Center.Y));
+                    if (WallRectangles[x, y] != null)
+                    {
+                        this.stoneSprite.Draw(spriteBatch, new Vector2(WallRectangles[x, y].Left, WallRectangles[x, y].Top - offset), true);
+                    }
                 }
             }
         }

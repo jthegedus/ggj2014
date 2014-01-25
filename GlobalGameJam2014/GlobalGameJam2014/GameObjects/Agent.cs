@@ -63,7 +63,7 @@ namespace GGJ2014.GameObjects
         {
             this.speed = TheyDontThinkItBeLikeItIsButItDo.Scale * Agent.BaseSpeed;
             this.size = TheyDontThinkItBeLikeItIsButItDo.Scale * Agent.BaseSize;
-            this.Sprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/agent"), (int)this.size, (int)this.size);
+            this.Sprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/agent"), (int)this.size, (int)this.size, ZIndex.Player);
             this.xPenetrations = new List<float>();
             this.yPenetrations = new List<float>();
             this.possibleRectangles = new List<Rectangle>();
