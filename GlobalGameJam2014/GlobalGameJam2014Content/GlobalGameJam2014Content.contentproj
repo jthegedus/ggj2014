@@ -49,11 +49,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Levels\level02.png">
-      <Name>level02</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
     <Compile Include="Levels\level04.png">
       <Name>level04</Name>
       <Importer>TextureImporter</Importer>
