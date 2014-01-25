@@ -136,7 +136,7 @@ namespace GGJ2014
             //tc.Position = new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 50, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 50);
             //agents[3].TransformComponent = tc;
             TheyDontThinkItBeLikeItIsButItDo.GameUI.ShowUI();
-            TheyDontThinkItBeLikeItIsButItDo.Gamestate = GameState.GamePlaying;
+            TheyDontThinkItBeLikeItIsButItDo.Gamestate = GameState.Pregame;
         }
 
         public void AddToWorld(Object obj)

@@ -79,92 +79,95 @@ namespace GGJ2014.GameObjects
 
         public void Update(GameTime gameTime)
         {
-            if (hitpoints <= 0)
+            if (TheyDontThinkItBeLikeItIsButItDo.Gamestate == GameState.GamePlaying)
             {
-                Enabled = false;
-            }
-            if (!Enabled)
-            {
-                Enabled = false;
-                // Count down spawn timer
-                spawnTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
-                if (spawnTimer <= 0)
+                if (hitpoints <= 0)
                 {
-                    spawnTimer = RespawnDuration;
-                    Spawn();
+                    Enabled = false;
                 }
-            }
-            else // Alive, do update!
-            {
-                // set the last position
-                this.movementComponent.LastPosition = this.transformComponent.Position;
-
-                // attenuate current velocity so the player slows down. Stop them if they're really close to not moving
-                this.movementComponent.Velocity *= 54f * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                if (this.movementComponent.Velocity.LengthSquared() < 0.5f)
+                if (!Enabled)
                 {
-                    this.movementComponent.Velocity = Vector2.Zero;
-                }
-
-                // add the current impulse to the velocity
-                this.movementComponent.Velocity += this.DesiredMovementDirection * Speed;
-
-                // apply the current velocity to the position
-                this.transformComponent.Position += this.movementComponent.Velocity * new Vector2(1, -1) * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-                // shoot
-                if (((this.ShootDirection != Vector2.Zero && this.burstTimer == 0f) || this.firing))
-                {
-                    if (((float)gameTime.TotalGameTime.TotalSeconds - timeLastFired) > 1.0f / fireRate)
+                    Enabled = false;
+                    // Count down spawn timer
+                    spawnTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    if (spawnTimer <= 0)
                     {
-                        // you can still shoot
-                        firing = true;
+                        spawnTimer = RespawnDuration;
+                        Spawn();
+                    }
+                }
+                else // Alive, do update!
+                {
+                    // set the last position
+                    this.movementComponent.LastPosition = this.transformComponent.Position;
 
-                        if (this.ShootDirection != Vector2.Zero)
+                    // attenuate current velocity so the player slows down. Stop them if they're really close to not moving
+                    this.movementComponent.Velocity *= 54f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    if (this.movementComponent.Velocity.LengthSquared() < 0.5f)
+                    {
+                        this.movementComponent.Velocity = Vector2.Zero;
+                    }
+
+                    // add the current impulse to the velocity
+                    this.movementComponent.Velocity += this.DesiredMovementDirection * Speed;
+
+                    // apply the current velocity to the position
+                    this.transformComponent.Position += this.movementComponent.Velocity * new Vector2(1, -1) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                    // shoot
+                    if (((this.ShootDirection != Vector2.Zero && this.burstTimer == 0f) || this.firing))
+                    {
+                        if (((float)gameTime.TotalGameTime.TotalSeconds - timeLastFired) > 1.0f / fireRate)
                         {
-                            float angle = (float)Math.Atan2(this.ShootDirection.Y, this.ShootDirection.X);
-                            float variation = (float)(TheyDontThinkItBeLikeItIsButItDo.Rand.NextDouble() - 0.5f) * Agent.SprayAngle;
-                            angle += variation;
-                            this.ShootDirection = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
-                            this.ShootDirection.Normalize();
-                            this.lastShootingDirection = this.ShootDirection;
+                            // you can still shoot
+                            firing = true;
+
+                            if (this.ShootDirection != Vector2.Zero)
+                            {
+                                float angle = (float)Math.Atan2(this.ShootDirection.Y, this.ShootDirection.X);
+                                float variation = (float)(TheyDontThinkItBeLikeItIsButItDo.Rand.NextDouble() - 0.5f) * Agent.SprayAngle;
+                                angle += variation;
+                                this.ShootDirection = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
+                                this.ShootDirection.Normalize();
+                                this.lastShootingDirection = this.ShootDirection;
+                            }
+                            else
+                            {
+                                this.ShootDirection = this.lastShootingDirection;
+                            }
+                            // shoot in the given direction
+                            TheyDontThinkItBeLikeItIsButItDo.WorldManager.BulletPool.createBullet(this.transformComponent.Position, Vector2.Normalize(this.ShootDirection), this, this.movementComponent.Velocity);
+
+                            //Play shooting sound
+                            Microsoft.Xna.Framework.Audio.Cue shootCue = TheyDontThinkItBeLikeItIsButItDo.AudioManager.LoadCue("shoot");
+                            TheyDontThinkItBeLikeItIsButItDo.AudioManager.PlayCue(ref shootCue, true);
+
+                            timeLastFired = (float)gameTime.TotalGameTime.TotalSeconds;
                         }
-                        else
+
+                        // increase burst timer
+                        this.burstTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                        if (this.burstTimer >= Agent.BurstDuration)
                         {
-                            this.ShootDirection = this.lastShootingDirection;
+                            this.burstTimer = Agent.BurstCooldown;
+                            this.firing = false;
                         }
-                        // shoot in the given direction
-                        TheyDontThinkItBeLikeItIsButItDo.WorldManager.BulletPool.createBullet(this.transformComponent.Position, Vector2.Normalize(this.ShootDirection), this, this.movementComponent.Velocity);
-
-                        //Play shooting sound
-                        Microsoft.Xna.Framework.Audio.Cue shootCue = TheyDontThinkItBeLikeItIsButItDo.AudioManager.LoadCue("shoot");
-                        TheyDontThinkItBeLikeItIsButItDo.AudioManager.PlayCue(ref shootCue, true);
-
-                        timeLastFired = (float)gameTime.TotalGameTime.TotalSeconds;
                     }
-
-                    // increase burst timer
-                    this.burstTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
-                    if (this.burstTimer >= Agent.BurstDuration)
+                    else
                     {
-                        this.burstTimer = Agent.BurstCooldown;
-                        this.firing = false;
-                    }
-                }
-                else
-                {
-                    this.burstTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
-                    if (this.burstTimer < 0)
-                    {
-                        // Have now cooled down from shooting or from dash
-                        this.burstTimer = 0;
-                    }
-                    // Dash duration timer!
-                    this.dashTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
-                    if (this.dashTimer < 0)
-                    {
-                        this.dashTimer = 0;
-                        Speed = BaseSpeed;
+                        this.burstTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                        if (this.burstTimer < 0)
+                        {
+                            // Have now cooled down from shooting or from dash
+                            this.burstTimer = 0;
+                        }
+                        // Dash duration timer!
+                        this.dashTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                        if (this.dashTimer < 0)
+                        {
+                            this.dashTimer = 0;
+                            Speed = BaseSpeed;
+                        }
                     }
                 }
             }

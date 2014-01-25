@@ -26,6 +26,7 @@ namespace GGJ2014
         public static GameState Gamestate { get; set; }
         public static Menu Menu { get; set; }
         public static EndMenu EndMenu { get; set; }
+        public static PregameScreen PregameScreen { get; set; }
         public static SpriteFont font { get; set; }
         public static SpriteFont LargeFont { get; set; }
         public static float Scale { get; set; }
@@ -100,6 +101,7 @@ namespace GGJ2014
             TheyDontThinkItBeLikeItIsButItDo.font = Content.Load<SpriteFont>("SpriteFonts/Arial14");
             TheyDontThinkItBeLikeItIsButItDo.LargeFont = Content.Load<SpriteFont>("SpriteFonts/Arial64Bold");
 
+            TheyDontThinkItBeLikeItIsButItDo.PregameScreen = new PregameScreen();
             TheyDontThinkItBeLikeItIsButItDo.GameUI = new GameUI();
             TheyDontThinkItBeLikeItIsButItDo.Menu = new Menu();
             TheyDontThinkItBeLikeItIsButItDo.EndMenu = new EndMenu();
