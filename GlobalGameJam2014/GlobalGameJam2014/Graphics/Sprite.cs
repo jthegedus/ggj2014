@@ -18,9 +18,11 @@ namespace GGJ2014.Graphics
         public int Height { get; set; }
         public float zIndex { get; set; }
         public List<SpriteEffect> Effects { get; set; }
+        public AnchorPoint AnchorPoint { get; set; }
 
         public Sprite(Texture2D texture, int width, int height, float zIndex)
         {
+            this.AnchorPoint = AnchorPoint.Centre;
             this.Texture2D = texture;
             this.Width = width;
             this.Height = height;
@@ -62,7 +64,7 @@ namespace GGJ2014.Graphics
             }
         }
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 point, bool fromTopLeft = false)
+        public void Draw(SpriteBatch spriteBatch, Vector2 point)
         {
             Color multipliedTint = this.Tint * this.Alpha;
             spriteBatch.Draw(
@@ -71,7 +73,7 @@ namespace GGJ2014.Graphics
                 this.GetSourceRectangle(),
                 multipliedTint,
                 this.Rotation,
-                this.GetOrigin(fromTopLeft),
+                TextElement.GetOrigin(this.Width, this.Height, this.AnchorPoint),
                 this.Zoom,
                 SpriteEffects.None,
                 this.zIndex);

@@ -9,23 +9,71 @@ using GGJ2014.Interfaces;
 
 namespace GGJ2014
 {
-    public class Menu : IDraw
+    public class Menu : IDraw, IUpdate
     {
-        private int selected = 0;
-        private const int MAX_CHOICES = 3;
-        private TextElement[] choices = new TextElement[MAX_CHOICES];
-
-        private float lastUpdate = 0f;
-        public const float threshold = 0.1f;
+        public List<Button> Buttons { get; set; }
+        public Button Start { get; set; }
+        public Button Instructions { get; set; }
+        public Button Quit { get; set; }
 
         public Menu()
         {
-            choices[0] = new TextElement("PLAY!",
-                new Vector2(20, 20), Color.Red, 1f);
-            choices[1] = new TextElement("Instructions",
-                new Vector2(20, 40), Color.Yellow, 1f);
-            choices[2] = new TextElement("Exit",
-                new Vector2(20, 60), Color.Yellow, 1f);
+            this.Buttons = new List<Button>();
+
+            Vector2 position = new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth / 2, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight / 4);
+            this.Start = new Button()
+            {
+                Position = position,
+                Text = new TextElement("Start", position, Color.Black, 0) { Font = TheyDontThinkItBeLikeItIsButItDo.LargeFont },
+                RolloverText = new TextElement("Start", position, Color.Red, 0) { Font = TheyDontThinkItBeLikeItIsButItDo.LargeFont },
+                ClickText = new TextElement("Start", position, Color.DarkRed, 0) { Font = TheyDontThinkItBeLikeItIsButItDo.LargeFont },
+                ClickDuration = 0.5f,
+            };
+
+            position = new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth / 2, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight / 4 * 2);
+            this.Instructions = new Button()
+            {
+                Position = position,
+                Text = new TextElement("Instructions", position, Color.Black, 0) { Font = TheyDontThinkItBeLikeItIsButItDo.LargeFont },
+                RolloverText = new TextElement("Instructions", position, Color.Red, 0) { Font = TheyDontThinkItBeLikeItIsButItDo.LargeFont },
+                ClickText = new TextElement("Instructions", position, Color.DarkRed, 0) { Font = TheyDontThinkItBeLikeItIsButItDo.LargeFont },
+                ClickDuration = 0.5f,
+            };
+
+            position = new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth / 2, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight / 4 * 3);
+            this.Quit = new Button()
+            {
+                Position = position,
+                Text = new TextElement("Quit", position, Color.Black, 0) { Font = TheyDontThinkItBeLikeItIsButItDo.LargeFont },
+                RolloverText = new TextElement("Quit", position, Color.Red, 0) { Font = TheyDontThinkItBeLikeItIsButItDo.LargeFont },
+                ClickText = new TextElement("Quit", position, Color.DarkRed, 0) { Font = TheyDontThinkItBeLikeItIsButItDo.LargeFont },
+                ClickDuration = 0.5f
+            };
+
+            Start.Selected = true;
+
+            Start.OnClick += new Action(TheyDontThinkItBeLikeItIsButItDo.WorldManager.InitGame);
+            Start.OnClick += new Action(this.HideMenu);
+            // Instructions.OnClick += new Action();
+            Quit.OnClick += new Action(this.QuitGame);
+
+            Start.ButtonAbove = this.Quit;
+            Start.ButtonBelow = this.Instructions;
+
+            Instructions.ButtonAbove = this.Start;
+            Instructions.ButtonBelow = this.Quit;
+
+            Quit.ButtonAbove = this.Instructions;
+            Quit.ButtonBelow = this.Start;
+
+            this.Buttons.Add(Start);
+            this.Buttons.Add(Instructions);
+            this.Buttons.Add(Quit);
+        }
+
+        private void QuitGame()
+        {
+            TheyDontThinkItBeLikeItIsButItDo.Gamestate = GameState.Quit;
         }
 
         public void ShowMenu()
@@ -38,54 +86,19 @@ namespace GGJ2014
             TheyDontThinkItBeLikeItIsButItDo.WorldManager.RemoveFromWorld(this);
         }
 
-        public void Update(GameTime gametime)
+        public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            if ((float)gametime.TotalGameTime.TotalSeconds - lastUpdate > threshold)
+            foreach (Button b in this.Buttons)
             {
-                GamePadState gps = GamePad.GetState(PlayerIndex.One);
-                Vector2 lThumb = gps.ThumbSticks.Left;
-                if (lThumb != Vector2.Zero)
-                {
-                    if (Math.Acos(Vector2.Dot(lThumb, Vector2.UnitY)) < MathHelper.PiOver4 && selected > 0)
-                    {
-                        ChangeSelection(selected, --selected);
-                    }
-                    else if (Math.Acos(Vector2.Dot(lThumb, -Vector2.UnitY)) < MathHelper.PiOver4 && selected < MAX_CHOICES - 1)
-                    {
-                        ChangeSelection(selected, ++selected);
-                    }
-
-                    lastUpdate = (float)gametime.TotalGameTime.TotalSeconds;
-                }
-
-                if (gps.IsButtonDown(Buttons.A) || Keyboard.GetState().IsKeyDown(Keys.Enter))
-                {
-                    this.HideMenu();
-
-                    if (selected == 0)
-                    {
-                        TheyDontThinkItBeLikeItIsButItDo.Gamestate = GameState.GAMEPLAYING;
-                        TheyDontThinkItBeLikeItIsButItDo.WorldManager.InitGame();
-                    }
-                    else if (selected == 1)
-                        TheyDontThinkItBeLikeItIsButItDo.Gamestate = GameState.INSTRUCTIONS;
-                    else if (selected == 2)
-                        TheyDontThinkItBeLikeItIsButItDo.Gamestate = GameState.GAMEENDED;
-                }
+                b.Draw(spriteBatch, gameTime);
             }
         }
 
-        private void ChangeSelection(int from, int to)
+        public void Update(GameTime gameTime)
         {
-            choices[from].color = Color.Yellow;
-            choices[to].color = Color.Red;
-        }
-
-        public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
-        {
-            foreach (TextElement text in this.choices)
+            foreach (Button b in this.Buttons)
             {
-                text.Draw(spriteBatch, gameTime);
+                b.Update(gameTime);
             }
         }
     }

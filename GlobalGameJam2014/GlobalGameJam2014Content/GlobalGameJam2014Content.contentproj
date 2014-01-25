@@ -42,8 +42,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SpriteFonts\Arial.spritefont">
-      <Name>Arial</Name>
+    <Compile Include="SpriteFonts\Arial14.spritefont">
+      <Name>Arial14</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
     </Compile>
@@ -132,6 +132,11 @@
       <Processor>XactProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Compile Include="SpriteFonts\Arial64Bold.spritefont">
+      <Name>Arial64Bold</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Levels\level04g.png">
