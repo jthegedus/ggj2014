@@ -71,6 +71,9 @@ namespace GGJ2014.Levels
             dirtSprite.zIndex = ZIndex.Ground;
             groundStoneSprite.zIndex = ZIndex.Ground;
             this.sprite.zIndex = ZIndex.Object;
+            stoneSprite.zIndex = ZIndex.Collision; // NOT SURE IF NEED ??? :S
+            rockSprite.zIndex = ZIndex.Collision;
+            bushSprite.zIndex = ZIndex.Collision;
 
             // spawn agents and collectables
             this.AgentSpawnRectangles = new List<Rectangle>();
