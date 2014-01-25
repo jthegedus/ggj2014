@@ -30,7 +30,7 @@ namespace GGJ2014.Controllers
             {
                 return this.score;
             }
-            
+
             set
             {
                 int diff = value - score;
@@ -38,7 +38,7 @@ namespace GGJ2014.Controllers
                 switch (this.PlayerIndex)
                 {
                     case PlayerIndex.One:
-                            TheyDontThinkItBeLikeItIsButItDo.GameUI.Player1Score.text = "Player 1: " + String.Format("{0:d4}", this.score);
+                        TheyDontThinkItBeLikeItIsButItDo.GameUI.Player1Score.text = "Player 1: " + String.Format("{0:d4}", this.score);
                         break;
                     case PlayerIndex.Two:
                         TheyDontThinkItBeLikeItIsButItDo.GameUI.Player2Score.text = "Player 2: " + String.Format("{0:d4}", this.score);
@@ -170,20 +170,21 @@ namespace GGJ2014.Controllers
                 first = false;
             }
 
+            // set the previous objective to the current objective
             this.previousObjective = this.Objective;
             this.previousTarget = this.Target;
 
-            do
+            // generate a new objective
+            // while the objective hasn't changed
+            while (this.Target == this.previousTarget && this.previousObjective == this.Objective)
             {
+                do
                 {
-                    do
-                    {
-                        this.Target = PlayerController.Colors[TheyDontThinkItBeLikeItIsButItDo.Rand.Next(4)];
-                    } while (Target == this.agent.Color) ;
+                    this.Target = PlayerController.Colors[TheyDontThinkItBeLikeItIsButItDo.Rand.Next(4)];
+                } while (Target == this.agent.Color);
 
-                    this.Objective = (Objectives)TheyDontThinkItBeLikeItIsButItDo.Rand.Next(2);
-                }
-            } while (this.Target == this.previousTarget && this.previousObjective == this.Objective);
+                this.Objective = (Objectives)TheyDontThinkItBeLikeItIsButItDo.Rand.Next(2);
+            }
 
             switch (this.PlayerIndex)
             {
@@ -205,7 +206,7 @@ namespace GGJ2014.Controllers
         private String GetObjectiveString()
         {
             StringBuilder objective = new StringBuilder();
-            
+
             switch (this.Objective)
             {
                 case Objectives.HighFive:

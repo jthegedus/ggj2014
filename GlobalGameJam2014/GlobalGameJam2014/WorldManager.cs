@@ -67,21 +67,6 @@ namespace GGJ2014
                 this.AddToWorld(Agents[i]);
             }
 
-            PlayerController player1 = new PlayerController(PlayerIndex.One, Agents[0]);
-            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player1);
-            PlayerController player2 = new PlayerController(PlayerIndex.Two, Agents[1]);
-            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player2);
-            PlayerController player3 = new PlayerController(PlayerIndex.Three, Agents[2]);
-            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player3);
-            PlayerController player4 = new PlayerController(PlayerIndex.Four, Agents[3]);
-            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player4);
-
-            // AI Controller
-            AIController ai = new AIController(Agents[4]);
-            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(ai);
-            ai.Target = Agents[0];
-            Agents[4].Controller = ai;
-
             // Randomise dem colours, MAAAAAAAAAAHN
             List<Color> colors = new List<Color>();
             colors.Add(Color.Red);
@@ -103,6 +88,21 @@ namespace GGJ2014
             {
                 Agents[i].Color = colors[i];
             }
+
+            PlayerController player1 = new PlayerController(PlayerIndex.One, Agents[0]);
+            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player1);
+            PlayerController player2 = new PlayerController(PlayerIndex.Two, Agents[1]);
+            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player2);
+            PlayerController player3 = new PlayerController(PlayerIndex.Three, Agents[2]);
+            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player3);
+            PlayerController player4 = new PlayerController(PlayerIndex.Four, Agents[3]);
+            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player4);
+
+            // AI Controller
+            AIController ai = new AIController(Agents[4]);
+            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(ai);
+            ai.Target = Agents[0];
+            Agents[4].Controller = ai;
 
             // Add collectibles
             for (int i = 0; i < 2; ++i)
