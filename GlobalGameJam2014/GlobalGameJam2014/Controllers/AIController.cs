@@ -10,6 +10,14 @@ namespace GGJ2014.Controllers
     class AIController : IController
     {
         private Agent agent;
+
+        private Agent Target { get; set; }
+
+        public AIController(Agent agent)
+        {
+            this.agent = agent;
+        }
+
         public void HandleInput()
         {
             throw new NotImplementedException();

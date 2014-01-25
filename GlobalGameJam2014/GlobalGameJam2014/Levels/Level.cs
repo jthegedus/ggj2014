@@ -13,8 +13,8 @@ namespace GGJ2014.Levels
         private bool[] map;
         public List<Rectangle> SpawnRectangles { get; set; }
         public Rectangle[,] WallRectangles { get; set; }
-        private int Width { get; set; }
-        private int Height { get; set; }
+        public int Width { get; private set; }
+        public int Height { get; private set; }
         private Sprite sprite;
 
         private int CellWidth { get; set; }
