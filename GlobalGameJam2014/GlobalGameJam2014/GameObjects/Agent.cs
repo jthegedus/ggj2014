@@ -67,6 +67,7 @@ namespace GGJ2014.GameObjects
             this.xPenetrations = new List<float>();
             this.yPenetrations = new List<float>();
             this.possibleRectangles = new List<Rectangle>();
+            Enabled = true;
         }
 
         public void Update(GameTime gameTime)
