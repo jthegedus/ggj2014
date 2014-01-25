@@ -11,8 +11,8 @@ namespace GGJ2014.Levels
     public class Level
     {
         private bool[] map;
-        private List<Rectangle> SpawnRectangles { get; set; }
-        private Rectangle[,] WallRectangles { get; set; }
+        public List<Rectangle> SpawnRectangles { get; set; }
+        public Rectangle[,] WallRectangles { get; set; }
         private int Width { get; set; }
         private int Height { get; set; }
         private Sprite sprite;
@@ -34,7 +34,6 @@ namespace GGJ2014.Levels
             CellHeight = (int)(TheyDontThinkItBeLikeItIsButItDo.ScreenHeight / height);
             this.sprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/agent"), CellWidth, CellHeight);
             this.SpawnRectangles = new List<Rectangle>();
-            this.initialiseRectangles();
         }
 
         public bool getCell(int x, int y)
@@ -55,27 +54,38 @@ namespace GGJ2014.Levels
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
             // Draw walls
-            this.sprite.Tint = Color.White;
-            for (int y = 0; y < Height; ++y)
-            {
-                for (int x = 0; x < Width; ++x)
-                {
-                    Vector2 pos = new Vector2((this.sprite.Width / 2) + x * this.sprite.Width, (this.sprite.Height / 2) + y * this.sprite.Height);
-                    if (this.getCell(x, y) == false)
-                    {
-                        this.sprite.Draw(spriteBatch, pos);
-                    }
-                }
-            }
+            //this.sprite.Tint = Color.DarkGray;
+            //for (int y = 0; y < Height; ++y)
+            //{
+            //    for (int x = 0; x < Width; ++x)
+            //    {
+            //        Vector2 pos = new Vector2(x * this.sprite.Width, y * this.sprite.Height);
+            //        if (this.getCell(x, y) == false)
+            //        {
+            //            this.sprite.Draw(spriteBatch, pos);
+            //        }
+            //    }
+            //}
             // Draw spawns
             foreach (Rectangle spawn in SpawnRectangles)
             {
                 this.sprite.Tint = Color.Red;
                 this.sprite.Draw(spriteBatch, new Vector2(spawn.Center.X, spawn.Center.Y));
             }
+
+            // Draw rectangles
+            this.sprite.Tint = Color.Blue;
+            foreach (Rectangle wall in WallRectangles)
+            {
+                if (wall != null)
+                {
+                    this.sprite.Tint = Color.Blue;
+                    this.sprite.Draw(spriteBatch, new Vector2(wall.Center.X, wall.Center.Y));
+                }
+            }
         }
 
-        private void initialiseRectangles()
+        public void UpdateWallRectangles()
         {
             this.WallRectangles = new Rectangle[Width, Height];
             for (int y = 0; y < Height; ++y)
@@ -88,6 +98,44 @@ namespace GGJ2014.Levels
                     }
                 }
             }
+        }
+
+        public List<Rectangle> GetPossibleRectangles(List<Rectangle> rectangles, Vector2 position, Vector2 lastPosition, Rectangle collisionRectangle)
+        {
+            rectangles.Clear();
+
+            Vector2 min = Vector2.Min(position, lastPosition);// / CellWidth;
+            min.X -= collisionRectangle.Width / 2;
+            min.Y -= collisionRectangle.Height / 2;
+            Vector2 max = Vector2.Max(position, lastPosition);// / CellWidth;
+            max.X += collisionRectangle.Width / 2;
+            max.Y += collisionRectangle.Height / 2;
+
+            int minX = (int)Math.Floor((min.X - CellWidth / 2) / CellWidth);
+            int minY = (int)Math.Floor((min.Y - CellWidth / 2) / CellWidth);
+
+            int maxX = (int)Math.Ceiling((max.X + CellWidth / 2) / CellWidth);
+            int maxY = (int)Math.Ceiling((max.Y + CellWidth / 2) / CellWidth);
+
+            for (int i = minX; i <= maxX; ++i)
+            {
+                for (int j = minY; j <= maxY; ++j)
+                {
+                    if (i >= 0 && i < WallRectangles.GetLength(0) && j >= 0 && j < WallRectangles.GetLength(1))
+                    {
+                        if (!getCell(i, j))
+                        {
+                            rectangles.Add(WallRectangles[i,j]);
+                        }
+                    }
+                    else
+                    {
+                        rectangles.Add(new Rectangle(i * CellWidth - CellWidth / 2, j * CellWidth - CellWidth / 2, CellWidth, CellWidth));
+                    }
+                }
+            }
+
+            return rectangles;
         }
     }
 }

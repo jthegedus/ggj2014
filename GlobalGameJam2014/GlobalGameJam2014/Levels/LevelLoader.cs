@@ -31,6 +31,7 @@ namespace GGJ2014.Levels
                     }
                 }
             }
+            level.UpdateWallRectangles();
             return level;
         }
     }
