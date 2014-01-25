@@ -27,6 +27,8 @@ namespace GGJ2014.Controllers
 
         public  const int MinDecisionCooldown = 5;
         public const int MaxDecisionCooldown = 15;
+        public const float MaxAttackDistance = 200f;
+        public const float MinAttackDistance = 40f;
         private float decisionTimer = MinDecisionCooldown;
 
         public const float PathfindCooldown = 0.5f;
@@ -124,7 +126,7 @@ namespace GGJ2014.Controllers
                     }
                     Vector2 aimingVec = Target.TransformComponent.Position - agent.TransformComponent.Position;
                     aimingVec.Y *= -1;
-                    if (aimingVec.Length() < 10)
+                    if (aimingVec.Length() > MinAttackDistance && aimingVec.Length() < MinAttackDistance)
                         agent.ShootDirection = aimingVec;
                 }
 

@@ -31,7 +31,7 @@ namespace GGJ2014
         private List<Object> objsToRemove;
         private List<Object> objsToAdd;
         public Level Level { get { return this.level; } }
-        private const float TimeLimit = 5;
+        private const float TimeLimit = 70;
 
         public int DisplayedTime { get; set; }
         public int LastDisplayedTime { get; set; }
@@ -67,27 +67,6 @@ namespace GGJ2014
                 this.AddToWorld(Agents[i]);
             }
 
-            // Player Controllers
-            PlayerController player1 = new PlayerController(PlayerIndex.One, Agents[0]);
-            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player1);
-            PlayerController player2 = new PlayerController(PlayerIndex.Two, Agents[1]);
-            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player2);
-            PlayerController player3 = new PlayerController(PlayerIndex.Three, Agents[2]);
-            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player3);
-            PlayerController player4 = new PlayerController(PlayerIndex.Four, Agents[3]);
-            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player4);
-
-            // AI Controllers
-            AIController ai1 = new AIController(Agents[4]);
-            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(ai1);
-            TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(ai1);
-            Agents[4].Controller = ai1;
-
-            AIController ai2 = new AIController(Agents[5]);
-            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(ai2);
-            TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(ai2);
-            Agents[5].Controller = ai2;
-
             // Randomise dem colours, MAAAAAAAAAAHN
             List<Color> colors = new List<Color>();
             colors.Add(Color.Red);
@@ -110,6 +89,26 @@ namespace GGJ2014
                 Agents[i].Color = colors[i];
             }
 
+            PlayerController player1 = new PlayerController(PlayerIndex.One, Agents[0]);
+            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player1);
+            PlayerController player2 = new PlayerController(PlayerIndex.Two, Agents[1]);
+            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player2);
+            PlayerController player3 = new PlayerController(PlayerIndex.Three, Agents[2]);
+            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player3);
+            PlayerController player4 = new PlayerController(PlayerIndex.Four, Agents[3]);
+            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player4);
+            
+            // AI Controllers
+            AIController ai1 = new AIController(Agents[4]);
+            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(ai1);
+            TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(ai1);
+            Agents[4].Controller = ai1;
+
+            AIController ai2 = new AIController(Agents[5]);
+            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(ai2);
+            TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(ai2);
+            Agents[5].Controller = ai2;
+
             // Add collectibles
             for (int i = 0; i < 2; ++i)
             {
@@ -123,7 +122,6 @@ namespace GGJ2014
 
             // Assign player positions based on first 4 spawn points
             List<Rectangle> spawns = this.Level.AgentSpawnRectangles;
-            TransformComponent tc = new TransformComponent();
             for (int i = 0; i < 6; ++i)
             {
                 Agents[i].Spawn();

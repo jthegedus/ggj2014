@@ -22,7 +22,7 @@ namespace GGJ2014.GameObjects
         private TransformComponent transformComponent;
         private MovementComponent movementComponent;
         private const float BaseSize = 10;
-        private const float BaseSpeed = 20;
+        private const float BaseSpeed = 30;
         private float size;
         public float Speed { get; set; }
         public TransformComponent TransformComponent { get { return this.transformComponent; } set { this.transformComponent = value; } }
@@ -33,7 +33,7 @@ namespace GGJ2014.GameObjects
         private const float DashDuration = 0.10f;
         private const float BurstCooldown = 0.8f;
         private const float DashCooldown = 1f;
-        private const float DashMultiplier = 6f;
+        private const float DashMultiplier = 4f;
         private float burstTimer = 0f;
         private float dashTimer = 0f;
         private float timeLastFired = 0.0f;
