@@ -18,11 +18,10 @@ namespace GGJ2014.Levels
 
         public int Width { get; private set; }
         public int Height { get; private set; }
+        public int CellWidth { get; set; }
+        public int CellHeight { get; set; }
 
-        private int CellWidth { get; set; }
-        private int CellHeight { get; set; }
-
-        private Sprite sprite;
+        public Sprite sprite;
 
         public Sprite Sprite { get { return this.sprite; } }
 
@@ -30,10 +29,9 @@ namespace GGJ2014.Levels
         private Sprite grassSprite;
         private Sprite stoneSprite;
         private Sprite groundStoneSprite;
-
         private Sprite rockSprite;
         private Sprite bushSprite;
-        
+
         public Level(int width, int height)
             : this(new GroundType[width * height], new GroundType[width * height], width, height)
         {
@@ -50,7 +48,6 @@ namespace GGJ2014.Levels
 
             // set sprites to textures
             this.sprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/agent"), CellWidth, CellHeight);
-
             Texture2D texture = TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Dirt");
             this.grassSprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Grass"), texture.Width, texture.Height);
             this.stoneSprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Stone"), texture.Width, texture.Height);
@@ -150,7 +147,7 @@ namespace GGJ2014.Levels
 
 
             // Draw collision objects
-            int offset = this.stoneSprite.Height/5;
+            int offset = (int)(this.stoneSprite.Height / 8.5f);
             this.stoneSprite.zIndex = ZIndex.Collision;
             for (int y = 0; y < Height; ++y)
             {
