@@ -49,14 +49,14 @@ namespace GGJ2014.Levels
             // set sprites to textures
             this.sprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/agent"), CellWidth, CellHeight);
             Texture2D texture = TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Dirt");
-            this.grassSprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Grass"), texture.Width, texture.Height);
-            this.stoneSprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Stone"), texture.Width, texture.Height);
-            this.groundStoneSprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Stone"), texture.Width, texture.Height);
-            this.rockSprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Rock"), texture.Width, texture.Height);
-            this.bushSprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Bush"), texture.Width, texture.Height);
+            this.grassSprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Grass"), texture.Width, texture.Height) { AnchorPoint = AnchorPoint.TopLeft };
+            this.stoneSprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Stone"), texture.Width, texture.Height) { AnchorPoint = AnchorPoint.TopLeft };
+            this.groundStoneSprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Stone"), texture.Width, texture.Height) { AnchorPoint = AnchorPoint.TopLeft };
+            this.rockSprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Rock"), texture.Width, texture.Height) { AnchorPoint = AnchorPoint.TopLeft };
+            this.bushSprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Bush"), texture.Width, texture.Height) { AnchorPoint = AnchorPoint.TopLeft };
 
             // determine scale
-            this.dirtSprite = new Sprite(texture, texture.Width, texture.Height);
+            this.dirtSprite = new Sprite(texture, texture.Width, texture.Height) { AnchorPoint = AnchorPoint.TopLeft };
             float scale = (float)CellWidth / texture.Width;
 
             // set scale
@@ -120,15 +120,15 @@ namespace GGJ2014.Levels
                     Vector2 pos = new Vector2(x * this.sprite.Width, y * this.sprite.Height);
                     if (this.ground[y * this.Width + x] == GroundType.DIRT)
                     {
-                        this.dirtSprite.Draw(spriteBatch, pos, true);
+                        this.dirtSprite.Draw(spriteBatch, pos);
                     }
                     else if (this.ground[y * this.Width + x] == GroundType.GRASS)
                     {
-                        this.grassSprite.Draw(spriteBatch, pos, true);
+                        this.grassSprite.Draw(spriteBatch, pos);
                     }
                     else if (this.ground[y * this.Width + x] == GroundType.STONE)
                     {
-                        this.groundStoneSprite.Draw(spriteBatch, pos, true);
+                        this.groundStoneSprite.Draw(spriteBatch, pos);
                     }
                 }
             }
@@ -160,15 +160,15 @@ namespace GGJ2014.Levels
                     {
                         if (this.map[y * this.Width + x] == GroundType.STONE)
                         {
-                            this.stoneSprite.Draw(spriteBatch, new Vector2(WallRectangles[x, y].Left, WallRectangles[x, y].Top - offset), true);
+                            this.stoneSprite.Draw(spriteBatch, new Vector2(WallRectangles[x, y].Left, WallRectangles[x, y].Top - offset));
                         }
                         else if (this.map[y * this.Width + x] == GroundType.BUSH)
                         {
-                            this.bushSprite.Draw(spriteBatch, new Vector2(WallRectangles[x, y].Left, WallRectangles[x, y].Top - offset), true);
+                            this.bushSprite.Draw(spriteBatch, new Vector2(WallRectangles[x, y].Left, WallRectangles[x, y].Top - offset));
                         }
                         else if (this.map[y * this.Width + x] == GroundType.ROCK)
                         {
-                            this.rockSprite.Draw(spriteBatch, new Vector2(WallRectangles[x, y].Left, WallRectangles[x, y].Top - offset), true);
+                            this.rockSprite.Draw(spriteBatch, new Vector2(WallRectangles[x, y].Left, WallRectangles[x, y].Top - offset));
                         }
                         
                     }
