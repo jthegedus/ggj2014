@@ -108,6 +108,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AnchorPoint.cs" />
+	<Compile Include="AI\Path.cs" />
     <Compile Include="AudioManager.cs" />
     <Compile Include="BulletPool.cs" />
     <Compile Include="ControllerManager.cs" />
@@ -140,6 +141,7 @@
     <Compile Include="GameObjects\Agent.cs" />
     <Compile Include="Components\TransformComponent.cs" />
     <Compile Include="Interfaces\IUpdate.cs" />
+    <Compile Include="Levels\GroundType.cs" />
     <Compile Include="Levels\Level.cs" />
     <Compile Include="Levels\LevelLoader.cs" />
     <Compile Include="Menu.cs" />
@@ -157,6 +159,7 @@
     <Compile Include="Scores.cs" />
     <Compile Include="TheyDontThinkItBeLikeItIsButItDo.cs" />
     <Compile Include="WorldManager.cs" />
+    <Compile Include="ZIndex.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

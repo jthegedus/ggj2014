@@ -42,8 +42,8 @@ namespace GGJ2014.GameObjects
         private List<float> xPenetrations;
         private List<float> yPenetrations;
         private List<Rectangle> possibleRectangles;
-        private bool Enabled { get; set; }
         private const float SprayAngle = MathHelper.Pi / 18;
+        public bool Enabled { get; set; }
 
         private const float RespawnDuration = 2f;
         private float spawnTimer = RespawnDuration;
@@ -66,7 +66,7 @@ namespace GGJ2014.GameObjects
         {
             this.speed = TheyDontThinkItBeLikeItIsButItDo.Scale * Agent.BaseSpeed;
             this.size = TheyDontThinkItBeLikeItIsButItDo.Scale * Agent.BaseSize;
-            this.Sprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/agent"), (int)this.size, (int)this.size, 0);
+            this.Sprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/agent"), (int)this.size, (int)this.size, ZIndex.Player);
             this.xPenetrations = new List<float>();
             this.yPenetrations = new List<float>();
             this.possibleRectangles = new List<Rectangle>();

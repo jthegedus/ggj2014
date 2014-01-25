@@ -10,6 +10,7 @@ using GGJ2014.Levels;
 using GGJ2014.GameObjects;
 using GGJ2014.Controllers;
 using GGJ2014.Components;
+using GGJ2014.AI;
 
 namespace GGJ2014
 {
@@ -49,7 +50,7 @@ namespace GGJ2014
         public void InitGame()
         {
 
-            for (int i = 0; i < 4; ++i)
+            for (int i = 0; i < 5; ++i)
             {
                 Agents.Add(new Agent());
                 this.AddToWorld(Agents[i]);
@@ -63,7 +64,12 @@ namespace GGJ2014
             TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player3);
             PlayerController player4 = new PlayerController(PlayerIndex.Four, Agents[3]);
             TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player4);
-            
+
+            // AI Controller
+            AIController ai = new AIController(Agents[4]);
+            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(ai);
+            ai.Target = Agents[0];
+
             // Randomise dem colours, MAAAAAAAAAAHN
             List<Color> colors = new List<Color>();
             colors.Add(Color.Red);
@@ -81,7 +87,7 @@ namespace GGJ2014
             }
 
             // Assign colours
-            for (int i = 0; i < Agents.Count; ++i)
+            for (int i = 0; i < colors.Count; ++i)
             {
                 Agents[i].Color = colors[i];
             }
@@ -99,10 +105,9 @@ namespace GGJ2014
             // Assign player positions based on first 4 spawn points
             List<Rectangle> spawns = this.Level.AgentSpawnRectangles;
             TransformComponent tc = new TransformComponent();
-            for (int i = 0; i < 4; ++i)
+            for (int i = 0; i < 5; ++i)
             {
-                tc.Position = new Vector2(spawns[i].Center.X, spawns[i].Center.Y);
-                Agents[i].TransformComponent = tc;
+                Agents[i].Spawn();
             }
 
             //tc.Position = new Vector2(50, 50);

@@ -58,7 +58,7 @@ namespace GGJ2014
                     lastUpdate = (float)gametime.TotalGameTime.TotalSeconds;
                 }
 
-                if (gps.IsButtonDown(Buttons.A))
+                if (gps.IsButtonDown(Buttons.A) || Keyboard.GetState().IsKeyDown(Keys.Enter))
                 {
                     this.HideMenu();
 
