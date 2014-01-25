@@ -31,7 +31,7 @@ namespace GGJ2014
         private List<Object> objsToRemove;
         private List<Object> objsToAdd;
         public Level Level { get { return this.level; } }
-        private const float TimeLimit = 3;
+        private const float TimeLimit = 70;
 
         public int DisplayedTime { get; set; }
         public int LastDisplayedTime { get; set; }
@@ -112,7 +112,7 @@ namespace GGJ2014
             Agents[5].Controller = ai2;
 
             // Add collectibles
-            for (int i = 0; i < 2; ++i)
+            for (int i = 0; i < 4; ++i)
             {
                 Collectibles.Add(new Collectible(new Vector2(0, 0)));
                 this.AddToWorld(Collectibles[i]);
