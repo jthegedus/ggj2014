@@ -34,13 +34,13 @@ namespace GGJ2014.Controllers
                         TheyDontThinkItBeLikeItIsButItDo.GameUI.Player1Score.text = "Player 1: " + String.Format("{0:d4}", this.score);
                         break;
                     case PlayerIndex.Two:
-                        TheyDontThinkItBeLikeItIsButItDo.GameUI.Player1Score.text = "Player 2: " + this.score.ToString();
+                        TheyDontThinkItBeLikeItIsButItDo.GameUI.Player2Score.text = "Player 2: " + String.Format("{0:d4}", this.score);
                         break;
                     case PlayerIndex.Three:
-                        TheyDontThinkItBeLikeItIsButItDo.GameUI.Player1Score.text = "Player 3: " + this.score.ToString();
+                        TheyDontThinkItBeLikeItIsButItDo.GameUI.Player3Score.text = "Player 3: " + String.Format("{0:d4}", this.score);
                         break;
                     case PlayerIndex.Four:
-                        TheyDontThinkItBeLikeItIsButItDo.GameUI.Player1Score.text = "Player 4: " + this.score.ToString();
+                        TheyDontThinkItBeLikeItIsButItDo.GameUI.Player4Score.text = "Player 4: " + String.Format("{0:d4}", this.score);
                         break;
                 }
             }

@@ -108,6 +108,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AnchorPoint.cs" />
+    <Compile Include="AudioManager.cs" />
     <Compile Include="BulletPool.cs" />
     <Compile Include="ControllerManager.cs" />
     <Compile Include="Controllers\AIController.cs" />

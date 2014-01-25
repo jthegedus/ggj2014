@@ -32,6 +32,7 @@ namespace GGJ2014
         public static WorldManager WorldManager { get; set; }
         public static ContentManager ContentManager { get; set; }
         public static ControllerManager ControllerManager { get; set; }
+        public static AudioManager AudioManager { get; set; }
         public static Random Rand { get; set; }
 
         public TheyDontThinkItBeLikeItIsButItDo()
@@ -67,6 +68,7 @@ namespace GGJ2014
             TheyDontThinkItBeLikeItIsButItDo.WorldManager = new WorldManager();
             TheyDontThinkItBeLikeItIsButItDo.ContentManager = this.Content;
             TheyDontThinkItBeLikeItIsButItDo.ControllerManager = new ControllerManager();
+            TheyDontThinkItBeLikeItIsButItDo.AudioManager = new AudioManager();
 
             TheyDontThinkItBeLikeItIsButItDo.Menu = new Menu();
             TheyDontThinkItBeLikeItIsButItDo.Menu.ShowMenu();

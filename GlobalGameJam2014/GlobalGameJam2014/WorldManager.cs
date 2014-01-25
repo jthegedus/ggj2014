@@ -85,14 +85,19 @@ namespace GGJ2014
             {
                 Agents[i].Color = colors[i];
             }
-            Collectible c = new Collectible(new Vector2(300, 300));
-            this.AddToWorld(c);
+
+            // Add collectibles
+            for (int i = 0; i < 2; ++i)
+            {
+                Collectibles.Add(new Collectible(new Vector2(0, 0)));
+                this.AddToWorld(Collectibles[i]);
+            }
 
             // Load level
             this.level = LevelLoader.LoadLevel("level04");
 
             // Assign player positions based on first 4 spawn points
-            List<Rectangle> spawns = this.Level.SpawnRectangles;
+            List<Rectangle> spawns = this.Level.AgentSpawnRectangles;
             TransformComponent tc = new TransformComponent();
             for (int i = 0; i < 4; ++i)
             {
@@ -151,11 +156,6 @@ namespace GGJ2014
                     {
                         this.DynamicObjects.Add(obj as IDynamic);
                     }
-
-                    if (obj is Collectible)
-                    {
-                        this.Collectibles.Add(obj as Collectible);
-                    }
                 }
                 objsToAdd.Clear();
             }
@@ -200,11 +200,6 @@ namespace GGJ2014
                     if (obj is IDynamic)
                     {
                         this.DynamicObjects.Remove(obj as IDynamic);
-                    }
-
-                    if (obj is Collectible)
-                    {
-                        this.Collectibles.Remove(obj as Collectible);
                     }
                 }
                 this.objsToRemove.Clear();
@@ -259,7 +254,7 @@ namespace GGJ2014
 
         public Vector2 FindSpawnPoint()
         {
-            List<Rectangle> spawns = Level.SpawnRectangles;
+            List<Rectangle> spawns = Level.AgentSpawnRectangles;
             float[] spawnsDistance = new float[spawns.Count];
             // Initially populate big distances
             for (int i = 0; i < spawnsDistance.Length; ++i)
@@ -293,6 +288,30 @@ namespace GGJ2014
             }
 
             return new Vector2(spawns[largestDistIndex].Center.X, spawns[largestDistIndex].Center.Y);
+        }
+
+        public Vector2 FindCollectableSpawnPoint()
+        {
+            int tryCount = 0;
+            do
+            {
+                ++tryCount;
+                int spawnIndex = TheyDontThinkItBeLikeItIsButItDo.Rand.Next(0, Level.CollectableSpawnRectangles.Count);
+                Vector2 pos = new Vector2(Level.CollectableSpawnRectangles[spawnIndex].Center.X, Level.CollectableSpawnRectangles[spawnIndex].Center.Y);
+                // Check distance from other collectables
+                float shortestDist = TheyDontThinkItBeLikeItIsButItDo.ScreenWidth;
+                foreach (Collectible c in Collectibles)
+                {
+                    float dist = Vector2.Distance(pos, c.TransformComponent.Position);
+                    if (dist < shortestDist)
+                        shortestDist = dist;
+                }
+                // If at least 64 away, it's suitable (won't duplicate spawn)
+                if (shortestDist > 64f)
+                    return pos;
+            }
+            while (tryCount < 10);
+            throw new Exception("Unable to find spawn location for collectable!!");
         }
     }
 }

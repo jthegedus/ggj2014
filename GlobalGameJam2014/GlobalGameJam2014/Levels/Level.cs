@@ -11,7 +11,8 @@ namespace GGJ2014.Levels
     public class Level
     {
         private bool[] map;
-        public List<Rectangle> SpawnRectangles { get; set; }
+        public List<Rectangle> AgentSpawnRectangles { get; set; }
+        public List<Rectangle> CollectableSpawnRectangles { get; set; }
         public Rectangle[,] WallRectangles { get; set; }
         private int Width { get; set; }
         private int Height { get; set; }
@@ -33,7 +34,8 @@ namespace GGJ2014.Levels
             CellWidth = (int)(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth / width);
             CellHeight = (int)(TheyDontThinkItBeLikeItIsButItDo.ScreenHeight / height);
             this.sprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/agent"), CellWidth, CellHeight, 1);
-            this.SpawnRectangles = new List<Rectangle>();
+            this.AgentSpawnRectangles = new List<Rectangle>();
+            this.CollectableSpawnRectangles = new List<Rectangle>();
         }
 
         public bool getCell(int x, int y)
@@ -46,9 +48,14 @@ namespace GGJ2014.Levels
             this.map[y * this.Width + x] = state;
         }
 
-        public void addSpawn(int x, int y)
+        public void addAgentSpawn(int x, int y)
         {
-            SpawnRectangles.Add(new Rectangle(x * CellWidth, y * CellHeight, CellWidth, CellHeight));
+            AgentSpawnRectangles.Add(new Rectangle(x * CellWidth, y * CellHeight, CellWidth, CellHeight));
+        }
+
+        public void addCollectableSpawn(int x, int y)
+        {
+            CollectableSpawnRectangles.Add(new Rectangle(x * CellWidth, y * CellHeight, CellWidth, CellHeight));
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
@@ -66,20 +73,25 @@ namespace GGJ2014.Levels
             //        }
             //    }
             //}
+
             // Draw spawns
-            foreach (Rectangle spawn in SpawnRectangles)
-            {
-                this.sprite.Tint = Color.Red;
-                this.sprite.Draw(spriteBatch, new Vector2(spawn.Center.X, spawn.Center.Y));
-            }
+            //foreach (Rectangle spawn in AgentSpawnRectangles)
+            //{
+            //    this.sprite.Tint = Color.Red;
+            //    this.sprite.Draw(spriteBatch, new Vector2(spawn.Center.X, spawn.Center.Y));
+            //}
+            //foreach (Rectangle spawn in CollectableSpawnRectangles)
+            //{
+            //    this.sprite.Tint = Color.Blue;
+            //    this.sprite.Draw(spriteBatch, new Vector2(spawn.Center.X, spawn.Center.Y));
+            //}
 
             // Draw rectangles
-            this.sprite.Tint = Color.Blue;
+            this.sprite.Tint = Color.Gray;
             foreach (Rectangle wall in WallRectangles)
             {
                 if (wall != null)
                 {
-                    this.sprite.Tint = Color.Blue;
                     this.sprite.Draw(spriteBatch, new Vector2(wall.Center.X, wall.Center.Y));
                 }
             }
