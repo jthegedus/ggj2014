@@ -36,6 +36,7 @@ namespace GGJ2014
         public int DisplayedTime { get; set; }
         public int LastDisplayedTime { get; set; }
         public float GameTimer { get; private set; }
+        public int LastLevel { get; private set; }
 
         public WorldManager()
         {
@@ -53,6 +54,7 @@ namespace GGJ2014
             this.objsToRemove = new List<Object>();
             this.objsToAdd = new List<Object>();
             this.Collectibles = new List<Collectible>();
+            this.LastLevel = -1;
         }
 
         public void InitGame()
@@ -118,7 +120,14 @@ namespace GGJ2014
 
             // Load level
             // WARNING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! - ONLY USE LEVELS THAT HAVE A levelXX.png and a levelXXg.png (10 -> 16)
-            this.level = LevelLoader.LoadLevel("level16");
+            // Randomise the level to load
+            int levelToLoad = TheyDontThinkItBeLikeItIsButItDo.Rand.Next(10, 17);
+            while (levelToLoad == this.LastLevel)
+            {
+                levelToLoad = TheyDontThinkItBeLikeItIsButItDo.Rand.Next(10, 17);
+            }
+            this.level = LevelLoader.LoadLevel("level" + levelToLoad);
+            this.LastLevel = levelToLoad;
 
             // Assign player positions based on first 4 spawn points
             List<Rectangle> spawns = this.Level.AgentSpawnRectangles;
