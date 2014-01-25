@@ -5,6 +5,7 @@ namespace GGJ2014.Graphics
     using System.Collections.Generic;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
+    using GGJ2014.Graphics.SpriteAnimations;
 
     public class Sprite
     {
@@ -16,6 +17,7 @@ namespace GGJ2014.Graphics
         public int Width { get; set; }
         public int Height { get; set; }
         public float zIndex { get; set; }
+        public List<SpriteEffect> Effects { get; set; }
 
         public Sprite(Texture2D texture, int width, int height, float zIndex)
         {
@@ -33,6 +35,8 @@ namespace GGJ2014.Graphics
                 this.zIndex = 1f;
             else
                 this.zIndex = zIndex;
+
+            this.Effects = new List<SpriteEffect>();
         }
 
         public Sprite(Sprite sprite)
@@ -44,7 +48,20 @@ namespace GGJ2014.Graphics
             : this(texture, width, height, 0f)
         {
         }
-    
+
+        public void UpdateEffects(GameTime time)
+        {
+            for (int i = Effects.Count - 1; i >= 0; --i)
+            {
+                Effects[i].Update(this, time);
+
+                if (Effects[i].HasFinished())
+                {
+                    Effects.RemoveAt(i);
+                }
+            }
+        }
+
         public void Draw(SpriteBatch spriteBatch, Vector2 point, bool fromTopLeft = false)
         {
             Color multipliedTint = this.Tint * this.Alpha;

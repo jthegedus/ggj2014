@@ -7,12 +7,16 @@ using Microsoft.Xna.Framework;
 using GGJ2014.GameObjects;
 using GGJ2014.Components;
 using GGJ2014.Interfaces;
+using GGJ2014.Graphics;
 
 namespace GGJ2014.Controllers
 {
     public class PlayerController : IController
     {
+        public static readonly List<String> BadThings = new List<String> { "Nope.", "Wrong.", "Bad.", "Derp.", "No.", "Uh-uh.", "Nup." };
         public static readonly List<Color> Colors = new List<Color>() { Color.Red, Color.Blue, Color.Yellow, Color.Green };
+        private static readonly List<Vector2> ScoreDirections = new List<Vector2> { -Vector2.UnitY, Vector2.Normalize(new Vector2(1, -1)), Vector2.UnitX, Vector2.Normalize(new Vector2(1, 1)), Vector2.UnitY, Vector2.Normalize(new Vector2(-1, 1)), -Vector2.UnitX, Vector2.Normalize(new Vector2(-1, -1)) };
+        private int scoreTurn = 0;
         private Color previousTarget;
         private Objectives previousObjective;
         public Color Target { get; set; }
@@ -27,11 +31,12 @@ namespace GGJ2014.Controllers
             
             set
             {
+                int diff = value - score;
                 this.score = value;
                 switch (this.playerIndex)
                 {
                     case PlayerIndex.One:
-                        TheyDontThinkItBeLikeItIsButItDo.GameUI.Player1Score.text = "Player 1: " + String.Format("{0:d4}", this.score);
+                            TheyDontThinkItBeLikeItIsButItDo.GameUI.Player1Score.text = "Player 1: " + String.Format("{0:d4}", this.score);
                         break;
                     case PlayerIndex.Two:
                         TheyDontThinkItBeLikeItIsButItDo.GameUI.Player2Score.text = "Player 2: " + String.Format("{0:d4}", this.score);
@@ -43,6 +48,21 @@ namespace GGJ2014.Controllers
                         TheyDontThinkItBeLikeItIsButItDo.GameUI.Player4Score.text = "Player 4: " + String.Format("{0:d4}", this.score);
                         break;
                 }
+
+                // display score
+                TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(
+                    new FadingTextElement(
+                        true ? diff.ToString() : PlayerController.BadThings[TheyDontThinkItBeLikeItIsButItDo.Rand.Next(PlayerController.BadThings.Count)],
+                        this.agent.TransformComponent.Position + ScoreDirections[scoreTurn] * 30,
+                        Color.Black,
+                        0,
+                        0.5f,
+                        1,
+                        0) { AnchorPoint = AnchorPoint.Centre });
+
+                ++this.scoreTurn;
+                if (this.scoreTurn >= 8)
+                    this.scoreTurn = 0;
             }
         }
         private Agent agent;
