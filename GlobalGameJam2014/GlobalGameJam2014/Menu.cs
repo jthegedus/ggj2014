@@ -5,12 +5,12 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using GGJ2014.Interfaces;
 
 namespace GGJ2014
 {
-    public class Menu
+    public class Menu : IDraw
     {
-        public SpriteBatch spritebatch;
         private int selected = 0;
         private const int MAX_CHOICES = 3;
         private TextElement[] choices = new TextElement[MAX_CHOICES];
@@ -26,6 +26,16 @@ namespace GGJ2014
                 new Vector2(20, 40), Color.Yellow, 1f);
             choices[2] = new TextElement("Exit",
                 new Vector2(20, 60), Color.Yellow, 1f);
+        }
+
+        public void ShowMenu()
+        {
+            TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(this);
+        }
+
+        public void HideMenu()
+        {
+            TheyDontThinkItBeLikeItIsButItDo.WorldManager.RemoveFromWorld(this);
         }
 
         public void Update(GameTime gametime)
@@ -50,8 +60,13 @@ namespace GGJ2014
 
                 if (gps.IsButtonDown(Buttons.A))
                 {
+                    this.HideMenu();
+
                     if (selected == 0)
+                    {
                         TheyDontThinkItBeLikeItIsButItDo.Gamestate = GameState.GAMEPLAYING;
+                        TheyDontThinkItBeLikeItIsButItDo.WorldManager.InitGame();
+                    }
                     else if (selected == 1)
                         TheyDontThinkItBeLikeItIsButItDo.Gamestate = GameState.INSTRUCTIONS;
                     else if (selected == 2)
@@ -66,11 +81,11 @@ namespace GGJ2014
             choices[to].color = Color.Red;
         }
 
-        public void Draw()
+        public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            foreach (TextElement t in choices)
+            foreach (TextElement text in this.choices)
             {
-                t.Draw(this.spritebatch);
+                text.Draw(spriteBatch, gameTime);
             }
         }
     }

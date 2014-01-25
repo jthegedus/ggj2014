@@ -21,7 +21,7 @@ namespace GGJ2014
             inactive = new Stack<Bullet>(Size);
         }
 
-        public void createBullet(Vector2 ownerPosition, Vector2 direction, Color owner, Vector2 initialVelocity)
+        public void createBullet(Vector2 ownerPosition, Vector2 direction, Agent owner, Vector2 initialVelocity)
         {
             Bullet newBullet;
             if (inactive.Count == 0)

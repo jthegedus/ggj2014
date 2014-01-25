@@ -24,7 +24,6 @@ namespace GGJ2014
         List<Agent> Agents { get; set; }
         List<Collectible> Collectibles { get; set; }
         public SpriteBatch SpriteBatch { get; set; }
-        private Sprite s;
         private Level level;
         private BulletPool bulletPool;
         public BulletPool BulletPool { get { return this.bulletPool; } }
@@ -109,6 +108,7 @@ namespace GGJ2014
             //agents[2].TransformComponent = tc;
             //tc.Position = new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 50, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 50);
             //agents[3].TransformComponent = tc;
+            TheyDontThinkItBeLikeItIsButItDo.GameUI.ShowUI();
         }
 
         public void AddToWorld(Object obj)
@@ -240,7 +240,7 @@ namespace GGJ2014
 
         public void Draw(GameTime gameTime)
         {
-            this.SpriteBatch.Begin();
+            this.SpriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
 
             if (this.Level != null)
                 this.Level.Draw(this.SpriteBatch, gameTime);

@@ -58,7 +58,7 @@ namespace GGJ2014.Graphics
                 this.GetOrigin(fromTopLeft),
                 this.Zoom,
                 SpriteEffects.None,
-                0f);
+                zIndex);
         }
 
         private Vector2 GetOrigin(bool fromTopLeft)

@@ -8,21 +8,21 @@ namespace GGJ2014
 {
     public class ControllerManager
     {
-        private List<IController> controllers;
+        public List<IController> Controllers { get; private set; }
 
         public ControllerManager()
         {
-            this.controllers = new List<IController>();
+            this.Controllers = new List<IController>();
         }
 
         public void AddController(IController controller)
         {
-            this.controllers.Add(controller);
+            this.Controllers.Add(controller);
         }
 
         public void Update()
         {
-            foreach (IController controller in this.controllers)
+            foreach (IController controller in this.Controllers)
             {
                 controller.HandleInput();
             }

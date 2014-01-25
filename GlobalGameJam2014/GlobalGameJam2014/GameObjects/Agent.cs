@@ -15,6 +15,8 @@ namespace GGJ2014.GameObjects
 {
     public class Agent : IMovement, IDraw, IUpdate, IDynamic
     {
+
+        public IController Controller { set; private get; }
         private const float RevealDuration = 0.5f;
         private float revealTimer;
         private TransformComponent transformComponent;
@@ -63,10 +65,11 @@ namespace GGJ2014.GameObjects
         {
             this.speed = TheyDontThinkItBeLikeItIsButItDo.Scale * Agent.BaseSpeed;
             this.size = TheyDontThinkItBeLikeItIsButItDo.Scale * Agent.BaseSize;
-            this.Sprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/agent"), (int)this.size, (int)this.size);
+            this.Sprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/agent"), (int)this.size, (int)this.size, 0);
             this.xPenetrations = new List<float>();
             this.yPenetrations = new List<float>();
             this.possibleRectangles = new List<Rectangle>();
+            this.Enabled = true;
         }
 
         public void Update(GameTime gameTime)
@@ -122,7 +125,7 @@ namespace GGJ2014.GameObjects
                             this.ShootDirection = this.lastShootingDirection;
                         }
                         // shoot in the given direction
-                        TheyDontThinkItBeLikeItIsButItDo.WorldManager.BulletPool.createBullet(this.transformComponent.Position, Vector2.Normalize(this.ShootDirection), this.Color, this.movementComponent.Velocity);
+                        TheyDontThinkItBeLikeItIsButItDo.WorldManager.BulletPool.createBullet(this.transformComponent.Position, Vector2.Normalize(this.ShootDirection), this, this.movementComponent.Velocity);
                         timeLastFired = (float)gameTime.TotalGameTime.TotalSeconds;
                     }
 
@@ -165,6 +168,7 @@ namespace GGJ2014.GameObjects
             this.hitpoints = 100;
             this.revealTimer = 0;
             this.Enabled = true;
+            this.firing = false;
         }
 
         public void HandleMapCollisions(Level level)
@@ -231,6 +235,9 @@ namespace GGJ2014.GameObjects
                         // display colours
                         this.revealTimer = RevealDuration;
                         agents[i].revealTimer = RevealDuration;
+
+                        this.Controller.BumpedPlayer(agents[i]);
+                        agents[i].Controller.BumpedPlayer(this);
                     }
                 }
             }
@@ -245,7 +252,7 @@ namespace GGJ2014.GameObjects
                 for (int i = 0; i < numBullets; ++i)
                 {
                     bullet = bullets[i];
-                    if (bullet.Owner != this.Color &&
+                    if (bullet.Owner.Color != this.Color &&
                         (bullet.CollisionRectangle.Intersects(this.CollisionRectangle) ||
                         this.CollisionRectangle.Contains(bullet.CollisionRectangle)))
                     {
@@ -258,8 +265,11 @@ namespace GGJ2014.GameObjects
                         // set the reveal timer (later to be replaced with blood)
                         this.revealTimer = Agent.RevealDuration;
 
+                        bullet.Owner.Controller.DamagedPlayer(this);
+
                         if (this.hitpoints <= 0)
                         {
+                            bullet.Owner.Controller.KilledPlayer(this);
                             // handle death
                         }
                     }
@@ -278,7 +288,9 @@ namespace GGJ2014.GameObjects
                     if (collectible.Colours.Contains(this.Color))
                     {
                         collectible.Colours.Remove(this.Color);
+                        
                         // add points
+                        this.Controller.CollectedCollectible();
 
                         if (collectible.Colours.Count == 0)
                         {

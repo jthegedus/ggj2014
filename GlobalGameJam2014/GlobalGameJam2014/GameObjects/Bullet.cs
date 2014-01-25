@@ -29,7 +29,7 @@ namespace GGJ2014.GameObjects
         private MovementComponent movementComponent;
         public MovementComponent MovementComponent { get { return this.movementComponent; } set { this.movementComponent = value; } }
 
-        public Color Owner { get; set; }
+        public Agent Owner { get; set; }
         public Vector2 InitialPosition { get; set; }
         public float Lifespan { get; set; }
         public float Damage { get; set; }
@@ -45,7 +45,7 @@ namespace GGJ2014.GameObjects
             this.size = TheyDontThinkItBeLikeItIsButItDo.Scale * Bullet.BaseSize;
         }
 
-        public void Initialize(Vector2 ownerPosition, Vector2 direction, Color owner, Vector2 initialVelocity)
+        public void Initialize(Vector2 ownerPosition, Vector2 direction, Agent owner, Vector2 initialVelocity)
         {
             Lifespan = 2000f;
             Owner = owner;

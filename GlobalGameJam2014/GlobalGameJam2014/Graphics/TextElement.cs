@@ -4,15 +4,17 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using GGJ2014.Interfaces;
 
 namespace GGJ2014
 {
-    class TextElement
+    public class TextElement : IDraw
     {
         public String text { get; set; }
         public Vector2 pos { get; set; }
         public Color color { get; set; }
         public float zIndex { get; set; }
+        public AnchorPoint AnchorPoint { get; set; }
 
         public TextElement(String text, Vector2 pos, Color color, float zIndex)
         {
@@ -22,13 +24,55 @@ namespace GGJ2014
             this.zIndex = zIndex;
         }
 
-        public void Draw(SpriteBatch spritebatch)
+        public void Draw(SpriteBatch spritebatch, GameTime gameTime)
         {
-            spritebatch.Begin();
-            //zIndex logic goes here???
-            spritebatch.DrawString(TheyDontThinkItBeLikeItIsButItDo.font, this.text, this.pos, this.color);
+            spritebatch.DrawString(
+                TheyDontThinkItBeLikeItIsButItDo.font, 
+                this.text, 
+                this.pos, 
+                this.color, 
+                0, 
+                GetOrigin((int)TheyDontThinkItBeLikeItIsButItDo.font.MeasureString(this.text).X, (int)TheyDontThinkItBeLikeItIsButItDo.font.MeasureString(this.text).Y, this.AnchorPoint),
+                1,
+                SpriteEffects.None,
+                zIndex);
+        }
 
-            spritebatch.End();
+        public static Vector2 GetOrigin(int width, int height, AnchorPoint anchorPoint)
+        {
+            Vector2 origin = Vector2.Zero;
+
+            switch (anchorPoint)
+            {
+                case AnchorPoint.Bottom:
+                    origin = new Vector2(width / 2.0f, height);
+                    break;
+                case AnchorPoint.BottomLeft:
+                    origin = new Vector2(0, height);
+                    break;
+                case AnchorPoint.BottomRight:
+                    origin = new Vector2(width, height);
+                    break;
+                case AnchorPoint.Centre:
+                    origin = new Vector2(width / 2.0f, height / 2.0f);
+                    break;
+                case AnchorPoint.Left:
+                    origin = new Vector2(0, height / 2.0f);
+                    break;
+                case AnchorPoint.Right:
+                    origin = new Vector2(width, height / 2.0f);
+                    break;
+                case AnchorPoint.Top:
+                    origin = new Vector2(width / 2.0f, 0);
+                    break;
+                case AnchorPoint.TopLeft:
+                    break;
+                case AnchorPoint.TopRight:
+                    origin = new Vector2(width, 0);
+                    break;
+            }
+
+            return origin;
         }
     }
 }
