@@ -16,8 +16,8 @@ Global Settings
     Header File = testProj.h;
     Exclude Category Names = 0;
     Exclude Variable Names = 0;
-    Last Modified Low = 0;
-    Last Modified High = 0;
+    Last Modified Low = 3143284824;
+    Last Modified High = 30349688;
 
     Category
     {
@@ -75,6 +75,84 @@ Global Settings
         Name = Music;
         Public = 1;
         Background Music = 1;
+        Volume = 0;
+
+        Category Entry
+        {
+            Name = Global;
+        }
+
+        Instance Limit
+        {
+            Max Instances = 255;
+            Behavior = 0;
+
+            Crossfade
+            {
+                Fade In = 0;
+                Fade Out = 0;
+                Crossfade Type = 0;
+            }
+        }
+    }
+
+    Category
+    {
+        Name = SFX;
+        Public = 1;
+        Background Music = 0;
+        Volume = 0;
+
+        Category Entry
+        {
+            Name = Global;
+        }
+
+        Instance Limit
+        {
+            Max Instances = 255;
+            Behavior = 0;
+
+            Crossfade
+            {
+                Fade In = 0;
+                Fade Out = 0;
+                Crossfade Type = 0;
+            }
+        }
+    }
+
+    Category
+    {
+        Name = Sound;
+        Public = 1;
+        Background Music = 0;
+        Volume = 0;
+
+        Category Entry
+        {
+            Name = Global;
+        }
+
+        Instance Limit
+        {
+            Max Instances = 255;
+            Behavior = 0;
+
+            Crossfade
+            {
+                Fade In = 0;
+                Fade Out = 0;
+                Crossfade Type = 0;
+            }
+        }
+    }
+
+    Category
+    {
+        Name = Voice;
+        Public = 1;
+        Background Music = 0;
         Volume = 0;
 
         Category Entry
@@ -225,15 +303,21 @@ Wave Bank
     Windows Bank Path Edited = 0;
     Seek Tables = 1;
     Compression Preset Name = <none>;
-    Bank Last Revised Low = 992891398;
-    Bank Last Revised High = 30349651;
+    Xbox Bank Last Modified Low = 0;
+    Xbox Bank Last Modified High = 0;
+    PC Bank Last Modified Low = 3143314826;
+    PC Bank Last Modified High = 30349688;
+    Header Last Modified Low = 0;
+    Header Last Modified High = 0;
+    Bank Last Revised Low = 2557199147;
+    Bank Last Revised High = 30349671;
 
     Wave
     {
         Name = hit;
-        File = ..\Desktop\GGJ\Sound Effects\hit.wav;
-        Build Settings Last Modified Low = 4014965630;
-        Build Settings Last Modified High = 30349583;
+        File = C:\Users\gj\Desktop\GGJ\Sound Effects\hit.wav;
+        Build Settings Last Modified Low = 781619227;
+        Build Settings Last Modified High = 30349670;
 
         Cache
         {
@@ -254,9 +338,9 @@ Wave Bank
     Wave
     {
         Name = death;
-        File = ..\Desktop\GGJ\Sound Effects\death.wav;
-        Build Settings Last Modified Low = 20722259;
-        Build Settings Last Modified High = 30349586;
+        File = C:\Users\gj\Desktop\GGJ\Sound Effects\death.wav;
+        Build Settings Last Modified Low = 854443392;
+        Build Settings Last Modified High = 30349670;
 
         Cache
         {
@@ -277,9 +361,9 @@ Wave Bank
     Wave
     {
         Name = powerup;
-        File = ..\Desktop\GGJ\Sound Effects\powerup.wav;
-        Build Settings Last Modified Low = 90866271;
-        Build Settings Last Modified High = 30349586;
+        File = C:\Users\gj\Desktop\GGJ\Sound Effects\powerup.wav;
+        Build Settings Last Modified Low = 929757700;
+        Build Settings Last Modified High = 30349670;
 
         Cache
         {
@@ -300,9 +384,9 @@ Wave Bank
     Wave
     {
         Name = shoot;
-        File = ..\Desktop\GGJ\Sound Effects\shoot.wav;
-        Build Settings Last Modified Low = 146379446;
-        Build Settings Last Modified High = 30349586;
+        File = C:\Users\gj\Desktop\GGJ\Sound Effects\shoot.wav;
+        Build Settings Last Modified Low = 1023323052;
+        Build Settings Last Modified High = 30349670;
 
         Cache
         {
@@ -328,6 +412,8 @@ Sound Bank
     Windows File = Win\Sound Bank.xsb;
     Xbox Bank Path Edited = 0;
     Windows Bank Path Edited = 0;
+    Bank Last Modified Low = 3143354828;
+    Bank Last Modified High = 30349688;
     Header Last Modified High = 0;
     Header Last Modified Low = 0;
 
