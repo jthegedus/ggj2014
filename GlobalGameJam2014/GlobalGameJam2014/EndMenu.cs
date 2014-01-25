@@ -49,6 +49,7 @@ namespace GGJ2014
             PlayAgain.OnClick += new Action(TheyDontThinkItBeLikeItIsButItDo.WorldManager.InitGame);
             QuitToMenu.OnClick += new Action(TheyDontThinkItBeLikeItIsButItDo.Menu.ShowMenu);
             QuitToMenu.OnClick += new Action(this.HideMenu);
+            QuitToMenu.OnClick += new Action(TheyDontThinkItBeLikeItIsButItDo.GameUI.HideUI);
 
             PlayAgain.ButtonAbove = this.QuitToMenu;
             PlayAgain.ButtonBelow = this.QuitToMenu;
@@ -110,6 +111,9 @@ namespace GGJ2014
                         }
                     }
                 }
+
+                this.PlayAgain.Selected = true;
+                this.QuitToMenu.Selected = false;
             }
 
             if (winner.Length > 8)

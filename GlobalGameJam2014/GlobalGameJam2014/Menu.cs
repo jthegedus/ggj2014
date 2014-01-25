@@ -79,6 +79,9 @@ namespace GGJ2014
         public void ShowMenu()
         {
             TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(this);
+            this.Start.Selected = true;
+            this.Instructions.Selected = false;
+            this.Quit.Selected = false;
         }
 
         public void HideMenu()
