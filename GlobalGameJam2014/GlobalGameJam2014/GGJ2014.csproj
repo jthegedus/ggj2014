@@ -110,11 +110,14 @@
     <Compile Include="AnchorPoint.cs" />
     <Compile Include="AudioManager.cs" />
     <Compile Include="BulletPool.cs" />
+    <Compile Include="Button.cs" />
     <Compile Include="ControllerManager.cs" />
     <Compile Include="Controllers\AIController.cs" />
     <Compile Include="Controllers\PlayerController.cs" />
     <Compile Include="Controllers\TimedVibration.cs" />
+    <Compile Include="Menu.cs" />
     <Compile Include="GameObjects\Bullet.cs" />
+    <Compile Include="GameOverScreen.cs" />
     <Compile Include="GameState.cs" />
     <Compile Include="GameObjects\Collectible.cs" />
     <Compile Include="GameUI.cs" />
@@ -142,7 +145,7 @@
     <Compile Include="Interfaces\IUpdate.cs" />
     <Compile Include="Levels\Level.cs" />
     <Compile Include="Levels\LevelLoader.cs" />
-    <Compile Include="Menu.cs" />
+    <Compile Include="EndMenu.cs" />
     <Compile Include="Objectives.cs" />
     <Compile Include="Physics\CollisionSolver.cs" />
     <Compile Include="Physics\CorrectionVector2.cs" />
