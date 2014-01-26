@@ -114,24 +114,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Sounds\Sound Bank.xsb">
-      <Name>Sound Bank</Name>
-      <Importer>XactImporter</Importer>
-      <Processor>XactProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Sounds\testProj.xgs">
-      <Name>testProj</Name>
-      <Importer>XactImporter</Importer>
-      <Processor>XactProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Sounds\Wave Bank.xwb">
-      <Name>Wave Bank</Name>
-      <Importer>XactImporter</Importer>
-      <Processor>XactProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <Compile Include="SpriteFonts\Arial64Bold.spritefont">
       <Name>Arial64Bold</Name>
       <Importer>FontDescriptionImporter</Importer>
@@ -318,6 +300,26 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Sounds\Sound Bank.xsb">
+      <Name>Sound Bank</Name>
+      <Importer>XactImporter</Importer>
+      <Processor>XactProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Sounds\testProj.xgs">
+      <Name>testProj</Name>
+      <Importer>XactImporter</Importer>
+      <Processor>XactProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Sounds\Wave Bank.xwb">
+      <Name>Wave Bank</Name>
+      <Importer>XactImporter</Importer>
+      <Processor>XactProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Backgrounds\gameRules1080.png">
