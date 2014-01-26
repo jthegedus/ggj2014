@@ -20,6 +20,7 @@ namespace GGJ2014
     /// </summary>
     public class TheyDontThinkItBeLikeItIsButItDo : Microsoft.Xna.Framework.Game
     {
+        public static Color Blue { get; set; }
         public static Dictionary<PlayerIndex, GamePadState> CurrentGPS { get; private set; }
         public static Dictionary<PlayerIndex, GamePadState> LastGPS { get; private set; }
         public static GameUI GameUI { get; set; }
@@ -42,6 +43,7 @@ namespace GGJ2014
 
         public TheyDontThinkItBeLikeItIsButItDo()
         {
+            TheyDontThinkItBeLikeItIsButItDo.Blue = new Color(0, 0, 255, 255);
             TheyDontThinkItBeLikeItIsButItDo.CurrentGPS = new Dictionary<PlayerIndex, GamePadState>();
             TheyDontThinkItBeLikeItIsButItDo.CurrentGPS[PlayerIndex.One] = new GamePadState();
             TheyDontThinkItBeLikeItIsButItDo.CurrentGPS[PlayerIndex.Two] = new GamePadState();
