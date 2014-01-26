@@ -132,6 +132,7 @@ namespace GGJ2014
             }
             this.level = LevelLoader.LoadLevel("level" + levelToLoad);
             this.LastLevel = levelToLoad;
+            // this.level = LevelLoader.LoadLevel("level" + 10);
 
             // Assign player positions based on first 4 spawn points
             List<Rectangle> spawns = this.Level.AgentSpawnRectangles;
