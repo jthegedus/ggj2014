@@ -18,12 +18,13 @@ namespace GGJ2014
         public Button PlayAgain { get; set; }
         public Button QuitToMenu { get; set; }
         public Sprite Background { get; set; }
+        public Sprite GameOver { get; set; }
 
         public EndMenu()
         {
             this.Buttons = new List<Button>();
 
-            Vector2 position = new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth / 2, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight / 4 * 2);
+            Vector2 position = new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth / 2, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight / 5 * 3);
             this.PlayAgain = new Button()
             {
                 Position = position,
@@ -33,7 +34,7 @@ namespace GGJ2014
                 ClickDuration = 0.5f,
             };
 
-            position = new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth / 2, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight / 4 * 3);
+            position = new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth / 2, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight / 5 * 4);
             this.QuitToMenu = new Button()
             {
                 Position = position,
@@ -41,6 +42,13 @@ namespace GGJ2014
                 RolloverText = new TextElement("Quit to Menu", position, Color.Red, 0) { Font = TheyDontThinkItBeLikeItIsButItDo.LargeFont },
                 ClickText = new TextElement("Quit to Menu", position, Color.DarkRed, 0) { Font = TheyDontThinkItBeLikeItIsButItDo.LargeFont },
                 ClickDuration = 0.5f,
+            };
+
+            Texture2D img = TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/gameOver");
+            this.GameOver = new Sprite(img, img.Width, img.Height, 0)
+            {
+                AnchorPoint = GGJ2014.AnchorPoint.Centre,
+                Zoom = img.Width / (TheyDontThinkItBeLikeItIsButItDo.ScreenWidth / 3)
             };
 
             PlayAgain.Selected = true;
@@ -130,7 +138,7 @@ namespace GGJ2014
             {
                 winner += " wins!";
             }
-            this.Winner = new TextElement(winner, new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth / 2, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight / 4), Color.Red, 0) { Font = TheyDontThinkItBeLikeItIsButItDo.LargeFont };
+            this.Winner = new TextElement(winner, new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth / 2, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight / 5 * 2), Color.Red, 0) { Font = TheyDontThinkItBeLikeItIsButItDo.LargeFont };
             TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(this);
         }
 
@@ -148,6 +156,7 @@ namespace GGJ2014
 
             // this.Background.Draw(spriteBatch, Vector2.Zero);
             this.Winner.Draw(spriteBatch, gameTime);
+            this.GameOver.Draw(spriteBatch, new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth / 2, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight / 5));
         }
 
         public void Update(GameTime gameTime)
