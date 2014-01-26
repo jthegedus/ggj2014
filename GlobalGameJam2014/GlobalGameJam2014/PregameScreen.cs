@@ -33,6 +33,7 @@ namespace GGJ2014
         private bool p3Ready = false;
         private bool p4Ready = false;
         private const float BaseScale = 0.35f;
+        private bool first = true;
 
         public PregameScreen()
         {
@@ -40,6 +41,7 @@ namespace GGJ2014
 
         public void Init()
         {
+            first = true;
             fadeDelay = 1;
             fadeTimer = FadeDuration;
             countdown = 3;
@@ -112,7 +114,8 @@ namespace GGJ2014
             if (!p1Ready)
             {
                 Texture2D img = TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/ready");
-                this.Player1Ready.RollOverImage = new Sprite(img, img.Width, img.Height) { AnchorPoint = AnchorPoint.Centre, Zoom = BaseScale * TheyDontThinkItBeLikeItIsButItDo.Scale };
+                this.Player1Ready.RollOverImage = new Sprite(img, img.Width, img.Height) { AnchorPoint = AnchorPoint.Centre, Zoom = BaseScale * TheyDontThinkItBeLikeItIsButItDo.Scale, zIndex = 0.000001f };
+                this.Player1Ready.Text = new TextElement("Player 1\n  Ready", this.Player1Ready.Position, Color.Black, 0) { AnchorPoint = GGJ2014.AnchorPoint.Centre, Font = TheyDontThinkItBeLikeItIsButItDo.LargeFont, Scale = new Vector2(0.6f) };
                 p1Ready = true;
             }
         }
@@ -122,7 +125,8 @@ namespace GGJ2014
             if (!p2Ready)
             {
                 Texture2D img = TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/ready");
-                this.Player2Ready.RollOverImage = new Sprite(img, img.Width, img.Height) { AnchorPoint = AnchorPoint.Centre, Zoom = BaseScale * TheyDontThinkItBeLikeItIsButItDo.Scale };
+                this.Player2Ready.RollOverImage = new Sprite(img, img.Width, img.Height) { AnchorPoint = AnchorPoint.Centre, Zoom = BaseScale * TheyDontThinkItBeLikeItIsButItDo.Scale, zIndex = 0.000001f };
+                this.Player2Ready.Text = new TextElement("Player 2\n  Ready", this.Player2Ready.Position, Color.Black, 0) { AnchorPoint = GGJ2014.AnchorPoint.Centre, Font = TheyDontThinkItBeLikeItIsButItDo.LargeFont, Scale = new Vector2(0.6f) };
                 p2Ready = true;
             }
         }
@@ -131,7 +135,8 @@ namespace GGJ2014
             if (!p3Ready)
             {
                 Texture2D img = TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/ready");
-                this.Player3Ready.RollOverImage = new Sprite(img, img.Width, img.Height) { AnchorPoint = AnchorPoint.Centre, Zoom = BaseScale * TheyDontThinkItBeLikeItIsButItDo.Scale };
+                this.Player3Ready.RollOverImage = new Sprite(img, img.Width, img.Height) { AnchorPoint = AnchorPoint.Centre, Zoom = BaseScale * TheyDontThinkItBeLikeItIsButItDo.Scale, zIndex = 0.000001f };
+                this.Player3Ready.Text = new TextElement("Player 3\n  Ready", this.Player3Ready.Position, Color.Black, 0) { AnchorPoint = GGJ2014.AnchorPoint.Centre, Font = TheyDontThinkItBeLikeItIsButItDo.LargeFont, Scale = new Vector2(0.6f) };
                 p3Ready = true;
             }
         }
@@ -140,7 +145,8 @@ namespace GGJ2014
             if (!p4Ready)
             {
                 Texture2D img = TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/ready");
-                this.Player4Ready.RollOverImage = new Sprite(img, img.Width, img.Height) { AnchorPoint = AnchorPoint.Centre, Zoom = BaseScale * TheyDontThinkItBeLikeItIsButItDo.Scale };
+                this.Player4Ready.RollOverImage = new Sprite(img, img.Width, img.Height) { AnchorPoint = AnchorPoint.Centre, Zoom = BaseScale * TheyDontThinkItBeLikeItIsButItDo.Scale, zIndex = 0.000001f };
+                this.Player4Ready.Text = new TextElement("Player 4\n  Ready", this.Player4Ready.Position, Color.Black, 0) { AnchorPoint = GGJ2014.AnchorPoint.Centre, Font = TheyDontThinkItBeLikeItIsButItDo.LargeFont, Scale = new Vector2(0.6f) };
                 p4Ready = true;
             }
         }
@@ -191,11 +197,26 @@ namespace GGJ2014
                     this.fadeTimer -= elapsedTime;
                     foreach (Button b in this.ButtonList)
                     {
-                        b.RollOverImage.Alpha = MathHelper.Clamp(MathHelper.Lerp(0, 1, this.fadeTimer / FadeDuration), 0, 1);
+                        float val = MathHelper.Clamp(MathHelper.Lerp(0, 1, this.fadeTimer / FadeDuration), 0, 1);
+                        b.RollOverImage.Alpha = val;
+                        b.RolloverText.color = new Color(b.RolloverText.color.R, b.RolloverText.color.G, b.RolloverText.color.B, val);
                     }
                 }
                 else
                 {
+                    if (first)
+                    {
+                        first = false;
+
+                        foreach (IController c in TheyDontThinkItBeLikeItIsButItDo.ControllerManager.Controllers)
+                        {
+                            if (c is PlayerController)
+                            {
+                                (c as PlayerController).Spawned();
+                            }
+                        }
+                    }
+
                     this.countdown -= elapsedTime;
                     displayedCount = (int)Math.Ceiling(this.countdown);
 
