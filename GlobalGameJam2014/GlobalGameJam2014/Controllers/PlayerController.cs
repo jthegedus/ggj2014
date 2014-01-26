@@ -211,7 +211,7 @@ namespace GGJ2014.Controllers
 
         public void Spawned()
         {
-            FadingTextElement fte = new FadingTextElement("Player " + PlayerIndex, Agent, Color.Black, 0, 4f, 1f, 0f);
+            FadingTextElement fte = new FadingTextElement("Player " + PlayerIndex, Agent, Color.Black, ZIndex.UIText + 0.0001f, 4f, 1f, 0f);
             TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(fte);
         }
 
