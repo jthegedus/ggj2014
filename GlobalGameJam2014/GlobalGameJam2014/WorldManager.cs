@@ -31,11 +31,12 @@ namespace GGJ2014
         private List<Object> objsToRemove;
         private List<Object> objsToAdd;
         public Level Level { get { return this.level; } }
-        private const float TimeLimit = 3;
+        private const float TimeLimit = 70;
 
         public int DisplayedTime { get; set; }
         public int LastDisplayedTime { get; set; }
         public float GameTimer { get; private set; }
+        public int LastLevel { get; private set; }
 
         public WorldManager()
         {
@@ -53,6 +54,7 @@ namespace GGJ2014
             this.objsToRemove = new List<Object>();
             this.objsToAdd = new List<Object>();
             this.Collectibles = new List<Collectible>();
+            this.LastLevel = -1;
         }
 
         public void InitGame()
@@ -91,13 +93,17 @@ namespace GGJ2014
 
             PlayerController player1 = new PlayerController(PlayerIndex.One, Agents[0]);
             TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player1);
+            TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(player1);
             PlayerController player2 = new PlayerController(PlayerIndex.Two, Agents[1]);
             TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player2);
+            TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(player2);
             PlayerController player3 = new PlayerController(PlayerIndex.Three, Agents[2]);
             TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player3);
+            TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(player3);
             PlayerController player4 = new PlayerController(PlayerIndex.Four, Agents[3]);
             TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player4);
-            
+            TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(player4);
+
             // AI Controllers
             AIController ai1 = new AIController(Agents[4]);
             TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(ai1);
@@ -110,7 +116,7 @@ namespace GGJ2014
             Agents[5].Controller = ai2;
 
             // Add collectibles
-            for (int i = 0; i < 2; ++i)
+            for (int i = 0; i < 4; ++i)
             {
                 Collectibles.Add(new Collectible(new Vector2(0, 0)));
                 this.AddToWorld(Collectibles[i]);
@@ -118,7 +124,14 @@ namespace GGJ2014
 
             // Load level
             // WARNING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! - ONLY USE LEVELS THAT HAVE A levelXX.png and a levelXXg.png (10 -> 16)
-            this.level = LevelLoader.LoadLevel("level16");
+            // Randomise the level to load
+            int levelToLoad = TheyDontThinkItBeLikeItIsButItDo.Rand.Next(10, 17);
+            while (levelToLoad == this.LastLevel)
+            {
+                levelToLoad = TheyDontThinkItBeLikeItIsButItDo.Rand.Next(10, 17);
+            }
+            this.level = LevelLoader.LoadLevel("level" + levelToLoad);
+            this.LastLevel = levelToLoad;
 
             // Assign player positions based on first 4 spawn points
             List<Rectangle> spawns = this.Level.AgentSpawnRectangles;
@@ -313,6 +326,30 @@ namespace GGJ2014
             }
 
             this.SpriteBatch.End();
+        }
+
+        // Attempts to find the nearest AI to the player who isn't chasing someone and gets them to chase the player
+        public void SetPenaltyChase(PlayerController pc)
+        {
+            float shortestDistance = TheyDontThinkItBeLikeItIsButItDo.ScreenWidth;
+            AIController closestAi = null;
+            foreach (Agent agent in Agents)
+            {
+                if (agent.Enabled && agent.Controller is AIController && !((AIController)agent.Controller).TargetIsPenalty)
+                {
+                    float distance = Vector2.Distance(agent.TransformComponent.Position, pc.Agent.TransformComponent.Position);
+                    if (distance < shortestDistance)
+                    {
+                        shortestDistance = distance;
+                        closestAi = ((AIController)agent.Controller);
+                    }
+                }
+            }
+
+            if (closestAi != null)
+            {
+                closestAi.SetPenaltyTarget(pc);
+            }
         }
 
         public List<ITransform> GetActiveTransforms()

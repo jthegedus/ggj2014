@@ -13,5 +13,7 @@ namespace GGJ2014.Interfaces
         void KilledPlayer(Agent victim);
         void BumpedPlayer(Agent victim);
         void CollectedCollectible();
+        void Died();
+        void Spawned();
     }
 }
