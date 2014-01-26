@@ -11,6 +11,7 @@ using GGJ2014.GameObjects;
 using GGJ2014.Controllers;
 using GGJ2014.Components;
 using GGJ2014.AI;
+using Microsoft.Xna.Framework.Input;
 
 namespace GGJ2014
 {
@@ -32,6 +33,9 @@ namespace GGJ2014
         private List<Object> objsToAdd;
         public Level Level { get { return this.level; } }
         private const float TimeLimit = 70;
+        public static int NumberOfPlayers = 4;
+        public static int NumberOfAI = 2;
+        public static int NumberOfCollectibles = 4;
 
         public int DisplayedTime { get; set; }
         public int LastDisplayedTime { get; set; }
@@ -63,7 +67,27 @@ namespace GGJ2014
             TheyDontThinkItBeLikeItIsButItDo.ControllerManager.ClearLists();
             TheyDontThinkItBeLikeItIsButItDo.GameUI.Init();
 
-            for (int i = 0; i < 6; ++i)
+            // Load level
+            // WARNING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! - ONLY USE LEVELS THAT HAVE A levelXX.png and a levelXXg.png (10 -> 16)
+            // Randomise the level to load
+            int levelToLoad = TheyDontThinkItBeLikeItIsButItDo.Rand.Next(10, 17);
+            while (levelToLoad == this.LastLevel)
+            {
+                levelToLoad = TheyDontThinkItBeLikeItIsButItDo.Rand.Next(10, 17);
+            }
+            // SET LEVEL HERE FOR DEBUG
+            //levelToLoad = 13;
+            this.level = LevelLoader.LoadLevel("level" + levelToLoad);
+            this.LastLevel = levelToLoad;
+
+            // Decide number of players
+            NumberOfPlayers = 0;
+            if(GamePad.GetState(PlayerIndex.One).IsConnected) NumberOfPlayers++;
+            if(GamePad.GetState(PlayerIndex.Two).IsConnected) NumberOfPlayers++;
+            if(GamePad.GetState(PlayerIndex.Three).IsConnected) NumberOfPlayers++;
+            if(GamePad.GetState(PlayerIndex.Four).IsConnected) NumberOfPlayers++;
+
+            for (int i = 0; i < NumberOfPlayers + NumberOfAI; ++i)
             {
                 Agents.Add(new Agent());
                 this.AddToWorld(Agents[i]);
@@ -71,10 +95,10 @@ namespace GGJ2014
 
             // Randomise dem colours, MAAAAAAAAAAHN
             List<Color> colors = new List<Color>();
-            colors.Add(Color.Red);
-            colors.Add(Color.Blue);
-            colors.Add(Color.Yellow);
-            colors.Add(Color.Green);
+            for (int i = 0; i < NumberOfPlayers; ++i)
+            {
+                colors.Add(PlayerController.Colors[i]);
+            }
 
             // Do 10 random swaps on colors list
             for (int i = 0; i < 10; ++i)
@@ -86,69 +110,45 @@ namespace GGJ2014
             }
 
             // Assign colours
-            for (int i = 0; i < colors.Count; ++i)
+            for (int i = 0; i < NumberOfPlayers; ++i)
             {
                 Agents[i].Color = colors[i];
+                PlayerIndex index = PlayerIndex.One;
+                switch (i)
+                {
+                    case 0: index = PlayerIndex.One; break;
+                    case 1: index = PlayerIndex.Two; break;
+                    case 2: index = PlayerIndex.Three; break;
+                    case 3: index = PlayerIndex.Four; break;
+                }
+                PlayerController player = new PlayerController(index, Agents[i]);
+                TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player);
+                TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(player);
             }
 
-            PlayerController player1 = new PlayerController(PlayerIndex.One, Agents[0]);
-            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player1);
-            TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(player1);
-            PlayerController player2 = new PlayerController(PlayerIndex.Two, Agents[1]);
-            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player2);
-            TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(player2);
-            PlayerController player3 = new PlayerController(PlayerIndex.Three, Agents[2]);
-            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player3);
-            TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(player3);
-            PlayerController player4 = new PlayerController(PlayerIndex.Four, Agents[3]);
-            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player4);
-            TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(player4);
-
             // AI Controllers
-            AIController ai1 = new AIController(Agents[4]);
-            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(ai1);
-            TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(ai1);
-            Agents[4].Controller = ai1;
-
-            AIController ai2 = new AIController(Agents[5]);
-            TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(ai2);
-            TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(ai2);
-            Agents[5].Controller = ai2;
+            for (int i = NumberOfPlayers; i < NumberOfPlayers + NumberOfAI; ++i)
+            {
+                AIController ai = new AIController(Agents[i]);
+                TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(ai);
+                TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(ai);
+                Agents[i].Controller = ai;
+            }
 
             // Add collectibles
-            for (int i = 0; i < 4; ++i)
+            for (int i = 0; i < NumberOfCollectibles; ++i)
             {
                 Collectibles.Add(new Collectible(new Vector2(0, 0)));
                 this.AddToWorld(Collectibles[i]);
             }
 
-            // Load level
-            // WARNING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! - ONLY USE LEVELS THAT HAVE A levelXX.png and a levelXXg.png (10 -> 16)
-            // Randomise the level to load
-            int levelToLoad = TheyDontThinkItBeLikeItIsButItDo.Rand.Next(10, 17);
-            while (levelToLoad == this.LastLevel)
-            {
-                levelToLoad = TheyDontThinkItBeLikeItIsButItDo.Rand.Next(10, 17);
-            }
-            this.level = LevelLoader.LoadLevel("level" + levelToLoad);
-            this.LastLevel = levelToLoad;
-            // this.level = LevelLoader.LoadLevel("level" + 10);
-
             // Assign player positions based on first 4 spawn points
             List<Rectangle> spawns = this.Level.AgentSpawnRectangles;
-            for (int i = 0; i < 6; ++i)
+            for (int i = 0; i < NumberOfPlayers+NumberOfAI; ++i)
             {
                 Agents[i].Spawn();
             }
 
-            //tc.Position = new Vector2(50, 50);
-            //agents[0].TransformComponent = tc;
-            //tc.Position = new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 50, 50);
-            //agents[1].TransformComponent = tc;
-            //tc.Position = new Vector2(50, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 50);
-            //agents[2].TransformComponent = tc;
-            //tc.Position = new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 50, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 50);
-            //agents[3].TransformComponent = tc;
             TheyDontThinkItBeLikeItIsButItDo.GameUI.ShowUI();
             TheyDontThinkItBeLikeItIsButItDo.Gamestate = GameState.Pregame;
         }
@@ -275,6 +275,9 @@ namespace GGJ2014
 
                 if (this.GameTimer <= 0)
                 {
+                    //Stop music playing
+                    TheyDontThinkItBeLikeItIsButItDo.AudioManager.Pause(TheyDontThinkItBeLikeItIsButItDo.PregameScreen.GameMusic);
+
                     TheyDontThinkItBeLikeItIsButItDo.Gamestate = GameState.GameEnded;
                     this.ClearLists();
                     TheyDontThinkItBeLikeItIsButItDo.EndMenu.ShowMenu();

@@ -32,8 +32,8 @@ namespace GGJ2014
         public TextElement Player3Objective { get; set; }
         public TextElement Player4Objective { get; set; }
         public TextElement GameTimer { get; set; }
-        private float targetIconScale = 0.08f;
-        private float objectiveIconScale = 0.06f;
+        private float targetIconScale = 0.17f;
+        private float objectiveIconScale = 0.12f;
 
         public GameUI()
         {
@@ -43,14 +43,14 @@ namespace GGJ2014
         {
             this.GameTimer = new TextElement(TheyDontThinkItBeLikeItIsButItDo.WorldManager.GameTimer.ToString(), new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth / 2, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight), Color.Black, 0) { AnchorPoint = AnchorPoint.Bottom, Font = TheyDontThinkItBeLikeItIsButItDo.LargeFont };
             Color textColor = Color.Black;
-            this.Player1Score = new TextElement("Player 1: 0000", new Vector2(10, 10), textColor, 0) { AnchorPoint = AnchorPoint.TopLeft };
-            this.Player2Score = new TextElement("Player 2: 0000", new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 10, 10), textColor, 0) { AnchorPoint = AnchorPoint.TopRight };
-            this.Player3Score = new TextElement("Player 3: 0000", new Vector2(10, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 50), textColor, 0) { AnchorPoint = AnchorPoint.BottomLeft };
-            this.Player4Score = new TextElement("Player 4: 0000", new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 10, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 50), textColor, 0) { AnchorPoint = AnchorPoint.BottomRight };
-            this.Player1Objective = new TextElement("", new Vector2(45, 45), textColor, 0) { AnchorPoint = AnchorPoint.TopLeft };
-            this.Player2Objective = new TextElement("", new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 45, 45), textColor, 0) { AnchorPoint = AnchorPoint.TopRight };
-            this.Player3Objective = new TextElement("", new Vector2(45, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 15), textColor, 0) { AnchorPoint = AnchorPoint.BottomLeft };
-            this.Player4Objective = new TextElement("", new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 45, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 15), textColor, 0) { AnchorPoint = AnchorPoint.BottomRight };
+            this.Player1Score = new TextElement("P1: 000", new Vector2(90, 0), textColor, 0) { Font = TheyDontThinkItBeLikeItIsButItDo.LargeFont, AnchorPoint = AnchorPoint.TopLeft, Scale = new Vector2(TheyDontThinkItBeLikeItIsButItDo.Scale) * 0.3f };
+            this.Player2Score = new TextElement("P2: 000", new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 90, 0), textColor, 0) { Font = TheyDontThinkItBeLikeItIsButItDo.LargeFont, AnchorPoint = AnchorPoint.TopRight, Scale = new Vector2(TheyDontThinkItBeLikeItIsButItDo.Scale) * 0.3f };
+            this.Player3Score = new TextElement("P3: 000", new Vector2(90, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 50), textColor, 0) { Font = TheyDontThinkItBeLikeItIsButItDo.LargeFont, AnchorPoint = AnchorPoint.BottomLeft, Scale = new Vector2(TheyDontThinkItBeLikeItIsButItDo.Scale) * 0.3f };
+            this.Player4Score = new TextElement("P4: 000", new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 90, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 50), textColor, 0) { Font = TheyDontThinkItBeLikeItIsButItDo.LargeFont, AnchorPoint = AnchorPoint.BottomRight, Scale = new Vector2(TheyDontThinkItBeLikeItIsButItDo.Scale) * 0.3f };
+            this.Player1Objective = new TextElement("", new Vector2(90, 45), textColor, 0) { AnchorPoint = AnchorPoint.TopLeft, Scale = new Vector2(TheyDontThinkItBeLikeItIsButItDo.Scale) * 0.4f};
+            this.Player2Objective = new TextElement("", new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 95, 45), textColor, 0) { AnchorPoint = AnchorPoint.TopRight, Scale = new Vector2(TheyDontThinkItBeLikeItIsButItDo.Scale) * 0.4f };
+            this.Player3Objective = new TextElement("", new Vector2(90, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 35), textColor, 0) { AnchorPoint = AnchorPoint.BottomLeft, Scale = new Vector2(TheyDontThinkItBeLikeItIsButItDo.Scale) * 0.4f };
+            this.Player4Objective = new TextElement("", new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 95, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 35), textColor, 0) { AnchorPoint = AnchorPoint.BottomRight, Scale = new Vector2(TheyDontThinkItBeLikeItIsButItDo.Scale) * 0.4f };
 
             this.texts = new List<TextElement>();
             this.texts.Add(Player1Score);
@@ -63,17 +63,17 @@ namespace GGJ2014
             this.texts.Add(Player4Objective);
 
             Texture2D img = TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/circle");
-            this.P1TargetIcon = new Sprite(img, img.Width, img.Height, 0.000001f) { AnchorPoint = AnchorPoint.TopLeft, Zoom = targetIconScale * TheyDontThinkItBeLikeItIsButItDo.Scale };
-            this.P2TargetIcon = new Sprite(img, img.Width, img.Height, 0.000001f) { AnchorPoint = AnchorPoint.TopRight, Zoom = targetIconScale * TheyDontThinkItBeLikeItIsButItDo.Scale };
-            this.P3TargetIcon = new Sprite(img, img.Width, img.Height, 0.000001f) { AnchorPoint = AnchorPoint.BottomLeft, Zoom = targetIconScale * TheyDontThinkItBeLikeItIsButItDo.Scale };
-            this.P4TargetIcon = new Sprite(img, img.Width, img.Height, 0.000001f) { AnchorPoint = AnchorPoint.BottomRight, Zoom = targetIconScale * TheyDontThinkItBeLikeItIsButItDo.Scale };
+            this.P1TargetIcon = new Sprite(img, img.Width, img.Height, 0.000001f) { AnchorPoint = AnchorPoint.Centre, Zoom = targetIconScale * TheyDontThinkItBeLikeItIsButItDo.Scale };
+            this.P2TargetIcon = new Sprite(img, img.Width, img.Height, 0.000001f) { AnchorPoint = AnchorPoint.Centre, Zoom = targetIconScale * TheyDontThinkItBeLikeItIsButItDo.Scale };
+            this.P3TargetIcon = new Sprite(img, img.Width, img.Height, 0.000001f) { AnchorPoint = AnchorPoint.Centre, Zoom = targetIconScale * TheyDontThinkItBeLikeItIsButItDo.Scale };
+            this.P4TargetIcon = new Sprite(img, img.Width, img.Height, 0.000001f) { AnchorPoint = AnchorPoint.Centre, Zoom = targetIconScale * TheyDontThinkItBeLikeItIsButItDo.Scale };
 
             Baseball = TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/baseballLarge");
             Glove = TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/glove");
-            this.P1ObjectiveIcon = new Sprite(Baseball, img.Width, img.Height, 0) { AnchorPoint = AnchorPoint.TopLeft, Zoom = objectiveIconScale * TheyDontThinkItBeLikeItIsButItDo.Scale };
-            this.P2ObjectiveIcon = new Sprite(Baseball, img.Width, img.Height, 0) { AnchorPoint = AnchorPoint.TopRight, Zoom = objectiveIconScale * TheyDontThinkItBeLikeItIsButItDo.Scale };
-            this.P3ObjectiveIcon = new Sprite(Baseball, img.Width, img.Height, 0) { AnchorPoint = AnchorPoint.BottomLeft, Zoom = objectiveIconScale * TheyDontThinkItBeLikeItIsButItDo.Scale };
-            this.P4ObjectiveIcon = new Sprite(Baseball, img.Width, img.Height, 0) { AnchorPoint = AnchorPoint.BottomRight, Zoom = objectiveIconScale * TheyDontThinkItBeLikeItIsButItDo.Scale };
+            this.P1ObjectiveIcon = new Sprite(Baseball, img.Width, img.Height, 0) { AnchorPoint = AnchorPoint.Centre, Zoom = objectiveIconScale * TheyDontThinkItBeLikeItIsButItDo.Scale };
+            this.P2ObjectiveIcon = new Sprite(Baseball, img.Width, img.Height, 0) { AnchorPoint = AnchorPoint.Centre, Zoom = objectiveIconScale * TheyDontThinkItBeLikeItIsButItDo.Scale };
+            this.P3ObjectiveIcon = new Sprite(Baseball, img.Width, img.Height, 0) { AnchorPoint = AnchorPoint.Centre, Zoom = objectiveIconScale * TheyDontThinkItBeLikeItIsButItDo.Scale };
+            this.P4ObjectiveIcon = new Sprite(Baseball, img.Width, img.Height, 0) { AnchorPoint = AnchorPoint.Centre, Zoom = objectiveIconScale * TheyDontThinkItBeLikeItIsButItDo.Scale };
         }
 
         public void ShowUI()
@@ -98,15 +98,15 @@ namespace GGJ2014
             this.Player3Objective.Draw(spriteBatch, gameTime);
             this.Player4Objective.Draw(spriteBatch, gameTime);
 
-            this.P1TargetIcon.Draw(spriteBatch, new Vector2(10, 44));
-            this.P2TargetIcon.Draw(spriteBatch, new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 10, 44));
-            this.P3TargetIcon.Draw(spriteBatch, new Vector2(10,  TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 16));
-            this.P4TargetIcon.Draw(spriteBatch, new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 10, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 16));
+            this.P1TargetIcon.Draw(spriteBatch, new Vector2(50, 40));
+            this.P2TargetIcon.Draw(spriteBatch, new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 50, 40));
+            this.P3TargetIcon.Draw(spriteBatch, new Vector2(50,  TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 65));
+            this.P4TargetIcon.Draw(spriteBatch, new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 50, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 65));
 
-            this.P1ObjectiveIcon.Draw(spriteBatch, new Vector2(14, 48));
-            this.P2ObjectiveIcon.Draw(spriteBatch, new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 14, 48));
-            this.P3ObjectiveIcon.Draw(spriteBatch, new Vector2(14, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 20));
-            this.P4ObjectiveIcon.Draw(spriteBatch, new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 14, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 20));  
+            this.P1ObjectiveIcon.Draw(spriteBatch, new Vector2(50, 40));
+            this.P2ObjectiveIcon.Draw(spriteBatch, new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 50, 40));
+            this.P3ObjectiveIcon.Draw(spriteBatch, new Vector2(50, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 65));
+            this.P4ObjectiveIcon.Draw(spriteBatch, new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth - 50, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight - 65));  
         }
     }
 }

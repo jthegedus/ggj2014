@@ -181,7 +181,7 @@ namespace GGJ2014.GameObjects
                                 this.ShootDirection = this.lastShootingDirection;
                             }
                             // shoot in the given direction
-                            TheyDontThinkItBeLikeItIsButItDo.WorldManager.BulletPool.createBullet(this.transformComponent.Position, Vector2.Normalize(this.ShootDirection), this, this.movementComponent.Velocity);
+                            TheyDontThinkItBeLikeItIsButItDo.WorldManager.BulletPool.createBullet(this.transformComponent.Position + Vector2.Normalize(this.ShootDirection) * this.sprCap.Width * this.sprCap.Zoom * 0.3f * -Vector2.UnitY, Vector2.Normalize(this.ShootDirection), this, this.movementComponent.Velocity);
 
                             //Play shooting sound
                             Microsoft.Xna.Framework.Audio.Cue shootCue = TheyDontThinkItBeLikeItIsButItDo.AudioManager.LoadCue("shoot");
@@ -436,7 +436,7 @@ namespace GGJ2014.GameObjects
 
         public void HandleCollectibleCollisions(List<Collectible> collectibles)
         {
-            if (Enabled)
+            if (Enabled && this.Color != Color.Transparent)
             {
                 foreach (Collectible collectible in collectibles)
                 {

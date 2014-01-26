@@ -14,7 +14,7 @@ namespace GGJ2014.Controllers
     public class PlayerController : IUpdate, IController
     {
         public static readonly List<String> BadThings = new List<String> { "Nope.", "Wrong.", "Bad.", "Derp.", "No.", "Uh-uh.", "Nup." };
-        public static readonly List<Color> Colors = new List<Color>() { Color.Red, Color.Blue, Color.Yellow, Color.Green };
+        public static readonly List<Color> Colors = new List<Color>() { Color.Red, TheyDontThinkItBeLikeItIsButItDo.Blue, Color.Yellow, Color.Green };
         private static readonly List<Vector2> ScoreDirections = new List<Vector2> { -Vector2.UnitY, Vector2.Normalize(new Vector2(1, -1)), Vector2.UnitX, Vector2.Normalize(new Vector2(1, 1)), Vector2.UnitY, Vector2.Normalize(new Vector2(-1, 1)), -Vector2.UnitX, Vector2.Normalize(new Vector2(-1, -1)) };
         private int scoreTurn = 0;
         private Color previousTarget;
@@ -62,16 +62,16 @@ namespace GGJ2014.Controllers
                 switch (this.PlayerIndex)
                 {
                     case PlayerIndex.One:
-                        TheyDontThinkItBeLikeItIsButItDo.GameUI.Player1Score.text = "Player 1: " + String.Format("{0:d4}", this.score);
-                        break;
-                    case PlayerIndex.Two:
-                        TheyDontThinkItBeLikeItIsButItDo.GameUI.Player2Score.text = "Player 2: " + String.Format("{0:d4}", this.score);
-                        break;
-                    case PlayerIndex.Three:
-                        TheyDontThinkItBeLikeItIsButItDo.GameUI.Player3Score.text = "Player 3: " + String.Format("{0:d4}", this.score);
-                        break;
-                    case PlayerIndex.Four:
-                        TheyDontThinkItBeLikeItIsButItDo.GameUI.Player4Score.text = "Player 4: " + String.Format("{0:d4}", this.score);
+                        TheyDontThinkItBeLikeItIsButItDo.GameUI.Player1Score.text = "P1: " + String.Format("{0:d3}", this.score);
+                        break;                                                        
+                    case PlayerIndex.Two:                                             
+                        TheyDontThinkItBeLikeItIsButItDo.GameUI.Player2Score.text = "P2: " + String.Format("{0:d3}", this.score);
+                        break;                                                        
+                    case PlayerIndex.Three:                                           
+                        TheyDontThinkItBeLikeItIsButItDo.GameUI.Player3Score.text = "P3: " + String.Format("{0:d3}", this.score);
+                        break;                                                        
+                    case PlayerIndex.Four:                                            
+                        TheyDontThinkItBeLikeItIsButItDo.GameUI.Player4Score.text = "P4: " + String.Format("{0:d3}", this.score);
                         break;
                 }
 
@@ -123,7 +123,7 @@ namespace GGJ2014.Controllers
                 {
                     TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(new TimedVibration(this.PlayerIndex, 1f, 0.25f));
                 }
-                else if (IsButtonJustPressed(Buttons.X, gps, lastGps) && this.Agent.Color == Color.Blue)
+                else if (IsButtonJustPressed(Buttons.X, gps, lastGps) && this.Agent.Color == TheyDontThinkItBeLikeItIsButItDo.Blue)
                 {
                     TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(new TimedVibration(this.PlayerIndex, 1f, 0.25f));
                 }
@@ -211,7 +211,7 @@ namespace GGJ2014.Controllers
 
         public void Spawned()
         {
-            FadingTextElement fte = new FadingTextElement("Player " + PlayerIndex, Agent, Color.Black, 0, 4f, 1f, 0f);
+            FadingTextElement fte = new FadingTextElement("Player " + PlayerIndex, Agent, Color.Black, ZIndex.UIText + 0.0001f, 4f, 1f, 0f);
             TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(fte);
         }
 
@@ -232,11 +232,11 @@ namespace GGJ2014.Controllers
 
             // generate a new objective
             // while the objective hasn't changed
-            while (this.Target == this.previousTarget && this.previousObjective == this.Objective)
+            while (WorldManager.NumberOfPlayers > 1 && this.Target == this.previousTarget && this.previousObjective == this.Objective)
             {
                 do
                 {
-                    this.Target = PlayerController.Colors[TheyDontThinkItBeLikeItIsButItDo.Rand.Next(4)];
+                    this.Target = PlayerController.Colors[TheyDontThinkItBeLikeItIsButItDo.Rand.Next(WorldManager.NumberOfPlayers)];
                 } while (Target == this.Agent.Color);
 
                 this.Objective = (Objectives)TheyDontThinkItBeLikeItIsButItDo.Rand.Next(2);
@@ -293,7 +293,7 @@ namespace GGJ2014.Controllers
             {
                 objective.Append("Green");
             }
-            else if (this.Target == Color.Blue)
+            else if (this.Target == TheyDontThinkItBeLikeItIsButItDo.Blue)
             {
                 objective.Append("Blue");
             }
