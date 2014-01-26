@@ -113,7 +113,15 @@ namespace GGJ2014
             for (int i = 0; i < NumberOfPlayers; ++i)
             {
                 Agents[i].Color = colors[i];
-                PlayerController player = new PlayerController(PlayerIndex.One, Agents[i]);
+                PlayerIndex index = PlayerIndex.One;
+                switch (i)
+                {
+                    case 0: index = PlayerIndex.One; break;
+                    case 1: index = PlayerIndex.Two; break;
+                    case 2: index = PlayerIndex.Three; break;
+                    case 3: index = PlayerIndex.Four; break;
+                }
+                PlayerController player = new PlayerController(index, Agents[i]);
                 TheyDontThinkItBeLikeItIsButItDo.ControllerManager.AddController(player);
                 TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(player);
             }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using GGJ2014.Interfaces;
 using GGJ2014.Controllers;
+using Microsoft.Xna.Framework;
 
 namespace GGJ2014
 {
@@ -28,6 +29,25 @@ namespace GGJ2014
                 controller.HandleInput();
             }
         }
+
+        public PlayerController GetPlayerController(int player)
+        {
+            PlayerIndex playerIndex = PlayerIndex.One;
+            switch (player)
+            {
+                case 0: playerIndex = PlayerIndex.One; break;
+                case 1: playerIndex = PlayerIndex.Two; break;
+                case 2: playerIndex = PlayerIndex.Three; break;
+                case 3: playerIndex = PlayerIndex.Four; break;
+            }
+            foreach (IController c in Controllers)
+            {
+                if (c is PlayerController && ((PlayerController)c).PlayerIndex == playerIndex)
+                    return (PlayerController)c;
+            }
+            return null;
+        }
+
 
         public void ClearLists()
         {

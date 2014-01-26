@@ -56,6 +56,8 @@ namespace GGJ2014
             p4Ready = false;
             lastDisplayedCount = -1;
 
+            playerReadyButtons = new Button[WorldManager.NumberOfPlayers];
+
             ColourButtonMapping = new Dictionary<Color, Buttons>();
             ColourButtonMapping.Add(Color.Red, Buttons.B);
             ColourButtonMapping.Add(Color.Blue, Buttons.X);
@@ -76,7 +78,7 @@ namespace GGJ2014
                     Position = positions[i],
                     PlayerIndex = playerIndexes[i],
                     Selected = true,
-                    SelectButton = ColourButtonMapping[(TheyDontThinkItBeLikeItIsButItDo.ControllerManager.Controllers[i] as PlayerController).Agent.Color]
+                    SelectButton = ColourButtonMapping[((PlayerController)TheyDontThinkItBeLikeItIsButItDo.ControllerManager.Controllers[i]).Agent.Color]
                 };
             }
             
@@ -132,13 +134,13 @@ namespace GGJ2014
                             action = new Action(ReadyPlayer1);
                             break;
                         case 1:
-                            action = new Action(ReadyPlayer1);
+                            action = new Action(ReadyPlayer2);
                             break;
                         case 2:
-                            action = new Action(ReadyPlayer1);
+                            action = new Action(ReadyPlayer3);
                             break;
                         case 3:
-                            action = new Action(ReadyPlayer1);
+                            action = new Action(ReadyPlayer4);
                             break;
                     }
                     playerReadyButtons[i].OnClick += action;
@@ -165,6 +167,7 @@ namespace GGJ2014
             {
                 Texture2D img = TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/ready");
                 playerReadyButtons[player].RollOverImage = new Sprite(img, img.Width, img.Height) { AnchorPoint = AnchorPoint.Centre, Zoom = BaseScale * TheyDontThinkItBeLikeItIsButItDo.Scale };
+                this.playerReadyButtons[player].Text = new TextElement("Player " + player + "\n  Ready", this.playerReadyButtons[player].Position, Color.Black, 0) { AnchorPoint = GGJ2014.AnchorPoint.Centre, Font = TheyDontThinkItBeLikeItIsButItDo.LargeFont, Scale = new Vector2(0.6f) };
                 isReady[player] = true;
             }
         }
