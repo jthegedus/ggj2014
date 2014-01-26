@@ -20,6 +20,7 @@ namespace GGJ2014
     /// </summary>
     public class TheyDontThinkItBeLikeItIsButItDo : Microsoft.Xna.Framework.Game
     {
+        public static Color Blue { get; set; }
         public static Dictionary<PlayerIndex, GamePadState> CurrentGPS { get; private set; }
         public static Dictionary<PlayerIndex, GamePadState> LastGPS { get; private set; }
         public static GameUI GameUI { get; set; }
@@ -42,6 +43,7 @@ namespace GGJ2014
 
         public TheyDontThinkItBeLikeItIsButItDo()
         {
+            TheyDontThinkItBeLikeItIsButItDo.Blue = new Color(0, 0, 255, 255);
             TheyDontThinkItBeLikeItIsButItDo.CurrentGPS = new Dictionary<PlayerIndex, GamePadState>();
             TheyDontThinkItBeLikeItIsButItDo.CurrentGPS[PlayerIndex.One] = new GamePadState();
             TheyDontThinkItBeLikeItIsButItDo.CurrentGPS[PlayerIndex.Two] = new GamePadState();
@@ -55,9 +57,11 @@ namespace GGJ2014
             graphics = new GraphicsDeviceManager(this);
             // graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             // graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-            // graphics.IsFullScreen = true;
-            graphics.PreferredBackBufferWidth = 64 * 25;
-            graphics.PreferredBackBufferHeight = 36 * 25;
+            graphics.IsFullScreen = true;
+            graphics.PreferredBackBufferWidth = 1920;
+            graphics.PreferredBackBufferHeight = 1080;
+            //graphics.PreferredBackBufferWidth = 64 * 25;
+            //graphics.PreferredBackBufferHeight = 36 * 25;
             TheyDontThinkItBeLikeItIsButItDo.Scale = (float)graphics.PreferredBackBufferWidth / (64 * 15);
             graphics.SynchronizeWithVerticalRetrace = true;
             graphics.ApplyChanges();

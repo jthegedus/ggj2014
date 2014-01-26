@@ -141,7 +141,7 @@ namespace GGJ2014.Levels
             //}
             //foreach (Rectangle spawn in CollectableSpawnRectangles)
             //{
-            //    this.sprite.Tint = Color.Blue;
+            //    this.sprite.Tint = TheyDontThinkItBeLikeItIsButItDo.Blue;
             //    this.sprite.Draw(spriteBatch, new Vector2(spawn.Center.X, spawn.Center.Y));
             //}
 
