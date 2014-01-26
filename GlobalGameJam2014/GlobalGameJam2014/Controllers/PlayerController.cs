@@ -8,6 +8,7 @@ using GGJ2014.GameObjects;
 using GGJ2014.Components;
 using GGJ2014.Interfaces;
 using GGJ2014.Graphics;
+using Microsoft.Xna.Framework.Audio;
 
 namespace GGJ2014.Controllers
 {
@@ -39,8 +40,11 @@ namespace GGJ2014.Controllers
                     this.Agent.DesiredMovementDirection = Vector2.Zero;
                     this.Agent.ShootDirection = Vector2.Zero;
                     this.Agent.Firing = false;
-                    FadingTextElement fte = new FadingTextElement("Penalty!", this.Agent, Color.Black, 0, PenaltyDuration, 1, 1);
+                    FadingTextElement fte = new FadingTextElement("Foul!", this.Agent, Color.Black, 0, PenaltyDuration, 1, 1);
                     TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(fte);
+                    Cue refCue = TheyDontThinkItBeLikeItIsButItDo.AudioManager.LoadCue("refereewhistle");
+                    TheyDontThinkItBeLikeItIsButItDo.AudioManager.PlayCue(ref refCue, true);
+                    TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(new TimedVibration(this.PlayerIndex, 0.5f, 0.25f));
                 }
                 this.Agent.Visible = value;
                 this.penalty = value;

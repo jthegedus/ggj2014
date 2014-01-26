@@ -20,6 +20,9 @@ namespace GGJ2014
     /// </summary>
     public class TheyDontThinkItBeLikeItIsButItDo : Microsoft.Xna.Framework.Game
     {
+        private float quitDelay = 5;
+        private bool exiting = false;
+        private Sprite credits;
         public static Color Blue { get; set; }
         public static Dictionary<PlayerIndex, GamePadState> CurrentGPS { get; private set; }
         public static Dictionary<PlayerIndex, GamePadState> LastGPS { get; private set; }
@@ -128,9 +131,24 @@ namespace GGJ2014
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (TheyDontThinkItBeLikeItIsButItDo.Gamestate == GameState.Quit)
+            float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (TheyDontThinkItBeLikeItIsButItDo.Gamestate == GameState.Quit || this.exiting)
             {
-                this.Exit();
+                if (!this.exiting)
+                {
+                    this.exiting = true;
+                    Texture2D img = TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Backgrounds/credits1080");
+                    credits = new Sprite(img, img.Width, img.Height, 0);
+                    credits.Zoom = TheyDontThinkItBeLikeItIsButItDo.ScreenWidth / img.Width;
+                    credits.AnchorPoint = AnchorPoint.TopLeft;
+                }
+
+                this.quitDelay -= elapsedTime;
+                
+
+                if (this.quitDelay <= 0)
+                    this.Exit();
             }
             Button.ButtonChangedThisUpdate = false;
             TheyDontThinkItBeLikeItIsButItDo.CurrentGPS[PlayerIndex.One] = GamePad.GetState(PlayerIndex.One);
@@ -170,8 +188,16 @@ namespace GGJ2014
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             // TODO: Add your drawing code here
-            
-            TheyDontThinkItBeLikeItIsButItDo.WorldManager.Draw(gameTime);
+            if (this.exiting)
+            {
+                spriteBatch.Begin();
+                credits.Draw(TheyDontThinkItBeLikeItIsButItDo.spriteBatch, Vector2.Zero);
+                spriteBatch.End();
+            }
+            else
+            {
+                TheyDontThinkItBeLikeItIsButItDo.WorldManager.Draw(gameTime);
+            }
 
             base.Draw(gameTime);
         }
