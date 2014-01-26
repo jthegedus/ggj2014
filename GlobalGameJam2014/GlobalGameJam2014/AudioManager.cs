@@ -56,7 +56,7 @@ using System.Collections.Generic;
         /// </summary>
         public AudioManager()
         {
-            this.audioEngine = new AudioEngine("Content\\Sounds\\testProj.xgs");
+            this.audioEngine = new AudioEngine("Content\\Sounds\\Sound Effects.xgs");
             this.waveBank = new WaveBank(this.audioEngine, "Content\\Sounds\\Wave Bank.xwb");
             this.soundBank = new SoundBank(this.audioEngine, "Content\\Sounds\\Sound Bank.xsb");
             this.CueQueue = new Queue<Cue>();

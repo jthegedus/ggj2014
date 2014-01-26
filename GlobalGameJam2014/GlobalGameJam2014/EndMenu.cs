@@ -68,6 +68,10 @@ namespace GGJ2014
 
         public void ShowMenu()
         {
+            //play cheer sound
+            Microsoft.Xna.Framework.Audio.Cue cheer = TheyDontThinkItBeLikeItIsButItDo.AudioManager.LoadCue("smallapplause");
+            TheyDontThinkItBeLikeItIsButItDo.AudioManager.PlayCue(ref cheer, false);
+
             String winner = "";
             int score = -1;
             foreach (IController controller in TheyDontThinkItBeLikeItIsButItDo.ControllerManager.Controllers)

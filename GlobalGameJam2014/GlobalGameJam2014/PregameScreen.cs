@@ -15,7 +15,8 @@ namespace GGJ2014
     public class PregameScreen : IDraw, IUpdate
     {
         private Cue gameMusic;
-        public Cue GameMusic { get { return this.gameMusic; } set { this.gameMusic = value; } } 
+        public Cue GameMusic { get { return this.gameMusic; } set { this.gameMusic = value; } }
+        private Cue crowdCheer;
         private Dictionary<Color, Buttons> ColourButtonMapping;
         private float fadeDelay = 1;
         private const float FadeDuration = 0.5f;
@@ -107,6 +108,9 @@ namespace GGJ2014
             this.ButtonList.Add(Player2Ready);
             this.ButtonList.Add(Player3Ready);
             this.ButtonList.Add(Player4Ready);
+
+            crowdCheer = TheyDontThinkItBeLikeItIsButItDo.AudioManager.LoadCue("longcrowdapplause");
+            TheyDontThinkItBeLikeItIsButItDo.AudioManager.PlayCue(ref crowdCheer, false);
         }
 
         private void ReadyPlayer1()
@@ -187,6 +191,11 @@ namespace GGJ2014
 
             if (p1Ready && p2Ready && p3Ready && p4Ready)
             {
+                //TheyDontThinkItBeLikeItIsButItDo.AudioManager.Pause(crowdCheer);
+                // Cue cheer = TheyDontThinkItBeLikeItIsButItDo.AudioManager.LoadCue("smallapplause");
+                // TheyDontThinkItBeLikeItIsButItDo.AudioManager.PlayCue(ref cheer, false);
+                // TheyDontThinkItBeLikeItIsButItDo.AudioManager.FadeOut(crowdCheer, 3f, true);
+
                 float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
                 if (fadeDelay >= 0)
                 {
@@ -219,6 +228,7 @@ namespace GGJ2014
 
                     this.countdown -= elapsedTime;
                     displayedCount = (int)Math.Ceiling(this.countdown);
+                    TheyDontThinkItBeLikeItIsButItDo.AudioManager.AdjustSFXVolume(MathHelper.Clamp(countdown / 3, 0, 1));
 
                     if (lastDisplayedCount != displayedCount)
                     {
@@ -235,6 +245,8 @@ namespace GGJ2014
 
                     if (this.countdown <= 0)
                     {
+                        TheyDontThinkItBeLikeItIsButItDo.AudioManager.AdjustSFXVolume(1);
+                        crowdCheer.Stop(AudioStopOptions.AsAuthored);
                         TheyDontThinkItBeLikeItIsButItDo.Gamestate = GameState.GamePlaying;
 
                         //Start playing music

@@ -302,26 +302,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Sounds\Sound Bank.xsb">
-      <Name>Sound Bank</Name>
-      <Importer>XactImporter</Importer>
-      <Processor>XactProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Sounds\testProj.xgs">
-      <Name>testProj</Name>
-      <Importer>XactImporter</Importer>
-      <Processor>XactProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Sounds\Wave Bank.xwb">
-      <Name>Wave Bank</Name>
-      <Importer>XactImporter</Importer>
-      <Processor>XactProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Backgrounds\gameRules1080.png">
       <Name>gameRules1080</Name>
       <Importer>TextureImporter</Importer>
@@ -332,6 +312,26 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Sounds\Sound Bank.xsb">
+      <Name>Sound Bank</Name>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Importer>XactImporter</Importer>
+      <Processor>XactProcessor</Processor>
+    </None>
+    <None Include="Sounds\Sound Effects.xgs">
+      <Name>Sound Effects</Name>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Importer>XactImporter</Importer>
+      <Processor>XactProcessor</Processor>
+    </None>
+    <None Include="Sounds\Wave Bank.xwb">
+      <Name>Wave Bank</Name>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Importer>XactImporter</Importer>
+      <Processor>XactProcessor</Processor>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!--  To modify your build process, add your task inside one of the targets below and uncomment it. 

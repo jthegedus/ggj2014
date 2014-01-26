@@ -21,6 +21,9 @@ namespace GGJ2014
         public Button Instructions { get; set; }
         public Button Quit { get; set; }
 
+        private Microsoft.Xna.Framework.Audio.Cue titleMusic;
+        public Microsoft.Xna.Framework.Audio.Cue Titleusic { get { return this.titleMusic; } set { this.titleMusic = value; } }
+
         public Menu()
         {
             this.Buttons = new List<Button>();
@@ -130,6 +133,10 @@ namespace GGJ2014
         public void ShowMenu()
         {
             TheyDontThinkItBeLikeItIsButItDo.Gamestate = GameState.MainMenu;
+
+            titleMusic = TheyDontThinkItBeLikeItIsButItDo.AudioManager.LoadCue("baseballintro");
+            TheyDontThinkItBeLikeItIsButItDo.AudioManager.PlayCue(ref titleMusic, false);
+
             TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(this);
             this.Start.Selected = true;
             this.Instructions.Selected = false;
@@ -139,6 +146,7 @@ namespace GGJ2014
         public void HideMenu()
         {
             TheyDontThinkItBeLikeItIsButItDo.WorldManager.RemoveFromWorld(this);
+            TheyDontThinkItBeLikeItIsButItDo.AudioManager.Pause(titleMusic);
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
