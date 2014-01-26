@@ -16,8 +16,8 @@ Global Settings
     Header File = testProj.h;
     Exclude Category Names = 0;
     Exclude Variable Names = 0;
-    Last Modified Low = 30349688;
-    Last Modified High = 3143284824;
+    Last Modified Low = 3143284824;
+    Last Modified High = 30349688;
 
     Category
     {
@@ -498,6 +498,8 @@ Sound Bank
     Windows File = Win\Sound Bank.xsb;
     Xbox Bank Path Edited = 0;
     Windows Bank Path Edited = 0;
+    Header Last Modified High = 0;
+    Header Last Modified Low = 0;
 
     Sound
     {
@@ -723,7 +725,7 @@ Sound Bank
     {
         Name = refereewhistle;
         Volume = -1200;
-        Pitch = 0;
+        Pitch = 8;
         Priority = 0;
 
         Category Entry
@@ -751,6 +753,22 @@ Sound Bank
                     Relative = 0;
                     Random Recurrence = 0;
                     Random Offset = 0;
+                }
+
+                Pitch Variation
+                {
+                    Min = -1184;
+                    Max = -547;
+                    Operator = 0;
+                    New Variation On Loop = 0;
+                }
+
+                Volume Variation
+                {
+                    Min = 230;
+                    Max = 560;
+                    Volume = 0;
+                    New Variation On Loop = 0;
                 }
 
                 Wave Entry
@@ -845,6 +863,22 @@ Sound Bank
                     Relative = 0;
                     Random Recurrence = 0;
                     Random Offset = 0;
+                }
+
+                Pitch Variation
+                {
+                    Min = -612;
+                    Max = 857;
+                    Operator = 0;
+                    New Variation On Loop = 0;
+                }
+
+                Volume Variation
+                {
+                    Min = 0;
+                    Max = 600;
+                    Volume = 0;
+                    New Variation On Loop = 0;
                 }
 
                 Wave Entry
