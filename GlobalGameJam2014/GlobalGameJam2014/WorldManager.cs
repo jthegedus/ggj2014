@@ -85,7 +85,7 @@ namespace GGJ2014
             // Randomise dem colours, MAAAAAAAAAAHN
             List<Color> colors = new List<Color>();
             colors.Add(Color.Red);
-            colors.Add(Color.Blue);
+            colors.Add(TheyDontThinkItBeLikeItIsButItDo.Blue);
             colors.Add(Color.Yellow);
             colors.Add(Color.Green);
 
