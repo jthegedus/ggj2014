@@ -166,8 +166,8 @@ namespace GGJ2014
             if (!isReady[player])
             {
                 Texture2D img = TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/ready");
-                playerReadyButtons[player].RollOverImage = new Sprite(img, img.Width, img.Height) { AnchorPoint = AnchorPoint.Centre, Zoom = BaseScale * TheyDontThinkItBeLikeItIsButItDo.Scale };
-                this.playerReadyButtons[player].Text = new TextElement("Player " + player + "\n  Ready", this.playerReadyButtons[player].Position, Color.Black, 0) { AnchorPoint = GGJ2014.AnchorPoint.Centre, Font = TheyDontThinkItBeLikeItIsButItDo.LargeFont, Scale = new Vector2(0.6f) };
+                playerReadyButtons[player].RollOverImage = new Sprite(img, img.Width, img.Height) { AnchorPoint = AnchorPoint.Centre, Zoom = BaseScale * TheyDontThinkItBeLikeItIsButItDo.Scale, zIndex = 0.00001f };
+                this.playerReadyButtons[player].Text = new TextElement("Player " + (player+1) + "\n  Ready", this.playerReadyButtons[player].Position, Color.Black, 0) { AnchorPoint = GGJ2014.AnchorPoint.Centre, Font = TheyDontThinkItBeLikeItIsButItDo.LargeFont, Scale = new Vector2(0.6f) };
                 isReady[player] = true;
             }
         }
