@@ -200,10 +200,10 @@ namespace GGJ2014.Controllers
             if (Target != null)
             {
                 // Uncomment these lines to draw path for AI!
-                TheyDontThinkItBeLikeItIsButItDo.WorldManager.RemoveFromWorld(path);
+                //TheyDontThinkItBeLikeItIsButItDo.WorldManager.RemoveFromWorld(path);
                 Vector2 targetGrid = new Vector2(level.GetGridX(Target.TransformComponent.Position.X), level.GetGridY(Target.TransformComponent.Position.Y));
                 path = Path.pathfind(gridPos, targetGrid, level);
-                TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(path);
+                //TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(path);
                 oldGridPos = Vector2.Zero;
             }
         }
