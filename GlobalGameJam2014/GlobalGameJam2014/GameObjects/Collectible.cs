@@ -25,8 +25,8 @@ namespace GGJ2014.GameObjects
 
         public bool Enabled { get; set; }
         public float spawnTimer;
-        public const int MinSpawnDuration = 4;
-        public const int MaxSpawnDuration = 10;
+        public const int MinSpawnDuration = 2;
+        public const int MaxSpawnDuration = 7;
 
         public Collectible(Vector2 position)
         {

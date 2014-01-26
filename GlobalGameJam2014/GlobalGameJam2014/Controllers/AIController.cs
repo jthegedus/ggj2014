@@ -25,10 +25,14 @@ namespace GGJ2014.Controllers
 
         private Vector2 oldGridPos = Vector2.Zero;
 
-        public const float PathWeighting = 2f;
-        public const float AvoidancePower = 4;
-        public const float AvoidanceWeighting = 4f;
-        public const float WaypointMargin = 1.2f;
+        public const float PathWeighting = 1f;
+        public const float SteeringWeighting = 0.5f;
+        public const float OldDirectionWeighting = 1.5f;
+
+        public const float AvoidanceExponent = 1f;
+        public const float AvoidanceWeighting = 3f;
+        public static float WaypointMargin = Level.CellWidth * 1.2f;
+        public const float MinClearanceMultiplier = 0.8f;
 
         public const float HitpointsMultiplier = 2f;
 
@@ -59,8 +63,11 @@ namespace GGJ2014.Controllers
                     oldGridPos = gridPos;
 
                     // Move towards waypoint, clear waypoints when close enough
-                    while (path.Waypoints.Count > 0 && Vector2.Distance(gridPos, path.Waypoints[0]) < WaypointMargin)
+                    while (path.Waypoints.Count > 0)
                     {
+                        Vector2 waypointPos = new Vector2(level.GetScreenX(path.Waypoints[0].X), level.GetScreenY(path.Waypoints[0].Y));
+                        if (Vector2.Distance(agent.TransformComponent.Position, waypointPos) > WaypointMargin)
+                            break;
                         path.Waypoints.RemoveAt(0);
                     }
                     Vector2 move = Vector2.Zero;
@@ -71,9 +78,10 @@ namespace GGJ2014.Controllers
                     }
                     else
                     {
+                        Vector2 oldMove = agent.DesiredMovementDirection;
                         // Vector towards goal
-                        move = (path.Waypoints[0] - gridPos) * PathWeighting;
-                        move.Y *= -1;
+                        Vector2 goal = (path.Waypoints[0] - gridPos);
+                        goal.Y *= -1;
                         // Apply steering with nearest adjacent rectangles
                         Vector2[] adjacents = new Vector2[8] { new Vector2(gridPos.X-1, gridPos.Y-1),
                                                                new Vector2(gridPos.X, gridPos.Y-1),
@@ -83,6 +91,7 @@ namespace GGJ2014.Controllers
                                                                new Vector2(gridPos.X, gridPos.Y+1),
                                                                new Vector2(gridPos.X-1, gridPos.Y+1),
                                                                new Vector2(gridPos.X-1, gridPos.Y) };
+                        Vector2 steering = Vector2.Zero;
                         for (int i = 0; i < adjacents.Length; ++i)
                         {
                             // If adjacent cell is a wall
@@ -93,7 +102,7 @@ namespace GGJ2014.Controllers
                                 Rectangle me = agent.CollisionRectangle;
                                 float meRadius = (me.Height * me.Height + me.Width * me.Width) / 2;
                                 float wallRadius = (wall.Height * wall.Height + wall.Width * wall.Width) / 2;
-                                float minClearanceSquared = meRadius + wallRadius;
+                                float minClearanceSquared = (meRadius + wallRadius) * MinClearanceMultiplier;
                                 // Steer away from that bitch
                                 Vector2 wallPos = new Vector2(wall.Center.X, wall.Center.Y);
                                 Vector2 vec = (agent.TransformComponent.Position - wallPos);
@@ -101,10 +110,11 @@ namespace GGJ2014.Controllers
                                 if (vec != Vector2.Zero)
                                     vec.Normalize();
                                 vec.Y *= -1;
-                                vec *= MathHelper.Lerp(0f, AvoidanceWeighting, (float)Math.Pow(minClearanceSquared / distanceSquared, AvoidancePower));
-                                move += vec;
+                                vec *= MathHelper.Lerp(0f, AvoidanceWeighting, (float)Math.Pow(minClearanceSquared / distanceSquared, AvoidanceExponent));
+                                steering += vec;
                             }
                         }
+                        move += (goal * PathWeighting) + (oldMove * OldDirectionWeighting) + (steering * SteeringWeighting);
                         if (!move.Equals(Vector2.Zero))
                             move.Normalize();
                     }
@@ -127,7 +137,6 @@ namespace GGJ2014.Controllers
                 if (Target != null && TargetIsPenalty)
                 {
                     float distance = Vector2.Distance(agent.TransformComponent.Position, Target.TransformComponent.Position);
-                    Console.Out.WriteLine("Distance: " + distance);
                     if (distance < PenaltyDistance && Target is Agent && ((Agent)Target).Controller is PlayerController)
                     {
                         ((PlayerController)((Agent)Target).Controller).Penalty = true;
@@ -191,10 +200,10 @@ namespace GGJ2014.Controllers
             if (Target != null)
             {
                 // Uncomment these lines to draw path for AI!
-                //TheyDontThinkItBeLikeItIsButItDo.WorldManager.RemoveFromWorld(path);
+                TheyDontThinkItBeLikeItIsButItDo.WorldManager.RemoveFromWorld(path);
                 Vector2 targetGrid = new Vector2(level.GetGridX(Target.TransformComponent.Position.X), level.GetGridY(Target.TransformComponent.Position.Y));
                 path = Path.pathfind(gridPos, targetGrid, level);
-                //TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(path);
+                TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(path);
                 oldGridPos = Vector2.Zero;
             }
         }

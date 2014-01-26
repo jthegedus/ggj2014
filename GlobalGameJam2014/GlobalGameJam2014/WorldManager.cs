@@ -63,6 +63,19 @@ namespace GGJ2014
             TheyDontThinkItBeLikeItIsButItDo.ControllerManager.ClearLists();
             TheyDontThinkItBeLikeItIsButItDo.GameUI.Init();
 
+            // Load level
+            // WARNING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! - ONLY USE LEVELS THAT HAVE A levelXX.png and a levelXXg.png (10 -> 16)
+            // Randomise the level to load
+            int levelToLoad = TheyDontThinkItBeLikeItIsButItDo.Rand.Next(10, 17);
+            while (levelToLoad == this.LastLevel)
+            {
+                levelToLoad = TheyDontThinkItBeLikeItIsButItDo.Rand.Next(10, 17);
+            }
+            // SET LEVEL HERE FOR DEBUG
+            levelToLoad = 13;
+            this.level = LevelLoader.LoadLevel("level" + levelToLoad);
+            this.LastLevel = levelToLoad;
+
             for (int i = 0; i < 6; ++i)
             {
                 Agents.Add(new Agent());
@@ -121,17 +134,6 @@ namespace GGJ2014
                 Collectibles.Add(new Collectible(new Vector2(0, 0)));
                 this.AddToWorld(Collectibles[i]);
             }
-
-            // Load level
-            // WARNING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! - ONLY USE LEVELS THAT HAVE A levelXX.png and a levelXXg.png (10 -> 16)
-            // Randomise the level to load
-            int levelToLoad = TheyDontThinkItBeLikeItIsButItDo.Rand.Next(10, 17);
-            while (levelToLoad == this.LastLevel)
-            {
-                levelToLoad = TheyDontThinkItBeLikeItIsButItDo.Rand.Next(10, 17);
-            }
-            this.level = LevelLoader.LoadLevel("level" + levelToLoad);
-            this.LastLevel = levelToLoad;
 
             // Assign player positions based on first 4 spawn points
             List<Rectangle> spawns = this.Level.AgentSpawnRectangles;
