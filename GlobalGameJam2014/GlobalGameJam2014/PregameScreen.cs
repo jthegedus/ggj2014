@@ -8,11 +8,14 @@ using Microsoft.Xna.Framework.Input;
 using GGJ2014.Interfaces;
 using GGJ2014.Graphics;
 using GGJ2014.Controllers;
+using Microsoft.Xna.Framework.Audio;
 
 namespace GGJ2014
 {
     public class PregameScreen : IDraw, IUpdate
     {
+        private Cue gameMusic;
+        public Cue GameMusic { get { return this.gameMusic; } set { this.gameMusic = value; } } 
         private Dictionary<Color, Buttons> ColourButtonMapping;
         private float fadeDelay = 1;
         private const float FadeDuration = 0.5f;
@@ -212,6 +215,11 @@ namespace GGJ2014
                     if (this.countdown <= 0)
                     {
                         TheyDontThinkItBeLikeItIsButItDo.Gamestate = GameState.GamePlaying;
+
+                        //Start playing music
+                        gameMusic = TheyDontThinkItBeLikeItIsButItDo.AudioManager.LoadCue("backgroundmusic");
+                        TheyDontThinkItBeLikeItIsButItDo.AudioManager.PlayCue(ref gameMusic, false);
+
                         this.HideMenu();
                     }
                 }

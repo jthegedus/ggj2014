@@ -261,6 +261,9 @@ namespace GGJ2014
 
                 if (this.GameTimer <= 0)
                 {
+                    //Stop music playing
+                    TheyDontThinkItBeLikeItIsButItDo.AudioManager.Pause(TheyDontThinkItBeLikeItIsButItDo.PregameScreen.GameMusic);
+
                     TheyDontThinkItBeLikeItIsButItDo.Gamestate = GameState.GameEnded;
                     this.ClearLists();
                     TheyDontThinkItBeLikeItIsButItDo.EndMenu.ShowMenu();
