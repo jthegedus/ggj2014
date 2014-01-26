@@ -230,7 +230,7 @@ namespace GGJ2014
                             0,
                             1,
                             1,
-                            0) { AnchorPoint = AnchorPoint.Centre, Font = TheyDontThinkItBeLikeItIsButItDo.LargeFont });
+                            0) { AnchorPoint = AnchorPoint.Centre, Font = TheyDontThinkItBeLikeItIsButItDo.LargeFont, Scale = new Vector2(2) });
                     }
 
                     if (this.countdown <= 0)
