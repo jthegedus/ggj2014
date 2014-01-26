@@ -55,7 +55,7 @@ namespace GGJ2014
             graphics = new GraphicsDeviceManager(this);
             // graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             // graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-            //graphics.IsFullScreen = true;
+            // graphics.IsFullScreen = true;
             graphics.PreferredBackBufferWidth = 64 * 25;
             graphics.PreferredBackBufferHeight = 36 * 25;
             TheyDontThinkItBeLikeItIsButItDo.Scale = (float)graphics.PreferredBackBufferWidth / (64 * 15);
@@ -98,8 +98,8 @@ namespace GGJ2014
             WorldManager.SpriteBatch = spriteBatch;
             // TODO: use this.Content to load your game content here
 
-            TheyDontThinkItBeLikeItIsButItDo.font = Content.Load<SpriteFont>("SpriteFonts/Arial14");
-            TheyDontThinkItBeLikeItIsButItDo.LargeFont = Content.Load<SpriteFont>("SpriteFonts/Arial64Bold");
+            TheyDontThinkItBeLikeItIsButItDo.font = Content.Load<SpriteFont>("SpriteFonts/Varsity20");
+            TheyDontThinkItBeLikeItIsButItDo.LargeFont = Content.Load<SpriteFont>("SpriteFonts/Varsity64");
 
             TheyDontThinkItBeLikeItIsButItDo.PregameScreen = new PregameScreen();
             TheyDontThinkItBeLikeItIsButItDo.GameUI = new GameUI();
