@@ -17,13 +17,20 @@ namespace GGJ2014.Controllers
         private Path path;
 
         public ITransform Target { get; set; }
+        public bool TargetIsPenalty { get; set; }
+
+        public const float PenaltyDuration = 10f;
+        public const float PenaltyDistance = 100;
+        private float penaltyTimer = PenaltyDuration;
 
         private Vector2 oldGridPos = Vector2.Zero;
 
         public const float PathWeighting = 2f;
         public const float AvoidancePower = 4;
-        public const float AvoidanceWeighting = 0.9f;
-        public const float WaypointMargin = 1f;
+        public const float AvoidanceWeighting = 4f;
+        public const float WaypointMargin = 1.2f;
+
+        public const float HitpointsMultiplier = 2f;
 
         public  const int MinDecisionCooldown = 5;
         public const int MaxDecisionCooldown = 15;
@@ -37,6 +44,7 @@ namespace GGJ2014.Controllers
         public AIController(Agent agent)
         {
             this.agent = agent;
+            agent.Hitpoints *= HitpointsMultiplier;
         }
 
         public void HandleInput()
@@ -46,26 +54,22 @@ namespace GGJ2014.Controllers
                 Level level = TheyDontThinkItBeLikeItIsButItDo.WorldManager.Level;
                 Vector2 gridPos = new Vector2(level.GetGridX(agent.TransformComponent.Position.X), level.GetGridY(agent.TransformComponent.Position.Y));
 
-                if (Target != null)
-                {
-                    // Uncomment these lines to draw path for AI!
-                    //TheyDontThinkItBeLikeItIsButItDo.WorldManager.RemoveFromWorld(path);
-                    Vector2 targetGrid = new Vector2(level.GetGridX(Target.TransformComponent.Position.X), level.GetGridY(Target.TransformComponent.Position.Y));
-                    path = Path.pathfind(gridPos, targetGrid, level);
-                    //TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(path);
-                    oldGridPos = Vector2.Zero;
-                }
                 if (path != null && (!gridPos.Equals(oldGridPos) || oldGridPos.Equals(Vector2.Zero)))
                 {
                     oldGridPos = gridPos;
 
-                    // Move towards waypoint
+                    // Move towards waypoint, clear waypoints when close enough
                     while (path.Waypoints.Count > 0 && Vector2.Distance(gridPos, path.Waypoints[0]) < WaypointMargin)
                     {
                         path.Waypoints.RemoveAt(0);
                     }
                     Vector2 move = Vector2.Zero;
-                    if (path.Waypoints.Count > 0)
+                    // Check for end of path
+                    if (path.Waypoints.Count <= 0)
+                    {
+                        OnPathFinished();
+                    }
+                    else
                     {
                         // Vector towards goal
                         move = (path.Waypoints[0] - gridPos) * PathWeighting;
@@ -86,15 +90,18 @@ namespace GGJ2014.Controllers
                             {
                                 // Get the Rectangle of the wall
                                 Rectangle wall = level.WallRectangles[(int)adjacents[i].X, (int)adjacents[i].Y];
-                                float gridWidth = level.CellWidth;
+                                Rectangle me = agent.CollisionRectangle;
+                                float meRadius = (me.Height * me.Height + me.Width * me.Width) / 2;
+                                float wallRadius = (wall.Height * wall.Height + wall.Width * wall.Width) / 2;
+                                float minClearanceSquared = meRadius + wallRadius;
                                 // Steer away from that bitch
                                 Vector2 wallPos = new Vector2(wall.Center.X, wall.Center.Y);
                                 Vector2 vec = (agent.TransformComponent.Position - wallPos);
-                                float distance = vec.Length();
+                                float distanceSquared = vec.LengthSquared();
                                 if (vec != Vector2.Zero)
                                     vec.Normalize();
                                 vec.Y *= -1;
-                                vec *= MathHelper.Lerp(0f, AvoidanceWeighting, (float)Math.Pow(gridWidth / distance, AvoidancePower));
+                                vec *= MathHelper.Lerp(0f, AvoidanceWeighting, (float)Math.Pow(minClearanceSquared / distanceSquared, AvoidancePower));
                                 move += vec;
                             }
                         }
@@ -112,17 +119,20 @@ namespace GGJ2014.Controllers
             {
                 //agent.ShootDirection = Vector2.Zero;
                 // Check if target still active (if not, find something else to do)
-                if (Target != null)
+                if (Target != null && Target is Agent && ((Agent)Target).Enabled == false)
                 {
-                    if (Target is Collectible && ((Collectible)Target).Enabled == false)
+                    OnDecisionTimer();
+                    return;
+                }
+                if (Target != null && TargetIsPenalty)
+                {
+                    float distance = Vector2.Distance(agent.TransformComponent.Position, Target.TransformComponent.Position);
+                    Console.Out.WriteLine("Distance: " + distance);
+                    if (distance < PenaltyDistance && Target is Agent && ((Agent)Target).Controller is PlayerController)
                     {
+                        ((PlayerController)((Agent)Target).Controller).Penalty = true;
+                        SetPenaltyTarget(null);
                         OnDecisionTimer();
-                        return;
-                    }
-                    else if (Target is Agent && ((Agent)Target).Enabled == false)
-                    {
-                        OnDecisionTimer();
-                        return;
                     }
                     // Uncomment below for AI shooting (crazy accurate)
                     //Vector2 aimingVec = Target.TransformComponent.Position - agent.TransformComponent.Position;
@@ -142,18 +152,32 @@ namespace GGJ2014.Controllers
                 {
                     OnPathfindTimer();
                 }
+                if (TargetIsPenalty)
+                {
+                    if (Target is Agent && ((Agent)Target).Controller is PlayerController && ((PlayerController)((Agent)Target).Controller).Penalty == true)
+                        penaltyTimer = 0;
+                    penaltyTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    if(penaltyTimer <= 0)
+                    {
+                        penaltyTimer = PenaltyDuration;
+                        OnPenaltyTimerExpired();
+                    }
+                }
             }
         }
 
         private void OnDecisionTimer()
         {
-            // Reset timer
-            decisionTimer = TheyDontThinkItBeLikeItIsButItDo.Rand.Next(MinDecisionCooldown, MaxDecisionCooldown);
-            // Choose Action
-            // Create list of valid targets
-            List<ITransform> targets = TheyDontThinkItBeLikeItIsButItDo.WorldManager.GetActiveTransforms();
-            int index = TheyDontThinkItBeLikeItIsButItDo.Rand.Next(0, targets.Count);
-            Target = targets[index];
+            // If on a penalty chase, don't allow change of target
+            if (Target == null || !TargetIsPenalty)
+            {
+                // Reset timer
+                decisionTimer = TheyDontThinkItBeLikeItIsButItDo.Rand.Next(MinDecisionCooldown, MaxDecisionCooldown);
+                // Choose random player or collectible to walk towards
+                List<ITransform> targets = TheyDontThinkItBeLikeItIsButItDo.WorldManager.GetActiveTransforms();
+                int index = TheyDontThinkItBeLikeItIsButItDo.Rand.Next(0, targets.Count);
+                Target = targets[index];
+            }
         }
 
         private void OnPathfindTimer()
@@ -175,40 +199,65 @@ namespace GGJ2014.Controllers
             }
         }
 
+        private void OnPathFinished()
+        {
+            // If not chasing for penalty, choose random destination
+            OnDecisionTimer();
+        }
+
+        private void OnPenaltyTimerExpired()
+        {
+            SetPenaltyTarget(null);
+            OnDecisionTimer();
+        }
+
+        public void SetPenaltyTarget(PlayerController pc)
+        {
+            Target = (pc != null) ? pc.Agent : null;
+            TargetIsPenalty = (pc != null);
+            agent.Visible = (pc != null);
+        }
+
+        public bool ConsiderNewTarget(PlayerController pc)
+        {
+            // This guy shot me, should I chase him?
+            if (Target == null || !TargetIsPenalty)
+            {
+                SetPenaltyTarget(pc);
+                return true;
+            }
+            return false;
+        }
+
         public void DamagedPlayer(Agent victim)
         {
-            
+            // Do nothing
         }
 
         public void KilledPlayer(Agent victim)
         {
-            if (Target == victim)
-            {
-                OnDecisionTimer();
-            }
+            // Do nothing
         }
 
         public void BumpedPlayer(Agent victim)
         {
-            // If AI is interruptible, chase new victim 20% of the time
-            if (Target == victim)
-            {
-                if (TheyDontThinkItBeLikeItIsButItDo.Rand.NextDouble() < 0.2)
-                {
-                    OnDecisionTimer();
-                }
-            }
-            else if (TheyDontThinkItBeLikeItIsButItDo.Rand.NextDouble() < 0.2)
-            {
-                // Reset timer
-                decisionTimer = TheyDontThinkItBeLikeItIsButItDo.Rand.Next(MinDecisionCooldown, MaxDecisionCooldown);
-                Target = victim;
-            }
+            // Do nothing
         }
 
         public void CollectedCollectible()
         {
-            OnDecisionTimer();
+            // Do nothing
+        }
+
+        public void Died()
+        {
+            // Clear any penalty chase
+            SetPenaltyTarget(null);
+        }
+
+        public void Spawned()
+        {
+            agent.Hitpoints *= 2;
         }
     }
 }

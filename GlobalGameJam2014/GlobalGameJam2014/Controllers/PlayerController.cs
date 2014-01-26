@@ -11,7 +11,7 @@ using GGJ2014.Graphics;
 
 namespace GGJ2014.Controllers
 {
-    public class PlayerController : IController
+    public class PlayerController : IUpdate, IController
     {
         public static readonly List<String> BadThings = new List<String> { "Nope.", "Wrong.", "Bad.", "Derp.", "No.", "Uh-uh.", "Nup." };
         public static readonly List<Color> Colors = new List<Color>() { Color.Red, Color.Blue, Color.Yellow, Color.Green };
@@ -23,6 +23,30 @@ namespace GGJ2014.Controllers
         public Objectives Objective { get; set; }
         private int score;
         private bool first = true;
+
+        public const float PenaltyDuration = 3f;
+        private float penaltyTimer = PenaltyDuration;
+        private bool penalty;
+        public bool Penalty { 
+            get
+            {
+                return penalty;
+            }
+            set
+            {
+                if (value == true && this.penalty == false)
+                {
+                    this.Agent.DesiredMovementDirection = Vector2.Zero;
+                    this.Agent.ShootDirection = Vector2.Zero;
+                    this.Agent.Firing = false;
+                    FadingTextElement fte = new FadingTextElement("Penalty!", this.Agent, Color.Black, 0, PenaltyDuration, 1, 1);
+                    TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(fte);
+                }
+                this.Agent.Visible = value;
+                this.penalty = value;
+            }
+                
+        }
 
         public int Score
         {
@@ -85,45 +109,55 @@ namespace GGJ2014.Controllers
         {
             GamePadState gps = GamePad.GetState(this.PlayerIndex);
 
-            this.Agent.DesiredMovementDirection = gps.ThumbSticks.Left;
-            this.Agent.ShootDirection = gps.ThumbSticks.Right;
+            if (!Penalty)
+            {
+                this.Agent.DesiredMovementDirection = gps.ThumbSticks.Left;
+                this.Agent.ShootDirection = gps.ThumbSticks.Right;
 
-            // Color Identification
-            if (IsButtonJustPressed(Buttons.A, gps, lastGps) && this.Agent.Color == Color.Green)
-            {
-                TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(new TimedVibration(this.PlayerIndex, 1f, 0.25f));
-            }
-            else if (IsButtonJustPressed(Buttons.B, gps, lastGps) && this.Agent.Color == Color.Red)
-            {
-                TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(new TimedVibration(this.PlayerIndex, 1f, 0.25f));
-            }
-            else if (IsButtonJustPressed(Buttons.X, gps, lastGps) && this.Agent.Color == Color.Blue)
-            {
-                TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(new TimedVibration(this.PlayerIndex, 1f, 0.25f));
-            }
-            else if (IsButtonJustPressed(Buttons.Y, gps, lastGps) && this.Agent.Color == Color.Yellow)
-            {
-                TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(new TimedVibration(this.PlayerIndex, 1f, 0.25f));
-            }
+                // Color Identification
+                if (IsButtonJustPressed(Buttons.A, gps, lastGps) && this.Agent.Color == Color.Green)
+                {
+                    TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(new TimedVibration(this.PlayerIndex, 1f, 0.25f));
+                }
+                else if (IsButtonJustPressed(Buttons.B, gps, lastGps) && this.Agent.Color == Color.Red)
+                {
+                    TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(new TimedVibration(this.PlayerIndex, 1f, 0.25f));
+                }
+                else if (IsButtonJustPressed(Buttons.X, gps, lastGps) && this.Agent.Color == Color.Blue)
+                {
+                    TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(new TimedVibration(this.PlayerIndex, 1f, 0.25f));
+                }
+                else if (IsButtonJustPressed(Buttons.Y, gps, lastGps) && this.Agent.Color == Color.Yellow)
+                {
+                    TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(new TimedVibration(this.PlayerIndex, 1f, 0.25f));
+                }
 
-            // Dash
-            if (IsButtonJustPressed(Buttons.LeftTrigger, gps, lastGps))
-            {
                 // Dash
-                Agent.Dash();
+                if (IsButtonJustPressed(Buttons.LeftTrigger, gps, lastGps))
+                {
+                    // Dash
+                    Agent.Dash();
+                }
             }
             this.lastGps = gps;
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            if (Penalty)
+            {
+                penaltyTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                if (penaltyTimer <= 0)
+                {
+                    penaltyTimer = PenaltyDuration;
+                    Penalty = false;
+                }
+            }
         }
 
         public static bool IsButtonJustPressed(Buttons button, GamePadState current, GamePadState last)
         {
             return current.IsButtonDown(button) && last.IsButtonUp(button);
-        }
-
-        public void OnAgentSpawn()
-        {
-            FadingTextElement fte = new FadingTextElement("Player " + PlayerIndex, Agent, Color.Black, 0, 4f, 1f, 0f);
-            TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(fte);
         }
 
         public void DamagedPlayer(Agent victim)
@@ -135,6 +169,10 @@ namespace GGJ2014.Controllers
             else
             {
                 this.Score += Scores.PlayerDamagedPenalty;
+                if (victim.Controller != null && victim.Controller is AIController)
+                {
+                    ((AIController)victim.Controller).ConsiderNewTarget(this);
+                }
             }
         }
 
@@ -148,6 +186,7 @@ namespace GGJ2014.Controllers
             else
             {
                 this.Score += Scores.PlayerKilledPenalty;
+                TheyDontThinkItBeLikeItIsButItDo.WorldManager.SetPenaltyChase(this);
             }
         }
 
@@ -163,6 +202,17 @@ namespace GGJ2014.Controllers
         public void CollectedCollectible()
         {
             this.Score += Scores.CollectibleReward;
+        }
+
+        public void Died()
+        {
+            // Do nothing
+        }
+
+        public void Spawned()
+        {
+            FadingTextElement fte = new FadingTextElement("Player " + PlayerIndex, Agent, Color.Black, 0, 4f, 1f, 0f);
+            TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(fte);
         }
 
         public void GenerateObjective()

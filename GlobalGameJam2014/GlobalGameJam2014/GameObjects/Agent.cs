@@ -17,7 +17,8 @@ namespace GGJ2014.GameObjects
     public class Agent : IMovement, IDraw, IUpdate, IDynamic
     {
 
-        public IController Controller { set; private get; }
+        public IController Controller { get; set; }
+        public bool Visible { get; set; }
         private const float RevealDuration = 0.5f;
         private float revealTimer;
         private TransformComponent transformComponent;
@@ -29,6 +30,17 @@ namespace GGJ2014.GameObjects
         public TransformComponent TransformComponent { get { return this.transformComponent; } set { this.transformComponent = value; } }
         public MovementComponent MovementComponent { get { return this.movementComponent; } set { this.movementComponent = value; } }
         private float hitpoints = 100;
+        public float Hitpoints
+        {
+            get
+            {
+                return hitpoints;
+            }
+            set
+            {
+                hitpoints = value;
+            }
+        }
         private float fireRate = 20f;
         private const float BurstDuration = 0.5f;
         private const float DashDuration = 0.10f;
@@ -38,7 +50,7 @@ namespace GGJ2014.GameObjects
         private float burstTimer = 0f;
         private float dashTimer = 0f;
         private float timeLastFired = 0.0f;
-        private bool firing = false;
+        public bool Firing { get; set; }
         private Vector2 lastShootingDirection;
         public Color Color { get; set; }
         public Vector2 ShootDirection { get; set; }
@@ -90,6 +102,7 @@ namespace GGJ2014.GameObjects
             this.yPenetrations = new List<float>();
             this.possibleRectangles = new List<Rectangle>();
             this.Enabled = true;
+            this.Visible = false;
 
             // Load sprites (jesus)
             Texture2D texCap = TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/Player/Cap");
@@ -147,12 +160,12 @@ namespace GGJ2014.GameObjects
                     this.transformComponent.Position += this.movementComponent.Velocity * new Vector2(1, -1) * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
                     // shoot
-                    if (((this.ShootDirection != Vector2.Zero && this.burstTimer == 0f) || this.firing))
+                    if (((this.ShootDirection != Vector2.Zero && this.burstTimer == 0f) || this.Firing))
                     {
                         if (((float)gameTime.TotalGameTime.TotalSeconds - timeLastFired) > 1.0f / fireRate)
                         {
                             // you can still shoot
-                            firing = true;
+                            Firing = true;
 
                             if (this.ShootDirection != Vector2.Zero)
                             {
@@ -182,7 +195,7 @@ namespace GGJ2014.GameObjects
                         if (this.burstTimer >= Agent.BurstDuration)
                         {
                             this.burstTimer = Agent.BurstCooldown;
-                            this.firing = false;
+                            this.Firing = false;
                         }
                     }
                     else
@@ -239,13 +252,20 @@ namespace GGJ2014.GameObjects
                 }
                 lastFacing = direction;
 
-                this.sprCap.Tint = Color.Lerp(Color.White, this.Color, this.revealTimer / Agent.RevealDuration);
-                this.revealTimer = MathHelper.Clamp(this.revealTimer, 0, this.revealTimer - (float)gameTime.ElapsedGameTime.TotalSeconds);
+                if (Visible)
+                {
+                    this.sprCap.Tint = this.Color;
+                }
+                else
+                {
+                    this.sprCap.Tint = Color.Lerp(Color.White, this.Color, this.revealTimer / Agent.RevealDuration);
+                    this.revealTimer = MathHelper.Clamp(this.revealTimer, 0, this.revealTimer - (float)gameTime.ElapsedGameTime.TotalSeconds);
+                }
                 this.sprCap.Rotation = rotation;
                 this.sprCap.Draw(spriteBatch, this.transformComponent.Position);
                 this.sprRefCap.Rotation = rotation;
                 this.sprRefCap.Draw(spriteBatch, this.transformComponent.Position);
-                if (firing)
+                if (Firing)
                 {
                     this.sprArm.Rotation = rotation;
                     this.sprArm.Draw(spriteBatch, this.transformComponent.Position);
@@ -283,18 +303,18 @@ namespace GGJ2014.GameObjects
             this.hitpoints = 100;
             this.revealTimer = 0;
             this.Enabled = true;
-            this.firing = false;
-            if (Controller != null && Controller is PlayerController)
+            this.Firing = false;
+            if (Controller != null)
             {
-                ((PlayerController)Controller).OnAgentSpawn();
+                Controller.Spawned();
             }
         }
 
         public void Dash()
         {
-            if (burstTimer == 0 || firing)
+            if (burstTimer == 0 || Firing)
             {
-                firing = false;
+                Firing = false;
                 Speed = BaseSpeed * DashMultiplier;
                 burstTimer = Agent.DashCooldown;
                 dashTimer = Agent.DashDuration;
@@ -416,25 +436,28 @@ namespace GGJ2014.GameObjects
 
         public void HandleCollectibleCollisions(List<Collectible> collectibles)
         {
-            foreach (Collectible collectible in collectibles)
+            if (Enabled)
             {
-                if (this.CollisionRectangle.Intersects(collectible.CollisionRectangle) ||
-                    this.CollisionRectangle.Contains(collectible.CollisionRectangle) ||
-                    collectible.CollisionRectangle.Contains(this.CollisionRectangle))
+                foreach (Collectible collectible in collectibles)
                 {
-                    if (collectible.Enabled && (collectible.color == this.Color || collectible.color == Color.White))
+                    if (this.CollisionRectangle.Intersects(collectible.CollisionRectangle) ||
+                        this.CollisionRectangle.Contains(collectible.CollisionRectangle) ||
+                        collectible.CollisionRectangle.Contains(this.CollisionRectangle))
                     {
-                        // add points
-                        this.Controller.CollectedCollectible();
+                        if (collectible.Enabled && (collectible.color == this.Color || collectible.color == Color.White))
+                        {
+                            // add points
+                            this.Controller.CollectedCollectible();
 
-                        collectible.Remove();
+                            collectible.Remove();
 
-                        //play sound
-                        Microsoft.Xna.Framework.Audio.Cue collectCue = TheyDontThinkItBeLikeItIsButItDo.AudioManager.LoadCue("powerup");
-                        TheyDontThinkItBeLikeItIsButItDo.AudioManager.PlayCue(ref collectCue, true);
+                            //play sound
+                            Microsoft.Xna.Framework.Audio.Cue collectCue = TheyDontThinkItBeLikeItIsButItDo.AudioManager.LoadCue("powerup");
+                            TheyDontThinkItBeLikeItIsButItDo.AudioManager.PlayCue(ref collectCue, true);
 
-                        //remove from world
-                        TheyDontThinkItBeLikeItIsButItDo.WorldManager.RemoveFromWorld(collectible);
+                            //remove from world
+                            TheyDontThinkItBeLikeItIsButItDo.WorldManager.RemoveFromWorld(collectible);
+                        }
                     }
                 }
             }
