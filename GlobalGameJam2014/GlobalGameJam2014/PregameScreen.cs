@@ -50,6 +50,8 @@ namespace GGJ2014
 
         public void Init()
         {
+            isReady = new bool[WorldManager.NumberOfPlayers];
+
             first = true;
             fadeDelay = 1;
             fadeTimer = FadeDuration;
