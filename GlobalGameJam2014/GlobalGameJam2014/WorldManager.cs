@@ -312,7 +312,7 @@ namespace GGJ2014
         {
             this.SpriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied);
 
-            if (this.Level != null)
+            if (this.Level != null && TheyDontThinkItBeLikeItIsButItDo.Gamestate != GameState.MainMenu && TheyDontThinkItBeLikeItIsButItDo.Gamestate != GameState.Instructions)
                 this.Level.Draw(this.SpriteBatch, gameTime);
 
             //if (s == null)

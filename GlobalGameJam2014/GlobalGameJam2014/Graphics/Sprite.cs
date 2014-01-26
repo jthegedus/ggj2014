@@ -13,7 +13,7 @@ namespace GGJ2014.Graphics
         public float Alpha { get; set; }
         public float Rotation { get; set; }
         public float Zoom { get; set; }
-        public Texture2D Texture2D { get; private set; }
+        public Texture2D Texture2D { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
         public float zIndex { get; set; }
