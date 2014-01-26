@@ -14,7 +14,7 @@ namespace GGJ2014.Controllers
     public class PlayerController : IUpdate, IController
     {
         public static readonly List<String> BadThings = new List<String> { "Nope.", "Wrong.", "Bad.", "Derp.", "No.", "Uh-uh.", "Nup." };
-        public static readonly List<Color> Colors = new List<Color>() { Color.Red, Color.Blue, Color.Yellow, Color.Green };
+        public static readonly List<Color> Colors = new List<Color>() { Color.Red, TheyDontThinkItBeLikeItIsButItDo.Blue, Color.Yellow, Color.Green };
         private static readonly List<Vector2> ScoreDirections = new List<Vector2> { -Vector2.UnitY, Vector2.Normalize(new Vector2(1, -1)), Vector2.UnitX, Vector2.Normalize(new Vector2(1, 1)), Vector2.UnitY, Vector2.Normalize(new Vector2(-1, 1)), -Vector2.UnitX, Vector2.Normalize(new Vector2(-1, -1)) };
         private int scoreTurn = 0;
         private Color previousTarget;
@@ -123,7 +123,7 @@ namespace GGJ2014.Controllers
                 {
                     TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(new TimedVibration(this.PlayerIndex, 1f, 0.25f));
                 }
-                else if (IsButtonJustPressed(Buttons.X, gps, lastGps) && this.Agent.Color == Color.Blue)
+                else if (IsButtonJustPressed(Buttons.X, gps, lastGps) && this.Agent.Color == TheyDontThinkItBeLikeItIsButItDo.Blue)
                 {
                     TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(new TimedVibration(this.PlayerIndex, 1f, 0.25f));
                 }
@@ -293,7 +293,7 @@ namespace GGJ2014.Controllers
             {
                 objective.Append("Green");
             }
-            else if (this.Target == Color.Blue)
+            else if (this.Target == TheyDontThinkItBeLikeItIsButItDo.Blue)
             {
                 objective.Append("Blue");
             }

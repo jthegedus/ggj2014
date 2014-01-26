@@ -436,7 +436,7 @@ namespace GGJ2014.GameObjects
 
         public void HandleCollectibleCollisions(List<Collectible> collectibles)
         {
-            if (Enabled)
+            if (Enabled && this.Color != Color.Transparent)
             {
                 foreach (Collectible collectible in collectibles)
                 {

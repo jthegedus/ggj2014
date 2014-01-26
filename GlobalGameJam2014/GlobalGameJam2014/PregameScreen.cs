@@ -53,7 +53,7 @@ namespace GGJ2014
 
             ColourButtonMapping = new Dictionary<Color, Buttons>();
             ColourButtonMapping.Add(Color.Red, Buttons.B);
-            ColourButtonMapping.Add(Color.Blue, Buttons.X);
+            ColourButtonMapping.Add(TheyDontThinkItBeLikeItIsButItDo.Blue, Buttons.X);
             ColourButtonMapping.Add(Color.Yellow, Buttons.Y);
             ColourButtonMapping.Add(Color.Green, Buttons.A);
 

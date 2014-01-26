@@ -31,7 +31,7 @@ namespace GGJ2014
         private List<Object> objsToRemove;
         private List<Object> objsToAdd;
         public Level Level { get { return this.level; } }
-        private const float TimeLimit = 3;
+        private const float TimeLimit = 70;
 
         public int DisplayedTime { get; set; }
         public int LastDisplayedTime { get; set; }
@@ -72,7 +72,7 @@ namespace GGJ2014
             // Randomise dem colours, MAAAAAAAAAAHN
             List<Color> colors = new List<Color>();
             colors.Add(Color.Red);
-            colors.Add(Color.Blue);
+            colors.Add(TheyDontThinkItBeLikeItIsButItDo.Blue);
             colors.Add(Color.Yellow);
             colors.Add(Color.Green);
 

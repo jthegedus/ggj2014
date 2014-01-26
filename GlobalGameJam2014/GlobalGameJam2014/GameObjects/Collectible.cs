@@ -15,14 +15,14 @@ namespace GGJ2014.GameObjects
     {
         private const float Duration = 10f;
         private float durationTimer;
-        private const float BaseSize = 20;
+        private const float BaseSize = 30;
         private float size;
         private const float FlickerDuration = 0.5f;
         private float flickerTimer;
         public Color color;
         private TransformComponent transformComponent;
         public Sprite Sprite { get; set; }
-
+        private const float RotateSpeed = MathHelper.PiOver2;
         public bool Enabled { get; set; }
         public float spawnTimer;
         public const int MinSpawnDuration = 4;
@@ -32,7 +32,8 @@ namespace GGJ2014.GameObjects
         {
             this.size = TheyDontThinkItBeLikeItIsButItDo.Scale * Collectible.BaseSize;
             this.transformComponent.Position = position;
-            this.Sprite = new Sprite(TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/agent"),(int)this.size, (int)this.size);
+            Texture2D img = TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/homeplate");
+            this.Sprite = new Sprite(img, img.Width, img.Height) { Zoom = Collectible.BaseSize * TheyDontThinkItBeLikeItIsButItDo.Scale / img.Width };
             Reset();
             this.flickerTimer = TheyDontThinkItBeLikeItIsButItDo.Rand.Next(0, 4);
             this.durationTimer = Collectible.Duration;
@@ -57,7 +58,7 @@ namespace GGJ2014.GameObjects
                     color = Color.Green;
                     break;
                 case 3:
-                    color = Color.Blue;
+                    color = TheyDontThinkItBeLikeItIsButItDo.Blue;
                     break;
                 case 4:
                     color = Color.Yellow;
@@ -79,8 +80,8 @@ namespace GGJ2014.GameObjects
                     new Rectangle(
                         (int)this.transformComponent.Position.X,
                         (int)this.transformComponent.Position.Y,
-                        this.Sprite.Width,
-                        this.Sprite.Height));
+                        (int)(this.Sprite.Width * this.Sprite.Zoom),
+                        (int)(this.Sprite.Height * this.Sprite.Zoom)));
             }
         }
 
@@ -102,6 +103,7 @@ namespace GGJ2014.GameObjects
 
             if (Enabled)
             {
+                this.Sprite.Rotation += Collectible.RotateSpeed * elapsedTime;
                 this.durationTimer -= elapsedTime;
 
                 if (durationTimer <= 0)
