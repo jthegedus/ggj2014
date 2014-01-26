@@ -37,7 +37,7 @@ namespace GGJ2014
                 this.pos, 
                 this.color, 
                 0, 
-                GetOrigin((int)this.Font.MeasureString(this.text).X, (int)this.Font.MeasureString(this.text).Y, this.AnchorPoint),
+                GetOrigin((int)(this.Font.MeasureString(this.text).X), (int)(this.Font.MeasureString(this.text).Y), this.AnchorPoint),
                 this.Scale,
                 SpriteEffects.None,
                 zIndex);

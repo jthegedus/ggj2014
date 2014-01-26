@@ -33,7 +33,7 @@ namespace GGJ2014.GameObjects
             this.size = TheyDontThinkItBeLikeItIsButItDo.Scale * Collectible.BaseSize;
             this.transformComponent.Position = position;
             Texture2D img = TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/homeplate");
-            this.Sprite = new Sprite(img, img.Width, img.Height) { Zoom = Collectible.BaseSize * TheyDontThinkItBeLikeItIsButItDo.Scale / img.Width };
+            this.Sprite = new Sprite(img, img.Width, img.Height, ZIndex.Object) { Zoom = Collectible.BaseSize * TheyDontThinkItBeLikeItIsButItDo.Scale / img.Width };
             Reset();
             this.flickerTimer = TheyDontThinkItBeLikeItIsButItDo.Rand.Next(0, 4);
             this.durationTimer = Collectible.Duration;
