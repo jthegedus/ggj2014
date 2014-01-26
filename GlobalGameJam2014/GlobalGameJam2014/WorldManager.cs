@@ -95,11 +95,10 @@ namespace GGJ2014
 
             // Randomise dem colours, MAAAAAAAAAAHN
             List<Color> colors = new List<Color>();
-            colors.Add(Color.Red);
-            colors.Add(Color.Blue);
-            colors.Add(Color.Yellow);
-            colors.Add(Color.Green);
-
+            for (int i = 0; i < NumberOfPlayers; ++i)
+            {
+                colors.Add(PlayerController.Colors[i]);
+            }
 
             // Do 10 random swaps on colors list
             for (int i = 0; i < 10; ++i)

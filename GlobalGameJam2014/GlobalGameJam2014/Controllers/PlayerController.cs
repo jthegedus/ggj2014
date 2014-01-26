@@ -236,7 +236,7 @@ namespace GGJ2014.Controllers
             {
                 do
                 {
-                    this.Target = PlayerController.Colors[TheyDontThinkItBeLikeItIsButItDo.Rand.Next(4)];
+                    this.Target = PlayerController.Colors[TheyDontThinkItBeLikeItIsButItDo.Rand.Next(WorldManager.NumberOfPlayers)];
                 } while (Target == this.Agent.Color);
 
                 this.Objective = (Objectives)TheyDontThinkItBeLikeItIsButItDo.Rand.Next(2);
