@@ -31,7 +31,7 @@ namespace GGJ2014
         private List<Object> objsToRemove;
         private List<Object> objsToAdd;
         public Level Level { get { return this.level; } }
-        private const float TimeLimit = 70;
+        private const float TimeLimit = 3;
 
         public int DisplayedTime { get; set; }
         public int LastDisplayedTime { get; set; }
@@ -311,7 +311,7 @@ namespace GGJ2014
         {
             this.SpriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied);
 
-            if (this.Level != null)
+            if (this.Level != null && TheyDontThinkItBeLikeItIsButItDo.Gamestate != GameState.MainMenu && TheyDontThinkItBeLikeItIsButItDo.Gamestate != GameState.Instructions)
                 this.Level.Draw(this.SpriteBatch, gameTime);
 
             //if (s == null)
