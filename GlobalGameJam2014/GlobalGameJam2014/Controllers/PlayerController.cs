@@ -196,15 +196,23 @@ namespace GGJ2014.Controllers
             {
                 case PlayerIndex.One:
                     TheyDontThinkItBeLikeItIsButItDo.GameUI.Player1Objective.text = this.GetObjectiveString();
+                    TheyDontThinkItBeLikeItIsButItDo.GameUI.P1TargetIcon.Tint = this.Target;
+                    TheyDontThinkItBeLikeItIsButItDo.GameUI.P1ObjectiveIcon.Texture2D = this.Objective == Objectives.Kill ? TheyDontThinkItBeLikeItIsButItDo.GameUI.Baseball : TheyDontThinkItBeLikeItIsButItDo.GameUI.Glove;
                     break;
                 case PlayerIndex.Two:
                     TheyDontThinkItBeLikeItIsButItDo.GameUI.Player2Objective.text = this.GetObjectiveString();
+                    TheyDontThinkItBeLikeItIsButItDo.GameUI.P2TargetIcon.Tint = this.Target;
+                    TheyDontThinkItBeLikeItIsButItDo.GameUI.P2ObjectiveIcon.Texture2D = this.Objective == Objectives.Kill ? TheyDontThinkItBeLikeItIsButItDo.GameUI.Baseball : TheyDontThinkItBeLikeItIsButItDo.GameUI.Glove;
                     break;
                 case PlayerIndex.Three:
                     TheyDontThinkItBeLikeItIsButItDo.GameUI.Player3Objective.text = this.GetObjectiveString();
+                    TheyDontThinkItBeLikeItIsButItDo.GameUI.P3TargetIcon.Tint = this.Target;
+                    TheyDontThinkItBeLikeItIsButItDo.GameUI.P3ObjectiveIcon.Texture2D = this.Objective == Objectives.Kill ? TheyDontThinkItBeLikeItIsButItDo.GameUI.Baseball : TheyDontThinkItBeLikeItIsButItDo.GameUI.Glove;
                     break;
                 case PlayerIndex.Four:
                     TheyDontThinkItBeLikeItIsButItDo.GameUI.Player4Objective.text = this.GetObjectiveString();
+                    TheyDontThinkItBeLikeItIsButItDo.GameUI.P4TargetIcon.Tint = this.Target;
+                    TheyDontThinkItBeLikeItIsButItDo.GameUI.P4ObjectiveIcon.Texture2D = this.Objective == Objectives.Kill ? TheyDontThinkItBeLikeItIsButItDo.GameUI.Baseball : TheyDontThinkItBeLikeItIsButItDo.GameUI.Glove;
                     break;
             }
         }
@@ -216,10 +224,10 @@ namespace GGJ2014.Controllers
             switch (this.Objective)
             {
                 case Objectives.HighFive:
-                    objective.Append("Tag ");
+                    objective.Append("Run-out ");
                     break;
                 case Objectives.Kill:
-                    objective.Append("Kill ");
+                    objective.Append("Strike-out ");
                     break;
             }
 
