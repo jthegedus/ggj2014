@@ -232,7 +232,7 @@ namespace GGJ2014.Controllers
 
             // generate a new objective
             // while the objective hasn't changed
-            while (this.Target == this.previousTarget && this.previousObjective == this.Objective)
+            while (WorldManager.NumberOfPlayers > 1 && this.Target == this.previousTarget && this.previousObjective == this.Objective)
             {
                 do
                 {
