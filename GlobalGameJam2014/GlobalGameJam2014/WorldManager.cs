@@ -72,7 +72,7 @@ namespace GGJ2014
                 levelToLoad = TheyDontThinkItBeLikeItIsButItDo.Rand.Next(10, 17);
             }
             // SET LEVEL HERE FOR DEBUG
-            levelToLoad = 13;
+            //levelToLoad = 13;
             this.level = LevelLoader.LoadLevel("level" + levelToLoad);
             this.LastLevel = levelToLoad;
 
