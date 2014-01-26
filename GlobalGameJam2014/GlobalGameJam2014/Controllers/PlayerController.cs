@@ -211,7 +211,7 @@ namespace GGJ2014.Controllers
 
         public void Spawned()
         {
-            FadingTextElement fte = new FadingTextElement("Player " + PlayerIndex, Agent, Color.Black, 0, 4f, 1f, 0f);
+            FadingTextElement fte = new FadingTextElement("Player " + PlayerIndex, Agent, Color.Black, ZIndex.UIText + 0.0001f, 4f, 1f, 0f);
             TheyDontThinkItBeLikeItIsButItDo.WorldManager.AddToWorld(fte);
         }
 
@@ -232,11 +232,11 @@ namespace GGJ2014.Controllers
 
             // generate a new objective
             // while the objective hasn't changed
-            while (this.Target == this.previousTarget && this.previousObjective == this.Objective)
+            while (WorldManager.NumberOfPlayers > 1 && this.Target == this.previousTarget && this.previousObjective == this.Objective)
             {
                 do
                 {
-                    this.Target = PlayerController.Colors[TheyDontThinkItBeLikeItIsButItDo.Rand.Next(4)];
+                    this.Target = PlayerController.Colors[TheyDontThinkItBeLikeItIsButItDo.Rand.Next(WorldManager.NumberOfPlayers)];
                 } while (Target == this.Agent.Color);
 
                 this.Objective = (Objectives)TheyDontThinkItBeLikeItIsButItDo.Rand.Next(2);

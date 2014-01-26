@@ -8,6 +8,7 @@ using GGJ2014.Graphics;
 using GGJ2014.Physics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using GGJ2014.Controllers;
 
 namespace GGJ2014.GameObjects
 {
@@ -25,8 +26,8 @@ namespace GGJ2014.GameObjects
         private const float RotateSpeed = MathHelper.PiOver2;
         public bool Enabled { get; set; }
         public float spawnTimer;
-        public const int MinSpawnDuration = 4;
-        public const int MaxSpawnDuration = 10;
+        public const int MinSpawnDuration = 2;
+        public const int MaxSpawnDuration = 7;
 
         public Collectible(Vector2 position)
         {
@@ -47,8 +48,14 @@ namespace GGJ2014.GameObjects
             spawnTimer = MathHelper.Clamp(spawnTimer, MinSpawnDuration, MaxSpawnDuration);
 
             Random rand = new Random();
-            int col = rand.Next(1, 6);
+            int col = rand.Next(0, WorldManager.NumberOfPlayers+1);
 
+            if (col == WorldManager.NumberOfPlayers)
+                color = Color.White;
+            else
+                color = PlayerController.Colors[col];
+            
+            /*
             switch (col)
             {
                 case 1:
@@ -69,6 +76,7 @@ namespace GGJ2014.GameObjects
                 default:
                     break;
             }
+             */
         }
 
         public Rectangle CollisionRectangle

@@ -18,8 +18,8 @@ namespace GGJ2014.Levels
 
         public int Width { get; private set; }
         public int Height { get; private set; }
-        public int CellWidth { get; set; }
-        public int CellHeight { get; set; }
+        public static int CellWidth { get; set; }
+        public static int CellHeight { get; set; }
 
         public Sprite sprite;
 
@@ -237,6 +237,16 @@ namespace GGJ2014.Levels
         public int GetGridY(float screenY)
         {
             return (int)(screenY / CellHeight);
+        }
+
+        public int GetScreenX(float gridX)
+        {
+            return (int)(gridX) * CellWidth + (CellWidth / 2);
+        }
+
+        public int GetScreenY(float gridY)
+        {
+            return (int)(gridY) * CellHeight + (CellHeight / 2);
         }
     }
 }

@@ -28,12 +28,20 @@ namespace GGJ2014
         public Button Player2Ready { get; set; }
         public Button Player3Ready { get; set; }
         public Button Player4Ready { get; set; }
+
+        public Button[] playerReadyButtons = new Button[WorldManager.NumberOfPlayers];
+
         List<Button> ButtonList { get; set; }
+        
+        private const float BaseScale = 0.35f;
+
         private bool p1Ready = false;
         private bool p2Ready = false;
         private bool p3Ready = false;
         private bool p4Ready = false;
-        private const float BaseScale = 0.35f;
+
+        private bool[] isReady = new bool[WorldManager.NumberOfPlayers];
+
         private bool first = true;
 
         public PregameScreen()
@@ -52,6 +60,8 @@ namespace GGJ2014
             p4Ready = false;
             lastDisplayedCount = -1;
 
+            playerReadyButtons = new Button[WorldManager.NumberOfPlayers];
+
             ColourButtonMapping = new Dictionary<Color, Buttons>();
             ColourButtonMapping.Add(Color.Red, Buttons.B);
             ColourButtonMapping.Add(TheyDontThinkItBeLikeItIsButItDo.Blue, Buttons.X);
@@ -59,6 +69,24 @@ namespace GGJ2014
             ColourButtonMapping.Add(Color.Green, Buttons.A);
 
             Texture2D img = TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/notReady");
+            PlayerIndex[] playerIndexes = { PlayerIndex.One, PlayerIndex.Two, PlayerIndex.Three, PlayerIndex.Four };
+            Vector2[] positions = { new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth / 3, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight / 3),
+                                      new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth / 3 * 2, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight / 3),
+                                      new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth / 3, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight / 3 * 2),
+                                      new Vector2(TheyDontThinkItBeLikeItIsButItDo.ScreenWidth / 3 * 2, TheyDontThinkItBeLikeItIsButItDo.ScreenHeight / 3 * 2) };
+            for(int i = 0; i < playerReadyButtons.Length; ++i)
+            {
+                playerReadyButtons[i] = new Button()
+                {
+                    BackgroundImage = new Sprite(img, img.Width, img.Height) { AnchorPoint = AnchorPoint.Centre, Zoom = BaseScale * TheyDontThinkItBeLikeItIsButItDo.Scale },
+                    Position = positions[i],
+                    PlayerIndex = playerIndexes[i],
+                    Selected = true,
+                    SelectButton = ColourButtonMapping[((PlayerController)TheyDontThinkItBeLikeItIsButItDo.ControllerManager.Controllers[i]).Agent.Color]
+                };
+            }
+            
+            /*
             Player1Ready = new Button()
             {
                 BackgroundImage = new Sprite(img, img.Width, img.Height) { AnchorPoint = AnchorPoint.Centre, Zoom = BaseScale * TheyDontThinkItBeLikeItIsButItDo.Scale },
@@ -97,22 +125,52 @@ namespace GGJ2014
                 Selected = true,
                 SelectButton = ColourButtonMapping[(TheyDontThinkItBeLikeItIsButItDo.ControllerManager.Controllers[3] as PlayerController).Agent.Color]
             };
+             * */
 
-            Player1Ready.OnClick += new Action(ReadyPlayer1);
-            Player2Ready.OnClick += new Action(ReadyPlayer2);
-            Player3Ready.OnClick += new Action(ReadyPlayer3);
-            Player4Ready.OnClick += new Action(ReadyPlayer4);
-
-            this.ButtonList = new List<Button>();
-            this.ButtonList.Add(Player1Ready);
-            this.ButtonList.Add(Player2Ready);
-            this.ButtonList.Add(Player3Ready);
-            this.ButtonList.Add(Player4Ready);
-
+            for (int i = 0; i < WorldManager.NumberOfPlayers; ++i)
+            {
+                if (playerReadyButtons[i] != null)
+                {
+                    Action action = null;
+                    switch (i)
+                    {
+                        case 0:
+                            action = new Action(ReadyPlayer1);
+                            break;
+                        case 1:
+                            action = new Action(ReadyPlayer2);
+                            break;
+                        case 2:
+                            action = new Action(ReadyPlayer3);
+                            break;
+                        case 3:
+                            action = new Action(ReadyPlayer4);
+                            break;
+                    }
+                    playerReadyButtons[i].OnClick += action;
+                    
+                }
+            }
             crowdCheer = TheyDontThinkItBeLikeItIsButItDo.AudioManager.LoadCue("longcrowdapplause");
             TheyDontThinkItBeLikeItIsButItDo.AudioManager.PlayCue(ref crowdCheer, false);
         }
 
+        private void ReadyPlayer(int player)
+        {
+            if (player < WorldManager.NumberOfPlayers && !isReady[player])
+            {
+                Texture2D img = TheyDontThinkItBeLikeItIsButItDo.ContentManager.Load<Texture2D>("Sprites/ready");
+                playerReadyButtons[player].RollOverImage = new Sprite(img, img.Width, img.Height) { AnchorPoint = AnchorPoint.Centre, Zoom = BaseScale * TheyDontThinkItBeLikeItIsButItDo.Scale, zIndex = 0.00001f };
+                this.playerReadyButtons[player].RolloverText = new TextElement("Player " + (player+1) + "\n  Ready", this.playerReadyButtons[player].Position, Color.Black, 0) { AnchorPoint = GGJ2014.AnchorPoint.Centre, Font = TheyDontThinkItBeLikeItIsButItDo.LargeFont, Scale = new Vector2(0.6f) };
+                isReady[player] = true;
+            }
+        }
+
+        private void ReadyPlayer1() { ReadyPlayer(0); }
+        private void ReadyPlayer2() { ReadyPlayer(1); }
+        private void ReadyPlayer3() { ReadyPlayer(2); }
+        private void ReadyPlayer4() { ReadyPlayer(3); }
+        /*
         private void ReadyPlayer1()
         {
             if (!p1Ready)
@@ -153,7 +211,7 @@ namespace GGJ2014
                 this.Player4Ready.Text = new TextElement("Player 4\n  Ready", this.Player4Ready.Position, Color.Black, 0) { AnchorPoint = GGJ2014.AnchorPoint.Centre, Font = TheyDontThinkItBeLikeItIsButItDo.LargeFont, Scale = new Vector2(0.6f) };
                 p4Ready = true;
             }
-        }
+        } */
 
         public void ShowMenu()
         {
@@ -167,12 +225,21 @@ namespace GGJ2014
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            foreach (Button b in this.ButtonList)
+            foreach (Button b in playerReadyButtons)
             {
                 b.Draw(spriteBatch, gameTime);
             }
         }
 
+        private bool allPlayersReady()
+        {
+            for (int i = 0; i < WorldManager.NumberOfPlayers; ++i)
+            {
+                if (isReady[i] == false)
+                    return false;
+            }
+            return true;
+        }
         public void Update(GameTime gameTime)
         {
             // HAX
@@ -184,12 +251,12 @@ namespace GGJ2014
                 this.ReadyPlayer4();
             }
 
-            foreach (Button b in this.ButtonList)
+            foreach (Button b in playerReadyButtons)
             {
                 b.Update(gameTime);
             }
 
-            if (p1Ready && p2Ready && p3Ready && p4Ready)
+            if (allPlayersReady())
             {
                 //TheyDontThinkItBeLikeItIsButItDo.AudioManager.Pause(crowdCheer);
                 // Cue cheer = TheyDontThinkItBeLikeItIsButItDo.AudioManager.LoadCue("smallapplause");
@@ -204,7 +271,7 @@ namespace GGJ2014
                 else if (this.fadeTimer >= 0)
                 {
                     this.fadeTimer -= elapsedTime;
-                    foreach (Button b in this.ButtonList)
+                    foreach (Button b in playerReadyButtons)
                     {
                         float val = MathHelper.Clamp(MathHelper.Lerp(0, 1, this.fadeTimer / FadeDuration), 0, 1);
                         b.RollOverImage.Alpha = val;
